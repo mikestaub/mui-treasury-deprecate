@@ -10,6 +10,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
 import PeaSocialAvatar from './PeaSocialAvatar';
@@ -17,14 +21,65 @@ import PeaTag from './PeaTag';
 import PeaText from './PeaTypography';
 import PeaChat from './PeaChat';
 
-const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
+const PeaGroupProfile = ({
+  cover,
+  groupName,
+  description,
+  type,
+  tags,
+  members,
+  followings,
+  followers,
+  joinLoading,
+  onJoinGroup,
+  onReport,
+}) => {
   const [index, onChange] = useState(0);
-  const [joined, setJoined] = useState(false);
   const joinButtonProps = {
     size: 'small',
     style: { marginLeft: 8, minWidth: 120 },
-    onClick: () => setJoined(!joined),
+    disabled: joinLoading,
+    onClick: onJoinGroup,
   };
+
+  const [anchorEl, setAnchor] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const onReportClicked = () => {
+    onReport();
+    setAnchor(null);
+  };
+
+  const renderMenu = () => (
+    <Menu
+      id="long-menu"
+      anchorEl={anchorEl}
+      open={open}
+      onClose={() => setAnchor(null)}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      PaperProps={{
+        style: {
+          minWidth: 240,
+        },
+      }}
+    >
+      <MenuItem onClick={onReportClicked}>
+        <ListItemText disableTypography>
+          <PeaText variant={'body1'} weight={'bold'}>
+            Report
+          </PeaText>
+        </ListItemText>
+      </MenuItem>
+    </Menu>
+  );
+
   return (
     <Card className={'PeaGroupProfile-root'}>
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
@@ -45,26 +100,16 @@ const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
                 icon={'more_vert'}
                 size={'small'}
                 style={{ marginLeft: 8 }}
+                onClick={e => setAnchor(e.currentTarget)}
+              />
+              {renderMenu()}
+              <PeaButton
+                variant={'contained'}
+                color={'primary'}
+                {...joinButtonProps}
               >
-                email
+                Join
               </PeaButton>
-              {joined ? (
-                <PeaButton
-                  variant={'outlined'}
-                  color={'danger'}
-                  {...joinButtonProps}
-                >
-                  Leave
-                </PeaButton>
-              ) : (
-                <PeaButton
-                  variant={'contained'}
-                  color={'primary'}
-                  {...joinButtonProps}
-                >
-                  Join
-                </PeaButton>
-              )}
             </Box>
           </Grid>
         </Grid>
@@ -72,7 +117,7 @@ const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
           <PeaIcon push={'right'} color={'secondary'} size={'small'}>
             fas fa-user
           </PeaIcon>
-          Personal Group
+          {type} Group
         </PeaText>
         <Tabs
           className={'MuiTabs-root'}
@@ -89,27 +134,33 @@ const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
         {index === 0 && <Box minHeight={300} />}
         {index === 1 && (
           <Box mt={2}>
-            <PeaText color={'secondary'}>
-              <b>Description</b>
-            </PeaText>
-            <PeaText gutterBottom>
-              This group is for friends only. Nice to meet you all!
-            </PeaText>
-            <PeaText color={'secondary'}>
-              <b>Tags</b>
-            </PeaText>
-            <PeaText gutterBottom />
-            <Grid container spacing={1}>
-              {tags.map(item => (
-                <Grid item key={item.label}>
-                  <PeaTag
-                    color={'secondary'}
-                    label={`#${item.label}`}
-                    onClick={() => {}}
-                  />
+            {description && (
+              <>
+                <PeaText color={'secondary'}>
+                  <b>Description</b>
+                </PeaText>
+                <PeaText gutterBottom>{description}</PeaText>
+              </>
+            )}
+            {tags && tags.length > 0 && (
+              <>
+                <PeaText color={'secondary'}>
+                  <b>Tags</b>
+                </PeaText>
+                <PeaText gutterBottom />
+                <Grid container spacing={1}>
+                  {tags.map(tag => (
+                    <Grid item key={tag}>
+                      <PeaTag
+                        color={'secondary'}
+                        label={`#${tag}`}
+                        onClick={() => {}}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
-              ))}
-            </Grid>
+              </>
+            )}
             <br />
             {(followings || followers) && (
               <PeaText color={'secondary'} gutterBottom>
@@ -147,7 +198,19 @@ const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
             )}
           </Box>
         )}
-        {index === 2 && <Box minHeight={300} />}
+        {index === 2 && (
+          <Box minHeight={300}>
+            <Grid container>
+              {members &&
+                members.length > 0 &&
+                members.map(({ id, name, profilePhoto }) => (
+                  <Grid item key={id}>
+                    <PeaSocialAvatar name={name} src={profilePhoto} />
+                  </Grid>
+                ))}
+            </Grid>
+          </Box>
+        )}
         {index === 3 && (
           <div>
             <Box my={2} textAlign={'center'}>
@@ -194,15 +257,27 @@ const PeaGroupProfile = ({ cover, groupName, tags, followings, followers }) => {
 PeaGroupProfile.propTypes = {
   cover: PropTypes.string,
   groupName: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  type: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.shape({})),
+  members: PropTypes.arrayOf(PropTypes.shape({})),
   followings: PropTypes.arrayOf(PropTypes.shape({})),
   followers: PropTypes.arrayOf(PropTypes.shape({})),
+  joinLoading: PropTypes.bool,
+  onJoinGroup: PropTypes.func,
+  onReport: PropTypes.func,
 };
 PeaGroupProfile.defaultProps = {
   cover: '',
+  description: '',
+  type: '',
   tags: [],
+  members: [],
   followings: null,
   followers: null,
+  joinLoading: false,
+  onJoinGroup: () => {},
+  onReport: () => {},
 };
 PeaGroupProfile.metadata = {
   name: 'Pea Group Profile',

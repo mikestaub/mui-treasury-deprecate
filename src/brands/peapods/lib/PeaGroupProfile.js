@@ -28,6 +28,7 @@ const PeaGroupProfile = ({
   type,
   tags,
   members,
+  currentUserJoinInfo,
   followings,
   followers,
   joinLoading,
@@ -38,7 +39,7 @@ const PeaGroupProfile = ({
   const joinButtonProps = {
     size: 'small',
     style: { marginLeft: 8, minWidth: 120 },
-    disabled: joinLoading,
+    disabled: joinLoading || !!currentUserJoinInfo,
     onClick: onJoinGroup,
   };
 
@@ -108,7 +109,7 @@ const PeaGroupProfile = ({
                 color={'primary'}
                 {...joinButtonProps}
               >
-                Join
+                {currentUserJoinInfo || 'Join'}
               </PeaButton>
             </Box>
           </Grid>
@@ -261,6 +262,7 @@ PeaGroupProfile.propTypes = {
   type: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.shape({})),
   members: PropTypes.arrayOf(PropTypes.shape({})),
+  currentUserJoinInfo: PropTypes.string,
   followings: PropTypes.arrayOf(PropTypes.shape({})),
   followers: PropTypes.arrayOf(PropTypes.shape({})),
   joinLoading: PropTypes.bool,
@@ -273,6 +275,7 @@ PeaGroupProfile.defaultProps = {
   type: '',
   tags: [],
   members: [],
+  currentUserJoinInfo: '',
   followings: null,
   followers: null,
   joinLoading: false,

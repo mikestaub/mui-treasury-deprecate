@@ -18,11 +18,9 @@ const styles = theme => {
     image: {
       display: 'block',
       width: imageSize,
-      height: imageSize,
       objectFit: 'cover',
       [theme.breakpoints.only('xs')]: {
         width: mobileImageSize,
-        height: mobileImageSize,
       },
     },
     mainImage: {
@@ -107,7 +105,7 @@ PeaCategoryToggle.defaultProps = {
   label: '',
   FormControlLabelProps: {},
   CheckboxProps: {},
-  checked: undefined,
+  checked: false,
   onChange: () => {},
   value: undefined,
 };

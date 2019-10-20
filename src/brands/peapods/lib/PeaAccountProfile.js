@@ -65,7 +65,8 @@ const PeaAccountProfile = ({
   gender,
   groups,
   pods,
-  groupsOfCurrentUser,
+  invitableGroups,
+  followableGroups,
   tags,
   podsCount,
   reputation,
@@ -313,16 +314,18 @@ const PeaAccountProfile = ({
                         spacing={1}
                         className={classes.followGroupContainer}
                       >
-                        {groups.map(({ id, name: groupName, profilePhoto }) => (
-                          <Grid item key={id}>
-                            <PeaCategoryToggle
-                              label={groupName}
-                              src={profilePhoto}
-                              checked={checkedFollowGroup[id]}
-                              onChange={onFollowGroupChange(id)}
-                            />
-                          </Grid>
-                        ))}
+                        {followableGroups.map(
+                          ({ id, name: groupName, profilePhoto }) => (
+                            <Grid item key={id}>
+                              <PeaCategoryToggle
+                                label={groupName}
+                                src={profilePhoto}
+                                checked={checkedFollowGroup[id]}
+                                onChange={onFollowGroupChange(id)}
+                              />
+                            </Grid>
+                          ),
+                        )}
                       </Grid>
                       <PeaButton
                         variant={'contained'}
@@ -512,7 +515,7 @@ const PeaAccountProfile = ({
       <PeaInvitationDialog
         person={userName}
         pods={pods}
-        groups={groupsOfCurrentUser}
+        groups={invitableGroups}
         loading={loadingInvitableList}
         onInvitePod={onInvitePod}
         onInviteGroup={onInviteGroup}
@@ -543,7 +546,8 @@ PeaAccountProfile.propTypes = {
     }),
   ),
   groups: PropTypes.arrayOf(PropTypes.shape({})),
-  groupsOfCurrentUser: PropTypes.arrayOf(PropTypes.shape({})),
+  invitableGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  followableGroups: PropTypes.arrayOf(PropTypes.shape({})),
   tags: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
@@ -594,7 +598,8 @@ PeaAccountProfile.defaultProps = {
   gender: undefined,
   groups: [],
   pods: [],
-  groupsOfCurrentUser: [],
+  invitableGroups: [],
+  followableGroups: [],
   tags: [],
   reputation: 0,
   podsCount: 0,

@@ -9,65 +9,41 @@ import PeaButton from './PeaButton';
 import PeaAvatar from './PeaAvatar';
 import PeaIcon from './PeaIcon';
 import Logo from './assets/peapods-logo-circle.svg';
+import PeaLoadingSpinner from './PeaLoadingSpinner';
 
-const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
+const PeaNotificationItem = ({
+  id,
+  src,
+  name,
+  text,
+  time,
+  type,
+  actions,
+  unread,
+  actionLoading,
+  onAction,
+}) => {
   const count = Array.isArray(src) ? src.length : 0;
-  const details = {
-    follow: {
-      sticker: 'person',
-      description: 'requested to follow you',
-      bgColor: 'secondary',
-    },
-    pea_request: {
-      sticker: 'pea',
-      description: 'has requested to join your pod for EVENT_NAME',
-      bgColor: '',
-    },
-    pea_invite: {
-      sticker: 'pea',
-      description: 'has invited you to pod Y',
-      bgColor: '',
-    },
-    cancel: {
-      sticker: 'clear',
-      description: 'has been canceled',
-      bgColor: 'danger',
-    },
-    accept: {
-      sticker: 'check',
-      description: 'has accepted your friend request',
-      bgColor: 'secondary',
-    },
-    left: {
-      sticker: 'remove',
-      description: 'has left your pod for EVENT_NAME',
-      bgColor: 'danger',
-    },
-    followed: {
-      sticker: 'added',
-      description: 'is now following you',
-      bgColor: 'secondary',
-    },
-    group: {
-      sticker: 'person',
-      description: `and ${count - 2} others requested to follow you`,
-      bgColor: 'secondary',
-    },
+  const stickers = {
+    follow: 'person',
+    pea_request: 'pea',
+    pea_invite: 'pea',
+    cancel: 'clear',
+    accept: 'check',
+    left: 'remove',
+    followed: 'added',
+    group: 'person',
   };
   const renderSticker = () => {
-    if (!details[type].sticker) return null;
-    if (details[type].sticker === 'pea') {
+    if (!stickers[type]) return null;
+    if (stickers[type] === 'pea') {
       return (
         <img src={Logo} alt="pea-invite" className={'MuiIcon-root -pea'} />
       );
     }
     return (
-      <PeaIcon
-        className={'-sticker'}
-        shape={'circular'}
-        bgColor={details[type].bgColor}
-      >
-        {details[type].sticker}
+      <PeaIcon className={'-sticker'} shape={'circular'}>
+        {stickers[type]}
       </PeaIcon>
     );
   };
@@ -95,7 +71,7 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
         primary={
           <span>
             <b>{type === 'group' ? name.slice(0, 2).join(', ') : name}</b>{' '}
-            {details[type].description}
+            {text}
           </span>
         }
         primaryTypographyProps={{
@@ -109,10 +85,20 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
           spacing={1}
           className={'PeaNotificationItem-actions'}
           justify={'flex-end'}
+          wrap="nowrap"
         >
           <Grid item>
-            <PeaButton className={'PeaButton-ignore'} size={'small'}>
-              Deny
+            <PeaButton
+              className={'PeaButton-ignore'}
+              size={'small'}
+              onClick={() => onAction({ id, type: 'deny' })}
+              disabled={actionLoading[id] && actionLoading[id].deny}
+            >
+              {actionLoading[id] && actionLoading[id].deny ? (
+                <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
+              ) : (
+                'Deny'
+              )}
             </PeaButton>
           </Grid>
           <Grid item>
@@ -121,8 +107,14 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
               elongated={false}
               variant={'contained'}
               color={'primary'}
+              onClick={() => onAction({ id, type: 'accept' })}
+              disabled={actionLoading[id] && actionLoading[id].accept}
             >
-              Accept
+              {actionLoading[id] && actionLoading[id].accept ? (
+                <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
+              ) : (
+                'Accept'
+              )}
             </PeaButton>
           </Grid>
         </Grid>
@@ -132,6 +124,7 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
 };
 
 PeaNotificationItem.propTypes = {
+  id: PropTypes.string.isRequired,
   src: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
@@ -140,6 +133,7 @@ PeaNotificationItem.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]).isRequired,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   type: PropTypes.oneOf([
     'follow',
     'pea_invite',
@@ -153,10 +147,14 @@ PeaNotificationItem.propTypes = {
   time: PropTypes.string.isRequired,
   actions: PropTypes.bool,
   unread: PropTypes.bool,
+  actionLoading: PropTypes.shape({}),
+  onAction: PropTypes.func,
 };
 PeaNotificationItem.defaultProps = {
   actions: false,
   unread: false,
+  actionLoading: {},
+  onAction: () => {},
 };
 PeaNotificationItem.metadata = {
   name: 'Pea Notification Item',

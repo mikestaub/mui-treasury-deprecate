@@ -30,8 +30,16 @@ const DateTimePicker = props => (
 );
 
 export * from '@material-ui/core';
-export { Visibility, VisibilityOff } from '@material-ui/icons';
-export { useTheme } from '@material-ui/core/styles';
+export { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
+export {
+  Visibility,
+  VisibilityOff,
+  Message as MessageIcon,
+  Group as GroupIcon,
+  CalendarToday as CalendarIcon,
+  MoreVert as VerticalDotsIcon,
+} from '@material-ui/icons';
+export { useTheme, makeStyles } from '@material-ui/styles';
 
 export { TimePicker, DatePicker, DateTimePicker };
 export { logo, images };

@@ -34,7 +34,10 @@ export { SpeedDial, SpeedDialIcon, SpeedDialAction } from '@material-ui/lab';
 export {
   Visibility,
   VisibilityOff,
-  Delete as DeleteIcon,
+  Message as MessageIcon,
+  Group as GroupIcon,
+  CalendarToday as CalendarIcon,
+  MoreVert as VerticalDotsIcon,
 } from '@material-ui/icons';
 export { useTheme, makeStyles } from '@material-ui/styles';
 

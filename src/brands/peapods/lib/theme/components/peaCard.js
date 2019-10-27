@@ -44,7 +44,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),
@@ -60,6 +60,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         // '&:hover': {
         //   boxShadow: '0 16px 70px -12.125px rgba(0,0,0,0.3)',
         // },
+
         '& > .MuiCardMedia-root': {
           paddingTop: '56.25%',
           position: 'relative',
@@ -94,7 +95,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),
@@ -138,7 +139,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),

@@ -18,24 +18,28 @@ import PeaStatistic from './PeaStatistic';
 import PeaText from './PeaTypography';
 
 const PeaGroupCard = ({
+  isMember,
+  name,
   cover,
   image,
   type,
   tag,
   AvatarProps,
+  onJoin,
+  onLeave,
   onEdit,
   onDelete,
   onReport,
+  actionText,
 }) => {
-  const [joined, setJoined] = useState(false);
+  const [anchorEl, setAnchor] = useState(null);
+  const open = Boolean(anchorEl);
+
   const joinButtonProps = {
     size: 'small',
     style: { marginLeft: 8, minWidth: 120 },
-    onClick: () => setJoined(!joined),
+    onClick: () => (isMember ? onLeave() : onJoin()),
   };
-
-  const [anchorEl, setAnchor] = useState(null);
-  const open = Boolean(anchorEl);
 
   const onEditClicked = () => {
     setAnchor(null);
@@ -72,23 +76,27 @@ const PeaGroupCard = ({
         },
       }}
     >
-      <MenuItem onClick={onEditClicked}>
-        <ListItemText disableTypography>
-          <PeaText variant={'body1'} weight={'bold'}>
-            Edit {tag}
-          </PeaText>
-        </ListItemText>
-      </MenuItem>
+      {onEdit && (
+        <MenuItem onClick={onEditClicked}>
+          <ListItemText disableTypography>
+            <PeaText variant={'body1'} weight={'bold'}>
+              Edit {tag}
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
 
       <Divider variant={'middle'} />
 
-      <MenuItem onClick={onDeleteClicked}>
-        <ListItemText disableTypography>
-          <PeaText color={'error'} variant={'body1'} weight={'bold'}>
-            Delete {tag}
-          </PeaText>
-        </ListItemText>
-      </MenuItem>
+      {onDelete && (
+        <MenuItem onClick={onDeleteClicked}>
+          <ListItemText disableTypography>
+            <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+              Delete {tag}
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
 
       <Divider variant={'middle'} />
 
@@ -107,23 +115,16 @@ const PeaGroupCard = ({
       <CardMedia className={'MuiCardMedia-root'} image={cover}>
         <PeaAvatar src={image} size={'large'} {...AvatarProps} />
       </CardMedia>
+
       <CardContent className={'MuiCardContent-root'}>
         <div className={'PeaProfileCard-actions'}>
-          {joined ? (
-            <PeaButton
-              variant={'outlined'}
-              color={'danger'}
-              {...joinButtonProps}
-            >
-              Leave
-            </PeaButton>
-          ) : (
+          {type !== 'PERSONAL' && (
             <PeaButton
               variant={'contained'}
-              color={'primary'}
+              color={isMember ? 'primary' : 'danger'}
               {...joinButtonProps}
             >
-              Join
+              {actionText}
             </PeaButton>
           )}
           <IconButton
@@ -135,10 +136,11 @@ const PeaGroupCard = ({
           </IconButton>
           {renderMenu()}
         </div>
-        <Typography className={'MuiTypography--heading'}>
-          {type.charAt(0) + type.slice(1).toLowerCase()} Group
-        </Typography>
+
+        <Typography className={'MuiTypography--heading'}>{name}</Typography>
+
         <Typography className={'MuiTypography--subheading'}>{tag}</Typography>
+
         <Grid container justify={'space-between'}>
           <Grid item>
             <PeaStatistic label={'Pods'} value={2} />
@@ -156,25 +158,36 @@ const PeaGroupCard = ({
 };
 
 PeaGroupCard.propTypes = {
+  name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   cover: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  onReport: PropTypes.func.isRequired,
   tag: PropTypes.string,
   AvatarProps: PropTypes.shape({}),
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  onReport: PropTypes.func,
+  actionText: PropTypes.string,
+  isMember: PropTypes.bool,
+  onJoin: PropTypes.func,
+  onLeave: PropTypes.func,
 };
+
 PeaGroupCard.defaultProps = {
   tag: '',
   AvatarProps: {},
-  onEdit: () => {},
-  onDelete: () => {},
-  onReport: () => {},
+  onEdit: undefined,
+  onDelete: undefined,
+  onJoin: undefined,
+  onLeave: undefined,
+  actionText: 'Join',
+  isMember: false,
 };
+
 PeaGroupCard.metadata = {
   name: 'Pea Profile Card',
 };
+
 PeaGroupCard.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 export default PeaGroupCard;

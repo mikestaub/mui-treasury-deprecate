@@ -22,6 +22,7 @@ const PeaGroupDialog = ({
   type,
   inviteInput,
   typeInput,
+  tagsInput,
   profilePhoto,
   submitting,
   onChangeCoverPhotoClicked,
@@ -61,9 +62,8 @@ const PeaGroupDialog = ({
           </CardMedia>
         </Box>
 
-        {inviteInput}
-
         <TextField
+          required
           fullWidth
           margin={'normal'}
           label={'Name'}
@@ -84,6 +84,10 @@ const PeaGroupDialog = ({
           value={description || ''}
           onChange={onChange('description')}
         />
+
+        {inviteInput}
+
+        {tagsInput}
 
         {typeInput}
       </>
@@ -118,8 +122,9 @@ PeaGroupDialog.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   type: PropTypes.string.isRequired,
-  inviteInput: PropTypes.object.isRequired,
-  typeInput: PropTypes.object.isRequired,
+  inviteInput: PropTypes.node.isRequired,
+  tagsInput: PropTypes.node.isRequired,
+  typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
   submitting: PropTypes.bool,
   onChangeCoverPhotoClicked: PropTypes.func,

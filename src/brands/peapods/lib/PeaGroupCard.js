@@ -17,6 +17,7 @@ import PeaText from './PeaTypography';
 
 const PeaGroupCard = ({
   isMember,
+  isLoading,
   name,
   memberCount,
   image,
@@ -28,6 +29,7 @@ const PeaGroupCard = ({
   onReport,
   onMessage,
   actionText,
+  children,
 }) => {
   const [anchorEl, setAnchor] = useState(null);
   const open = Boolean(anchorEl);
@@ -164,6 +166,7 @@ const PeaGroupCard = ({
                     variant={'contained'}
                     color={isMember ? 'primary' : 'danger'}
                     style={{ marginLeft: 8, minWidth: 120 }}
+                    loading={isLoading}
                     {...joinButtonProps}
                   >
                     {actionText}
@@ -173,6 +176,8 @@ const PeaGroupCard = ({
             </Grid>
           </Grid>
         </Grid>
+
+        {children}
       </CardContent>
     </Card>
   );
@@ -189,6 +194,7 @@ PeaGroupCard.propTypes = {
   onDelete: PropTypes.func,
   actionText: PropTypes.string,
   isMember: PropTypes.bool,
+  isLoading: PropTypes.bool,
   onJoin: PropTypes.func,
   onLeave: PropTypes.func,
 };
@@ -200,6 +206,7 @@ PeaGroupCard.defaultProps = {
   onLeave: undefined,
   actionText: 'Join',
   isMember: false,
+  isLoading: false,
 };
 
 PeaGroupCard.metadata = {

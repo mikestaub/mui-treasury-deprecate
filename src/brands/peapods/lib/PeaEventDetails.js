@@ -164,13 +164,15 @@ const PeaEventDetails = ({
         </ListItemText>
       </MenuItem>
 
-      <MenuItem onClick={() => editEvent()}>
-        <ListItemText disableTypography>
-          <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
-            Edit Event
-          </PeaText>
-        </ListItemText>
-      </MenuItem>
+      {onEditEventClicked && (
+        <MenuItem onClick={() => editEvent()}>
+          <ListItemText disableTypography>
+            <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
+              Edit Event
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -353,7 +355,7 @@ PeaEventDetails.propTypes = {
   sourceImage: PropTypes.string,
   sourceLink: PropTypes.string,
   onCreatePodClicked: PropTypes.func.isRequired,
-  onEditEventClicked: PropTypes.func.isRequired,
+  onEditEventClicked: PropTypes.func,
   renderConnections: PropTypes.func.isRequired,
   renderPods: PropTypes.func.isRequired,
   podCount: PropTypes.number,
@@ -379,6 +381,7 @@ PeaEventDetails.defaultProps = {
   sourceLink: undefined,
   isMobile: true,
   onChangeTab: undefined,
+  onEditEventClicked: undefined,
   isLoading: false,
   onReport: () => {},
 };

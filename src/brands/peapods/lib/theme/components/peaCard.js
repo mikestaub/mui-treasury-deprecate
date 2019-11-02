@@ -1,4 +1,11 @@
 export default ({ spacing, palette, typography, breakpoints }) => ({
+  MuiCardContent: {
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+    },
+  },
   MuiCard: {
     root: {
       display: 'flex',

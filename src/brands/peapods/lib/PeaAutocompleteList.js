@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
 import Select, {
   AsyncCreatable,
   Creatable,
@@ -191,14 +191,31 @@ const PeaAutocompleteList = ({
   autoFocus,
 }) => {
   const classes = useStyles({ removeSpacing, isUpsideDown: true });
+
   const theme = useTheme();
+
+  const selectRef = useRef(null);
+
+  const [preserveFocus, setPreserveFocus] = useState(false);
   const [value, setValue] = useState(propValue);
   const [inputValue, setInputValue] = useState('');
   const isAsync = !!getSuggestions;
 
+  const focusInput = useCallback(() => {
+    // TODO: this seems hacky
+    if (preserveFocus && selectRef.current) {
+      selectRef.current.select.focus();
+    }
+  }, [preserveFocus]);
+
   useEffect(() => {
     setValue(propValue);
-  }, [propValue]);
+    focusInput();
+  }, [propValue, focusInput]);
+
+  useEffect(() => {
+    focusInput();
+  }, [inputValue, focusInput]);
 
   function handleSelectChange(val) {
     let newValue = val;
@@ -231,7 +248,7 @@ const PeaAutocompleteList = ({
   };
 
   const handleKeyDown = event => {
-    if (!canCreate || !inputValue) {
+    if (!canCreate) {
       return;
     }
     const newVal = { label: inputValue, value: inputValue };
@@ -283,10 +300,17 @@ const PeaAutocompleteList = ({
     }
   };
 
+  const onFocus = () => {
+    setPreserveFocus(true);
+  };
+
   return (
     <div className={cx(classes.root, fullWidth && 'fullWidth')}>
       <SelectComponent
         key={key}
+        ref={ref => {
+          selectRef.current = ref;
+        }}
         classes={classes}
         styles={selectStyles}
         inputId="react-select-single"
@@ -305,6 +329,7 @@ const PeaAutocompleteList = ({
         components={components}
         onChange={handleSelectChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         isMulti={isMulti}
         menuShouldScrollIntoView
         menuPlacement={menuPlacement}
@@ -369,4 +394,4 @@ PeaAutocompleteList.metadata = {
 };
 PeaAutocompleteList.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaAutocompleteList;
+export default memo(PeaAutocompleteList);

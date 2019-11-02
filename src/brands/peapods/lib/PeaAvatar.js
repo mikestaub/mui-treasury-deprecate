@@ -7,13 +7,17 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 
+import PeaIcon from './PeaIcon';
+
 const PeaAvatar = ({
+  src,
   externalLink,
   className,
   size,
   more,
   alt,
   isClickable,
+  placeholderIcon,
   ...props
 }) =>
   more ? (
@@ -44,9 +48,10 @@ const PeaAvatar = ({
           isClickable && 'MuiAvatar--clickable',
           className,
         )}
+        src={src}
         {...props}
       >
-        {alt}
+        {!src && <PeaIcon icon={placeholderIcon} />}
       </Avatar>
       <Typography className={'MuiAvatar-more'}>+{more}</Typography>
     </Box>
@@ -61,9 +66,10 @@ const PeaAvatar = ({
               isClickable && 'MuiAvatar--clickable',
               className,
             )}
+            src={src}
             {...props}
           >
-            {alt}
+            {!src && <PeaIcon icon={placeholderIcon} />}
           </Avatar>
         </Link>
       ) : (
@@ -74,9 +80,10 @@ const PeaAvatar = ({
             isClickable && 'MuiAvatar--clickable',
             className,
           )}
+          src={src}
           {...props}
         >
-          {alt}
+          {!src && <PeaIcon icon={placeholderIcon} />}
         </Avatar>
       )}
     </>
@@ -89,7 +96,9 @@ PeaAvatar.propTypes = {
   more: PropTypes.number,
   size: PropTypes.oneOf(['small', 'big', 'large', 'huge']),
   alt: PropTypes.string,
+  placeholderIcon: PropTypes.string,
 };
+
 PeaAvatar.defaultProps = {
   externalLink: undefined,
   isClickable: false,
@@ -97,7 +106,9 @@ PeaAvatar.defaultProps = {
   more: undefined,
   size: undefined,
   alt: '',
+  placeholderIcon: 'fa fa-user',
 };
+
 PeaAvatar.metadata = {
   name: 'Pea Avatar',
   libraries: [
@@ -107,6 +118,7 @@ PeaAvatar.metadata = {
     },
   ],
 };
+
 PeaAvatar.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 const Group = ({ more, images, avatarProps, overlap, ...props }) => (
@@ -131,21 +143,25 @@ const Group = ({ more, images, avatarProps, overlap, ...props }) => (
     ))}
   </Box>
 );
+
 Group.propTypes = {
   more: PropTypes.number,
   overlap: PropTypes.number,
   images: PropTypes.arrayOf(PropTypes.string.isRequired),
   avatarProps: PropTypes.shape({}),
 };
+
 Group.defaultProps = {
   more: undefined,
   overlap: -8,
   images: [],
   avatarProps: {},
 };
+
 Group.metadata = {
   name: 'Pea Avatar Group',
 };
+
 Group.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 PeaAvatar.Group = Group;

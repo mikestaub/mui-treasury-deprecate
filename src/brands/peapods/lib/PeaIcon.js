@@ -88,7 +88,7 @@ PeaIcon.defaultProps = {
   link: false,
   push: '',
   size: '',
-  shape: 'circular',
+  shape: 'square',
   shadow: false,
 };
 PeaIcon.metadata = {

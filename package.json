@@ -46,6 +46,7 @@
     "emoji-mart": "^2.11.1",
     "formik": "^1.5.1",
     "history": "^4.7.2",
+    "human-format": "0.10.1",
     "jss": "^10.0.0-alpha.16",
     "lodash": "^4.17.11",
     "material-ui-pickers": "^2.2.4",

@@ -149,12 +149,7 @@ const PeaEventCard = ({
   return (
     <Card className={'PeaEventCard-root'} {...props}>
       <CardHeader
-        avatar={
-          <PeaAvatar
-            src={profile && profile.image}
-            alt={<PeaIcon icon="fa fa-user" />}
-          />
-        }
+        avatar={<PeaAvatar src={profile && profile.image} />}
         title={<b>{title}</b>}
         subheader={subTitle}
         action={

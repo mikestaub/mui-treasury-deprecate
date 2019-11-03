@@ -22,8 +22,9 @@ const PeaGroupDialog = ({
   type,
   inviteInput,
   typeInput,
+  tagsInput,
   profilePhoto,
-  submitting,
+  loading,
   onChangeCoverPhotoClicked,
   onChange,
   onClose,
@@ -61,9 +62,8 @@ const PeaGroupDialog = ({
           </CardMedia>
         </Box>
 
-        {inviteInput}
-
         <TextField
+          required
           fullWidth
           margin={'normal'}
           label={'Name'}
@@ -85,6 +85,10 @@ const PeaGroupDialog = ({
           onChange={onChange('description')}
         />
 
+        {inviteInput}
+
+        {tagsInput}
+
         {typeInput}
       </>
     }
@@ -93,10 +97,10 @@ const PeaGroupDialog = ({
       <PeaButton
         color={'primary'}
         variant={'contained'}
-        disabled={submitting}
+        disabled={loading}
         onClick={onSave}
       >
-        {submitting ? (
+        {loading ? (
           <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
         ) : (
           actionText
@@ -118,10 +122,11 @@ PeaGroupDialog.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   type: PropTypes.string.isRequired,
-  inviteInput: PropTypes.object.isRequired,
-  typeInput: PropTypes.object.isRequired,
+  inviteInput: PropTypes.node.isRequired,
+  tagsInput: PropTypes.node.isRequired,
+  typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
-  submitting: PropTypes.bool,
+  loading: PropTypes.bool,
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -131,7 +136,7 @@ PeaGroupDialog.propTypes = {
 PeaGroupDialog.defaultProps = {
   dialogTitle: 'Create Group',
   actionText: 'Create',
-  submitting: false,
+  loading: false,
   description: '',
   profilePhoto: undefined,
   onChangeCoverPhotoClicked: () => {},

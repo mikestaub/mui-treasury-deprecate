@@ -68,7 +68,6 @@ const PeaAccountProfile = ({
   onChangeProfilePhotosClicked,
   onAcceptFollowRequest,
   deleteProfile,
-  onCreateGroupClicked,
   onInvitePod,
   onInviteGroup,
   onInviteClicked,
@@ -399,25 +398,7 @@ const PeaAccountProfile = ({
           </Grid>
         </Box>
 
-        <Box minHeight={500} style={{ position: 'relative' }}>
-          {groupList}
-          <PeaIcon
-            icon={'add'}
-            bgColor={'lightPrimary'}
-            size={'big'}
-            inverted
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={onCreateGroupClicked}
-          />
-        </Box>
+        <Box minHeight={500}>{groupList}</Box>
       </PeaSwipeableTabs>
 
       <PeaInvitationDialog
@@ -486,7 +467,6 @@ PeaAccountProfile.propTypes = {
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
   onChangeProfilePhotosClicked: PropTypes.func.isRequired,
   deleteProfile: PropTypes.func,
-  onCreateGroupClicked: PropTypes.func,
   onFollow: PropTypes.func,
   onReport: PropTypes.func,
   onInvitePod: PropTypes.func.isRequired,
@@ -537,7 +517,6 @@ PeaAccountProfile.defaultProps = {
   onSubmit: () => {},
   setEditing: () => {},
   deleteProfile: () => {},
-  onCreateGroupClicked: () => {},
   onFollow: () => {},
   onReport: () => {},
   invitingIds: {},

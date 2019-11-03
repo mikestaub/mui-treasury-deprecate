@@ -11,6 +11,9 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
+      maxWidth: 500,
+      marginLeft: 'auto',
+      marginRight: 'auto',
       '&.PeaEventCardSmall-root': {
         transition: '0.3s',
         margin: 'auto',
@@ -60,9 +63,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       },
       '&.PeaEventCard-root': {
         transition: '0.3s',
-        margin: 'auto',
         minWidth: 375,
-        maxWidth: 500,
         // boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)',
         // '&:hover': {
         //   boxShadow: '0 16px 70px -12.125px rgba(0,0,0,0.3)',
@@ -471,7 +472,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
             marginLeft: -16,
             marginRight: -16,
             width: 'auto',
-            minWidth: 500,
           },
         },
         '& .MuiNoItems-root': {

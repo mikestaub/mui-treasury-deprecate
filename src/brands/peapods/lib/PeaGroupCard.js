@@ -29,6 +29,7 @@ const PeaGroupCard = ({
   onReport,
   onMessage,
   actionText,
+  hasBorderRadius,
   children,
 }) => {
   const [anchorEl, setAnchor] = useState(null);
@@ -116,7 +117,11 @@ const PeaGroupCard = ({
   );
 
   return (
-    <Card className={'PeaProfileCard-root'}>
+    <Card
+      className={
+        hasBorderRadius ? 'PeaGroupProfile-root' : 'PeaProfileCard-root'
+      }
+    >
       <CardMedia className={'MuiCardMedia-root'} image={image} />
 
       <CardContent className={'MuiCardContent-root'}>
@@ -197,6 +202,8 @@ PeaGroupCard.propTypes = {
   isLoading: PropTypes.bool,
   onJoin: PropTypes.func,
   onLeave: PropTypes.func,
+  children: PropTypes.node,
+  hasBorderRadius: PropTypes.bool,
 };
 
 PeaGroupCard.defaultProps = {
@@ -207,6 +214,8 @@ PeaGroupCard.defaultProps = {
   actionText: 'Join',
   isMember: false,
   isLoading: false,
+  children: undefined,
+  hasBorderRadius: false,
 };
 
 PeaGroupCard.metadata = {

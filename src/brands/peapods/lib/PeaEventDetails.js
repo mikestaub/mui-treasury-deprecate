@@ -192,7 +192,12 @@ const PeaEventDetails = ({
             <Grid container justify="space-between" alignItems="center">
               <Grid item>
                 <PeaText gutterBottom>
-                  <PeaIcon push={'right'} color={'secondary'} size={'small'}>
+                  <PeaIcon
+                    push={'right'}
+                    color={'secondary'}
+                    size={'small'}
+                    shape="square"
+                  >
                     fas fa-clock
                   </PeaIcon>
                   created {timeAgo}

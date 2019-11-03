@@ -14,7 +14,7 @@ export default ({ breakpoints, primary, secondary }) => ({
     root: {
       minHeight: 53,
       minWidth: 0,
-      [breakpoints.up('md')]: {
+      [breakpoints.up('sm')]: {
         minWidth: 0,
       },
       '&:hover': {

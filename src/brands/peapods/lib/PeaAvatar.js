@@ -94,7 +94,7 @@ PeaAvatar.propTypes = {
   isClickable: PropTypes.bool,
   className: PropTypes.string,
   more: PropTypes.number,
-  size: PropTypes.oneOf(['small', 'big', 'large', 'huge']),
+  size: PropTypes.oneOf(['tiny', 'small', 'big', 'large', 'huge']),
   alt: PropTypes.string,
   placeholderIcon: PropTypes.string,
 };

@@ -39,43 +39,51 @@ const PeaGroupProfile = ({
       {renderPodList()}
 
       <>
-        <PeaText color={'secondary'} gutterBottom>
-          <b>Description</b>
-        </PeaText>
-
         {description && (
-          <div className={cx('MuiTypography-root', 'MuiTypography-body1')}>
-            {typeof description === 'string' ? (
-              <PeaText>{description}</PeaText>
-            ) : (
-              React.Children.map(description, text => (
-                <div
-                  style={{
-                    marginBottom: 20,
-                  }}
-                >
-                  {text}
-                </div>
-              ))
+          <>
+            <PeaText color={'secondary'} gutterBottom>
+              <b>Description</b>
+            </PeaText>
+
+            {description && (
+              <div className={cx('MuiTypography-root', 'MuiTypography-body1')}>
+                {typeof description === 'string' ? (
+                  <PeaText>{description}</PeaText>
+                ) : (
+                  React.Children.map(description, text => (
+                    <div
+                      style={{
+                        marginBottom: 20,
+                      }}
+                    >
+                      {text}
+                    </div>
+                  ))
+                )}
+              </div>
             )}
-          </div>
+          </>
         )}
 
-        <PeaText color={'secondary'} gutterBottom>
-          <b>Tags</b>
-        </PeaText>
+        {tags.length > 0 && (
+          <>
+            <PeaText color={'secondary'} gutterBottom>
+              <b>Tags</b>
+            </PeaText>
 
-        <Grid container wrap="wrap" spacing={1}>
-          {tags.map(tag => (
-            <Grid item key={tag}>
-              <PeaTag
-                color={'secondary'}
-                label={`#${tag}`}
-                onClick={() => {}}
-              />
+            <Grid container wrap="wrap" spacing={1}>
+              {tags.map(tag => (
+                <Grid item key={tag}>
+                  <PeaTag
+                    color={'secondary'}
+                    label={`#${tag}`}
+                    onClick={() => {}}
+                  />
+                </Grid>
+              ))}
             </Grid>
-          ))}
-        </Grid>
+          </>
+        )}
 
         {renderConnections()}
       </>

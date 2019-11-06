@@ -24,6 +24,7 @@ import peaTypography from './components/peaTypography';
 import peaTooltip from './components/peaTooltip';
 import peaFab from './components/peaFab';
 import peaBackdrop from './components/peaBackdrop';
+import peaGrid from './components/peaGrid';
 
 const theme = {
   typography: {
@@ -67,6 +68,7 @@ const theme = {
     ...peaTooltip(variables),
     ...peaFab(variables),
     ...peaBackdrop(variables),
+    ...peaGrid(variables),
   },
 };
 

@@ -1,7 +1,9 @@
 /* eslint-disable react/forbid-prop-types */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { pickBy } from 'lodash';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -12,19 +14,48 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
+import Popover from '@material-ui/core/Popover';
+import Paper from '@material-ui/core/Paper';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
 import PeaStatistic from './PeaStatistic';
 import PeaText from './PeaTypography';
-import PeaSocialAvatar from './PeaSocialAvatar';
 import PeaTag from './PeaTag';
 import PeaProfileEditor from './PeaProfileEditor';
 import PeaUserSettings from './PeaUserSettings';
 import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
+import PeaCategoryToggle from './PeaCategoryToggle';
+
+const useStyles = makeStyles(theme => ({
+  followPopover: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: theme.spacing(2),
+  },
+  followGroupContainer: {
+    display: 'flex',
+    minWidth: 400,
+    maxWidth: 400,
+    maxHeight: 250,
+    overflowY: 'scroll',
+    marginBottom: theme.spacing(2),
+  },
+  followGroupItem: {
+    width: '100%',
+  },
+  followButton: {
+    width: 160,
+  },
+  createGroupButton: {
+    width: 200,
+  },
+}));
 
 const PeaAccountProfile = ({
   isCurrentUser,
@@ -40,9 +71,9 @@ const PeaAccountProfile = ({
   birthday,
   age,
   gender,
-  groups,
   pods,
-  groupsOfCurrentUser,
+  invitableGroups,
+  followableGroups,
   tags,
   podsCount,
   reputation,
@@ -71,29 +102,76 @@ const PeaAccountProfile = ({
   onInvitePod,
   onInviteGroup,
   onInviteClicked,
+  onCreateGroupClicked,
   onFollow,
   onReport,
   isMobile,
   activeTabIndex,
   onTabChange,
 }) => {
+  const classes = useStyles();
+
   const [anchorEl, setAnchor] = useState(null);
+  const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
   const [openInviteDialog, setOpenInviteDialog] = useState(false);
-  const open = Boolean(anchorEl);
+  const [followDisabled, setFollowDisabled] = useState(true);
+  const [checkedFollowGroup, setCheckedFollowGroup] = useState({});
+  const [followButtonText, setFollowButtonText] = useState('Follow');
 
-  const followBtnDisabled =
-    followLoading || currentUserFollowing === 'PENDING_APPROVAL';
-  let followBtnText = 'Follow';
-  if (currentUserFollowing === 'PENDING_APPROVAL') {
-    followBtnText = 'Follow Requested';
-  }
-  if (currentUserFollowing === 'FOLLOWING') {
-    followBtnText = 'Unfollow';
-  }
+  const open = Boolean(anchorEl);
+  const openFollowPopover = Boolean(followAnchorEl);
+  const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
+  const followBtnDisabled = followLoading;
 
   const isFollower = followerState === 'FOLLOWING';
   const followerRequested = followerState === 'PENDING_APPROVAL';
+
+  const updateFollowButtonText = useCallback(() => {
+    let value = currentUserFollowing === 'FOLLOWING' ? 'Unfollow' : 'Follow';
+
+    if (currentUserFollowing === 'PENDING_APPROVAL') {
+      value = 'Follow Requested';
+    }
+
+    setFollowButtonText(value);
+  }, [setFollowButtonText, currentUserFollowing]);
+
+  const updateFollowDisabled = useCallback(() => {
+    let value = true;
+
+    if (currentUserFollowing === 'PENDING_APPROVAL') {
+      value = false;
+    }
+
+    setFollowDisabled(value);
+  }, [currentUserFollowing]);
+
+  useEffect(updateFollowButtonText, [currentUserFollowing]);
+  useEffect(updateFollowDisabled, [currentUserFollowing, followAnchorEl]);
+
+  const toggleFollowButtonText = useCallback(() => {
+    if (!currentUserFollowing || followAnchorEl) {
+      return;
+    }
+
+    if (currentUserFollowing === 'FOLLOWING') {
+      setFollowButtonText(
+        followButtonText === 'Follow' ? 'Unfollow' : 'Follow',
+      );
+    } else {
+      setFollowButtonText(
+        followButtonText === 'Follow Requested'
+          ? 'Delete Request'
+          : 'Follow Requested',
+      );
+    }
+  }, [
+    setFollowButtonText,
+    currentUserFollowing,
+    followButtonText,
+    followAnchorEl,
+  ]);
 
   const onReportClick = () => {
     setAnchor(null);
@@ -105,6 +183,33 @@ const PeaAccountProfile = ({
       onInviteClicked();
     }
     setOpenInviteDialog(true);
+  };
+
+  const onFollowBtnClick = event => {
+    setFollowAnchorEl(event.currentTarget);
+  };
+
+  const onFollowPopClose = () => {
+    setCheckedFollowGroup({});
+    setFollowAnchorEl(null);
+  };
+
+  const onFollowGroupChange = id => () => {
+    const followGroups = {
+      ...checkedFollowGroup,
+      [id]: !checkedFollowGroup[id],
+    };
+    setCheckedFollowGroup(followGroups);
+    const hasOneChecked = !!Object.keys(pickBy(followGroups)).length;
+    setFollowDisabled(!hasOneChecked);
+  };
+
+  const onFollowByGroupIds = async () => {
+    const groupIds = Object.keys(checkedFollowGroup).filter(
+      key => checkedFollowGroup[key],
+    );
+    await onFollow(groupIds);
+    onFollowPopClose();
   };
 
   if (editing) {
@@ -239,16 +344,85 @@ const PeaAccountProfile = ({
                   />
                 </>
               ) : (
-                <PeaButton
-                  variant={'contained'}
-                  color={'primary'}
-                  size={'small'}
-                  disabled={followBtnDisabled}
-                  loading={followLoading}
-                  onClick={onFollow}
-                >
-                  {followBtnText}
-                </PeaButton>
+                <>
+                  <PeaButton
+                    className={classes.followButton}
+                    variant={'contained'}
+                    color={'primary'}
+                    size={'small'}
+                    disabled={followBtnDisabled}
+                    loading={followLoading}
+                    onClick={onFollowBtnClick}
+                    onMouseOver={toggleFollowButtonText}
+                    onMouseOut={toggleFollowButtonText}
+                    onFocus={toggleFollowButtonText}
+                    onBlur={toggleFollowButtonText}
+                  >
+                    {followButtonText}
+                  </PeaButton>
+
+                  <Popover
+                    id={followAriaId}
+                    open={openFollowPopover}
+                    anchorEl={followAnchorEl}
+                    onClose={onFollowPopClose}
+                  >
+                    <Paper className={classes.followPopover}>
+                      {followButtonText === 'Follow' &&
+                        !!followableGroups.length && (
+                          <Grid
+                            container
+                            spacing={1}
+                            className={classes.followGroupContainer}
+                          >
+                            {followableGroups.map(
+                              ({ id, name: groupName, profilePhoto }) => (
+                                <Grid item key={id} xs={12}>
+                                  <PeaCategoryToggle
+                                    isHorizontal
+                                    label={groupName}
+                                    src={profilePhoto}
+                                    checked={checkedFollowGroup[id]}
+                                    onChange={onFollowGroupChange(id)}
+                                  />
+                                </Grid>
+                              ),
+                            )}
+                          </Grid>
+                        )}
+
+                      <Grid container spacing={2} justify="center">
+                        {!followableGroups.length && (
+                          <Grid item>
+                            <PeaButton
+                              className={classes.createGroupButton}
+                              variant={'contained'}
+                              color={'primary'}
+                              size={'small'}
+                              onClick={onCreateGroupClicked}
+                            >
+                              Create Personal Group
+                            </PeaButton>
+                          </Grid>
+                        )}
+
+                        <Grid item>
+                          <PeaButton
+                            className={classes.followButton}
+                            disabled={followDisabled}
+                            variant={'contained'}
+                            color={'primary'}
+                            size={'small'}
+                            loading={followLoading}
+                            onClick={onFollowByGroupIds}
+                          >
+                            {followButtonText}
+                          </PeaButton>
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Popover>
+                </>
               )}
             </Grid>
 
@@ -373,13 +547,6 @@ const PeaAccountProfile = ({
             <b>Groups</b>
           </PeaText>
           <PeaText gutterBottom />
-          <Grid container spacing={2}>
-            {groupsOfCurrentUser.map(item => (
-              <Grid item key={item.id}>
-                <PeaSocialAvatar {...item} />
-              </Grid>
-            ))}
-          </Grid>
           <br />
           <PeaText link underline={'none'} gutterBottom>
             <b>Tags</b>
@@ -404,7 +571,7 @@ const PeaAccountProfile = ({
       <PeaInvitationDialog
         person={userName}
         pods={pods}
-        groups={groups}
+        groups={invitableGroups}
         loading={loadingInvitableList}
         onInvitePod={onInvitePod}
         onInviteGroup={onInviteGroup}
@@ -434,13 +601,8 @@ PeaAccountProfile.propTypes = {
       id: PropTypes.string,
     }),
   ),
-  groups: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      src: PropTypes.string,
-    }),
-  ),
-  groupsOfCurrentUser: PropTypes.arrayOf(PropTypes.shape({})),
+  invitableGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  followableGroups: PropTypes.arrayOf(PropTypes.shape({})),
   tags: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
@@ -471,6 +633,7 @@ PeaAccountProfile.propTypes = {
   onReport: PropTypes.func,
   onInvitePod: PropTypes.func.isRequired,
   onInviteGroup: PropTypes.func.isRequired,
+  onCreateGroupClicked: PropTypes.func.isRequired,
   onInviteClicked: PropTypes.func.isRequired,
   onAcceptFollowRequest: PropTypes.func.isRequired,
   invitingIds: PropTypes.object,
@@ -494,10 +657,10 @@ PeaAccountProfile.defaultProps = {
   birthday: undefined,
   age: undefined,
   gender: undefined,
-  groups: [],
   eventList: [],
   pods: [],
-  groupsOfCurrentUser: [],
+  invitableGroups: [],
+  followableGroups: [],
   tags: [],
   reputation: 0,
   podsCount: 0,

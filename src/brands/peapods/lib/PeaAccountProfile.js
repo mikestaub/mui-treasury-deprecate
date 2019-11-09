@@ -22,7 +22,6 @@ import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
 import PeaStatistic from './PeaStatistic';
 import PeaText from './PeaTypography';
-import PeaSocialAvatar from './PeaSocialAvatar';
 import PeaTag from './PeaTag';
 import PeaProfileEditor from './PeaProfileEditor';
 import PeaUserSettings from './PeaUserSettings';
@@ -71,7 +70,6 @@ const PeaAccountProfile = ({
   birthday,
   age,
   gender,
-  groups,
   pods,
   invitableGroups,
   followableGroups,
@@ -547,13 +545,6 @@ const PeaAccountProfile = ({
             <b>Groups</b>
           </PeaText>
           <PeaText gutterBottom />
-          <Grid container spacing={2}>
-            {groups.map(item => (
-              <Grid item key={item.id}>
-                <PeaSocialAvatar {...item} />
-              </Grid>
-            ))}
-          </Grid>
           <br />
           <PeaText link underline={'none'} gutterBottom>
             <b>Tags</b>
@@ -608,7 +599,6 @@ PeaAccountProfile.propTypes = {
       id: PropTypes.string,
     }),
   ),
-  groups: PropTypes.arrayOf(PropTypes.shape({})),
   invitableGroups: PropTypes.arrayOf(PropTypes.shape({})),
   followableGroups: PropTypes.arrayOf(PropTypes.shape({})),
   tags: PropTypes.arrayOf(
@@ -665,7 +655,6 @@ PeaAccountProfile.defaultProps = {
   birthday: undefined,
   age: undefined,
   gender: undefined,
-  groups: [],
   eventList: [],
   pods: [],
   invitableGroups: [],

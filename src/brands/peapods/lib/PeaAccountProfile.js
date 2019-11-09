@@ -1,7 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
 
-import Tab from '@material-ui/core/Tab/Tab';
-import Tabs from '@material-ui/core/Tabs/Tabs';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
@@ -29,25 +27,7 @@ import PeaProfileEditor from './PeaProfileEditor';
 import PeaUserSettings from './PeaUserSettings';
 import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
-import PeaCategoryToggle from './PeaCategoryToggle';
-
-const useStyles = makeStyles(theme => ({
-  followPopover: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-  },
-  followGroupContainer: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    maxWidth: 325,
-    marginBottom: theme.spacing(1),
-  },
-}));
-
-// TODO: refactor this to use PeaSwipeableTabs
+import PeaSwipeableTabs from './PeaSwipeableTabs';
 
 const PeaAccountProfile = ({
   isCurrentUser,
@@ -73,6 +53,7 @@ const PeaAccountProfile = ({
   followersCount,
   followingCount,
   isPrivate,
+  eventList,
   groupList,
   podList,
   onSubmit,
@@ -91,16 +72,15 @@ const PeaAccountProfile = ({
   onChangeProfilePhotosClicked,
   onAcceptFollowRequest,
   deleteProfile,
-  onCreateGroupClicked,
   onInvitePod,
   onInviteGroup,
   onInviteClicked,
   onFollow,
   onReport,
+  isMobile,
+  activeTabIndex,
+  onTabChange,
 }) => {
-  const classes = useStyles();
-
-  const [index, onChange] = useState(0);
   const [anchorEl, setAnchor] = useState(null);
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
@@ -429,21 +409,21 @@ const PeaAccountProfile = ({
         </Grid>
       </CardContent>
 
-      <Tabs
-        className={'MuiTabs-root'}
-        variant={'fullWidth'}
-        centered
-        value={index}
-        onChange={(e, val) => onChange(val)}
+      <PeaSwipeableTabs
+        activeIndex={activeTabIndex}
+        tabs={[
+          { label: 'Hosting' },
+          { label: 'Pods' },
+          { label: 'About' },
+          { label: 'Groups' },
+        ]}
+        enableFeedback={isMobile}
+        onTabChange={onTabChange}
       >
-        <Tab label="Pods" disableRipple />
-        <Tab label="About" disableRipple />
-        <Tab label="Groups" disableRipple />
-      </Tabs>
+        <Box minHeight={500}>{eventList}</Box>
 
-      {index === 0 && <Box minHeight={500}>{podList}</Box>}
+        <Box minHeight={500}>{podList}</Box>
 
-      {index === 1 && (
         <Box p={2} textAlign={'left'}>
           <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
             About
@@ -488,29 +468,9 @@ const PeaAccountProfile = ({
             ))}
           </Grid>
         </Box>
-      )}
 
-      {index === 2 && (
-        <Box minHeight={500} style={{ position: 'relative' }}>
-          {groupList}
-          <PeaIcon
-            icon={'add'}
-            bgColor={'lightPrimary'}
-            size={'big'}
-            inverted
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={onCreateGroupClicked}
-          />
-        </Box>
-      )}
+        <Box minHeight={500}>{groupList}</Box>
+      </PeaSwipeableTabs>
 
       <PeaInvitationDialog
         person={userName}
@@ -574,7 +534,6 @@ PeaAccountProfile.propTypes = {
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
   onChangeProfilePhotosClicked: PropTypes.func.isRequired,
   deleteProfile: PropTypes.func,
-  onCreateGroupClicked: PropTypes.func,
   onFollow: PropTypes.func,
   onReport: PropTypes.func,
   onInvitePod: PropTypes.func.isRequired,
@@ -585,9 +544,15 @@ PeaAccountProfile.propTypes = {
   invitedIds: PropTypes.object,
   followerState: PropTypes.string,
   acceptFollowLoading: PropTypes.bool,
+  isMobile: PropTypes.bool,
+  activeTabIndex: PropTypes.number,
+  onTabChange: PropTypes.func.isRequired,
+  eventList: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 PeaAccountProfile.defaultProps = {
+  isMobile: true,
+  activeTabIndex: 0,
   loadingInvitableList: false,
   userName: '',
   bio: '',
@@ -597,6 +562,7 @@ PeaAccountProfile.defaultProps = {
   age: undefined,
   gender: undefined,
   groups: [],
+  eventList: [],
   pods: [],
   invitableGroups: [],
   followableGroups: [],
@@ -619,7 +585,6 @@ PeaAccountProfile.defaultProps = {
   onSubmit: () => {},
   setEditing: () => {},
   deleteProfile: () => {},
-  onCreateGroupClicked: () => {},
   onFollow: () => {},
   onReport: () => {},
   invitingIds: {},

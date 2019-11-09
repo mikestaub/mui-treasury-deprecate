@@ -34,7 +34,11 @@ const renderAboutDetails = ({
   {
     key: '0',
     icon: (
-      <img alt="event-host" src={profile.image} style={{ height: '100%' }} />
+      <img
+        alt="event-host"
+        src={profile.image}
+        style={{ width: '100%', height: '100%' }}
+      />
     ),
     renderText: () => (
       <span>
@@ -97,6 +101,7 @@ const PeaEventDetails = ({
   stats,
   isPodMember,
   onCreatePodClicked,
+  onEditEventClicked,
   renderPods,
   renderConnections,
   isMobile,
@@ -126,6 +131,11 @@ const PeaEventDetails = ({
     setAnchor(null);
   };
 
+  const editEvent = () => {
+    setAnchor(null);
+    onEditEventClicked();
+  };
+
   const renderMenu = () => (
     <Menu
       id="long-menu"
@@ -153,6 +163,16 @@ const PeaEventDetails = ({
           </PeaText>
         </ListItemText>
       </MenuItem>
+
+      {onEditEventClicked && (
+        <MenuItem onClick={() => editEvent()}>
+          <ListItemText disableTypography>
+            <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
+              Edit Event
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -172,7 +192,12 @@ const PeaEventDetails = ({
             <Grid container justify="space-between" alignItems="center">
               <Grid item>
                 <PeaText gutterBottom>
-                  <PeaIcon push={'right'} color={'secondary'} size={'small'}>
+                  <PeaIcon
+                    push={'right'}
+                    color={'secondary'}
+                    size={'small'}
+                    shape="square"
+                  >
                     fas fa-clock
                   </PeaIcon>
                   created {timeAgo}
@@ -223,9 +248,10 @@ const PeaEventDetails = ({
         {renderPods()}
 
         <>
-          <PeaText color={'secondary'}>
+          <PeaText color={'secondary'} gutterBottom>
             <b>Details</b>
           </PeaText>
+
           <Grid container direction="row">
             <Grid container direction="column">
               {renderAboutDetails({
@@ -234,9 +260,9 @@ const PeaEventDetails = ({
                 mapOrigin,
                 location,
                 podCount,
-                attendingCount: stats.attending,
-                interestedCount: stats.interested,
-                limit: stats.limit,
+                attendingCount: stats ? stats.attending : null,
+                interestedCount: stats ? stats.interested : null,
+                limit: stats ? stats.limit : null,
               }).map(item => (
                 <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
                   <Grid item>
@@ -272,7 +298,7 @@ const PeaEventDetails = ({
             </Grid>
           </Grid>
 
-          <PeaText color={'secondary'}>
+          <PeaText color={'secondary'} gutterBottom>
             <b>Description</b>
           </PeaText>
 
@@ -294,9 +320,10 @@ const PeaEventDetails = ({
             </div>
           )}
 
-          <PeaText color={'secondary'}>
+          <PeaText color={'secondary'} gutterBottom>
             <b>Tags</b>
           </PeaText>
+
           <PeaText gutterBottom />
           <Grid container wrap="wrap" spacing={1}>
             {tags.map(tag => (
@@ -333,6 +360,7 @@ PeaEventDetails.propTypes = {
   sourceImage: PropTypes.string,
   sourceLink: PropTypes.string,
   onCreatePodClicked: PropTypes.func.isRequired,
+  onEditEventClicked: PropTypes.func,
   renderConnections: PropTypes.func.isRequired,
   renderPods: PropTypes.func.isRequired,
   podCount: PropTypes.number,
@@ -358,6 +386,7 @@ PeaEventDetails.defaultProps = {
   sourceLink: undefined,
   isMobile: true,
   onChangeTab: undefined,
+  onEditEventClicked: undefined,
   isLoading: false,
   onReport: () => {},
 };

@@ -4,38 +4,48 @@ import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
+import { startCase } from 'lodash';
+import humanFormat from 'human-format';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
-import PeaAvatar from './PeaAvatar';
-import PeaStatistic from './PeaStatistic';
 import PeaText from './PeaTypography';
 
 const PeaGroupCard = ({
-  cover,
+  isMember,
+  isLoading,
+  name,
+  memberCount,
   image,
   type,
-  tag,
-  AvatarProps,
+  onJoin,
+  onLeave,
   onEdit,
   onDelete,
   onReport,
+  onMessage,
+  actionText,
+  hasBorderRadius,
+  children,
 }) => {
-  const [joined, setJoined] = useState(false);
+  const [anchorEl, setAnchor] = useState(null);
+  const open = Boolean(anchorEl);
+
   const joinButtonProps = {
     size: 'small',
     style: { marginLeft: 8, minWidth: 120 },
-    onClick: () => setJoined(!joined),
+    onClick: () => (isMember ? onLeave() : onJoin()),
   };
 
-  const [anchorEl, setAnchor] = useState(null);
-  const open = Boolean(anchorEl);
+  const iconByType = {
+    PERSONAL: 'fas fa-user',
+    EXCLUSIVE: 'fas fa-lock',
+    PUBLIC: 'fas fa-globe-americas',
+  };
 
   const onEditClicked = () => {
     setAnchor(null);
@@ -72,30 +82,34 @@ const PeaGroupCard = ({
         },
       }}
     >
-      <MenuItem onClick={onEditClicked}>
-        <ListItemText disableTypography>
-          <PeaText variant={'body1'} weight={'bold'}>
-            Edit {tag}
-          </PeaText>
-        </ListItemText>
-      </MenuItem>
+      {onEdit && (
+        <MenuItem onClick={onEditClicked}>
+          <ListItemText disableTypography>
+            <PeaText variant={'body1'} weight={'bold'}>
+              Edit
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
 
       <Divider variant={'middle'} />
 
-      <MenuItem onClick={onDeleteClicked}>
-        <ListItemText disableTypography>
-          <PeaText color={'error'} variant={'body1'} weight={'bold'}>
-            Delete {tag}
-          </PeaText>
-        </ListItemText>
-      </MenuItem>
+      {onDelete && (
+        <MenuItem onClick={onDeleteClicked}>
+          <ListItemText disableTypography>
+            <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+              Delete
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
 
       <Divider variant={'middle'} />
 
       <MenuItem onClick={onReportClicked}>
         <ListItemText disableTypography>
           <PeaText color={'error'} variant={'body1'} weight={'bold'}>
-            Report {tag}
+            Report
           </PeaText>
         </ListItemText>
       </MenuItem>
@@ -103,78 +117,111 @@ const PeaGroupCard = ({
   );
 
   return (
-    <Card className={'PeaProfileCard-root'}>
-      <CardMedia className={'MuiCardMedia-root'} image={cover}>
-        <PeaAvatar src={image} size={'large'} {...AvatarProps} />
-      </CardMedia>
+    <Card
+      className={
+        hasBorderRadius ? 'PeaGroupProfile-root' : 'PeaProfileCard-root'
+      }
+    >
+      <CardMedia className={'MuiCardMedia-root'} image={image} />
+
       <CardContent className={'MuiCardContent-root'}>
-        <div className={'PeaProfileCard-actions'}>
-          {joined ? (
-            <PeaButton
-              variant={'outlined'}
-              color={'danger'}
-              {...joinButtonProps}
-            >
-              Leave
-            </PeaButton>
-          ) : (
-            <PeaButton
-              variant={'contained'}
-              color={'primary'}
-              {...joinButtonProps}
-            >
-              Join
-            </PeaButton>
-          )}
-          <IconButton
-            className={'MuiIconButton--tiny'}
-            style={{ marginLeft: 8 }}
-            onClick={e => setAnchor(e.currentTarget)}
-          >
-            <PeaIcon>more_vert</PeaIcon>
-          </IconButton>
-          {renderMenu()}
-        </div>
-        <Typography className={'MuiTypography--heading'}>
-          {type.charAt(0) + type.slice(1).toLowerCase()} Group
-        </Typography>
-        <Typography className={'MuiTypography--subheading'}>{tag}</Typography>
-        <Grid container justify={'space-between'}>
-          <Grid item>
-            <PeaStatistic label={'Pods'} value={2} />
+        <Grid container direction="column">
+          <Grid item container alignItems={'center'} xs>
+            <PeaText variant={'h6'} weight={'bold'}>
+              {name}
+            </PeaText>
           </Grid>
+
           <Grid item>
-            <PeaStatistic label={'Following'} value={48} />
-          </Grid>
-          <Grid item>
-            <PeaStatistic label={'Followers'} value={5} />
+            <Grid container justify="space-between" alignItems="center">
+              <Grid item>
+                <PeaText>
+                  <PeaIcon push={'right'} color={'secondary'} size={'small'}>
+                    {iconByType[type]}
+                  </PeaIcon>
+                  {startCase(type.toLowerCase())}
+                </PeaText>
+                <PeaText>{`${humanFormat(memberCount, { decimals: 0 })} member${
+                  memberCount === 1 ? '' : 's'
+                }`}</PeaText>
+              </Grid>
+
+              <Grid item>
+                <PeaButton
+                  shape={'circular'}
+                  icon={'email'}
+                  size={'small'}
+                  onClick={onMessage}
+                >
+                  message
+                </PeaButton>
+
+                <PeaButton
+                  shape={'circular'}
+                  icon={'more_vert'}
+                  size={'small'}
+                  style={{ marginLeft: 8 }}
+                  onClick={e => setAnchor(e.currentTarget)}
+                />
+
+                {renderMenu()}
+
+                {type !== 'PERSONAL' && (
+                  <PeaButton
+                    variant={'contained'}
+                    color={isMember ? 'primary' : 'danger'}
+                    style={{ marginLeft: 8, minWidth: 120 }}
+                    loading={isLoading}
+                    {...joinButtonProps}
+                  >
+                    {actionText}
+                  </PeaButton>
+                )}
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
+
+        {children}
       </CardContent>
     </Card>
   );
 };
 
 PeaGroupCard.propTypes = {
+  name: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
-  cover: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
-  tag: PropTypes.string,
-  AvatarProps: PropTypes.shape({}),
+  memberCount: PropTypes.number.isRequired,
+  onReport: PropTypes.func.isRequired,
+  onMessage: PropTypes.func.isRequired,
   onEdit: PropTypes.func,
   onDelete: PropTypes.func,
-  onReport: PropTypes.func,
+  actionText: PropTypes.string,
+  isMember: PropTypes.bool,
+  isLoading: PropTypes.bool,
+  onJoin: PropTypes.func,
+  onLeave: PropTypes.func,
+  children: PropTypes.node,
+  hasBorderRadius: PropTypes.bool,
 };
+
 PeaGroupCard.defaultProps = {
-  tag: '',
-  AvatarProps: {},
-  onEdit: () => {},
-  onDelete: () => {},
-  onReport: () => {},
+  onEdit: undefined,
+  onDelete: undefined,
+  onJoin: undefined,
+  onLeave: undefined,
+  actionText: 'Join',
+  isMember: false,
+  isLoading: false,
+  children: undefined,
+  hasBorderRadius: false,
 };
+
 PeaGroupCard.metadata = {
-  name: 'Pea Profile Card',
+  name: 'Pea Group Card',
 };
+
 PeaGroupCard.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 export default PeaGroupCard;

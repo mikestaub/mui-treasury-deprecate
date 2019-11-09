@@ -7,6 +7,22 @@ export default ({ spacing, breakpoints, white, palette }) => ({
           marginTop: spacing(1),
         },
       },
+      '&.PeaEventDialog': {
+        '& .PeaEventForm-photoBtn': {
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '100%',
+          borderRadius: 6,
+          background: 'rgba(0,0,0,0.4)',
+          '& .material-icons': {
+            fontSize: 48,
+          },
+        },
+      },
       '&.PeaDialog': {
         '& .DialogTitle--contained + .DialogContent--root': {
           paddingTop: 24,
@@ -49,7 +65,7 @@ export default ({ spacing, breakpoints, white, palette }) => ({
           border: `2px dashed ${palette.secondary.main}`,
           borderRadius: 8,
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
           '&:hover': {
             cursor: 'pointer',

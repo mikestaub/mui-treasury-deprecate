@@ -7,6 +7,9 @@ export default ({ spacing }) => {
     MuiAvatar: {
       root: {
         backgroundColor: '#ffffff',
+        '&.MuiAvatar--tiny': {
+          ...createSize(3),
+        },
         '&.MuiAvatar--small': {
           ...createSize(4),
         },

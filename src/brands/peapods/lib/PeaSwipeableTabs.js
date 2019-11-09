@@ -98,8 +98,9 @@ const PeaSwipeableTabs = ({
               {React.Children.map(children, child => (
                 <div
                   style={{
-                    padding: 16,
+                    height: 'calc(100% - 32px)',
                     minHeight: 'calc(100% - 32px)',
+                    padding: 16,
                   }}
                 >
                   {child}

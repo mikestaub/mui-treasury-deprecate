@@ -7,6 +7,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
+import PageviewIcon from '@material-ui/icons/Pageview';
 
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
@@ -148,7 +149,7 @@ const PeaEventCard = ({
   return (
     <Card className={'PeaEventCard-root'} {...props}>
       <CardHeader
-        avatar={<PeaAvatar src={profile.image} />}
+        avatar={<PeaAvatar src={profile && profile.image} />}
         title={<b>{title}</b>}
         subheader={subTitle}
         action={
@@ -278,7 +279,7 @@ PeaEventCard.propTypes = {
     name: PropTypes.string,
     image: PropTypes.string,
     link: PropTypes.string,
-  }).isRequired,
+  }),
   social: PropTypes.string,
   socialLink: PropTypes.string,
   shareText: PropTypes.string.isRequired,
@@ -313,6 +314,7 @@ PeaEventCard.defaultProps = {
   createPodText: 'Create Pod',
   isLoading: false,
   stats: undefined,
+  profile: undefined,
 };
 
 PeaEventCard.metadata = {

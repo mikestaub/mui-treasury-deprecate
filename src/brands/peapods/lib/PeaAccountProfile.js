@@ -388,6 +388,23 @@ const PeaAccountProfile = ({
                                 </Grid>
                               ),
                             )}
+                            <Grid item xs={12}>
+                              <Grid
+                                container
+                                alignItems="center"
+                                justify="center"
+                              >
+                                <PeaButton
+                                  className={classes.createGroupButton}
+                                  variant={'contained'}
+                                  color={'primary'}
+                                  size={'small'}
+                                  onClick={onCreateGroupClicked}
+                                >
+                                  Create Personal Group
+                                </PeaButton>
+                              </Grid>
+                            </Grid>
                           </Grid>
                         )}
 

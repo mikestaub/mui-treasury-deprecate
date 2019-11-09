@@ -40,6 +40,7 @@ const useStyles = makeStyles(theme => ({
   },
   followGroupContainer: {
     display: 'flex',
+    minWidth: 400,
     maxWidth: 400,
     maxHeight: 250,
     overflowY: 'scroll',
@@ -147,10 +148,10 @@ const PeaAccountProfile = ({
   }, [currentUserFollowing]);
 
   useEffect(updateFollowButtonText, [currentUserFollowing]);
-  useEffect(updateFollowDisabled, [currentUserFollowing, openFollowPopover]);
+  useEffect(updateFollowDisabled, [currentUserFollowing, followAnchorEl]);
 
   const toggleFollowButtonText = useCallback(() => {
-    if (!currentUserFollowing || openFollowPopover) {
+    if (!currentUserFollowing || followAnchorEl) {
       return;
     }
 
@@ -169,7 +170,7 @@ const PeaAccountProfile = ({
     setFollowButtonText,
     currentUserFollowing,
     followButtonText,
-    openFollowPopover,
+    followAnchorEl,
   ]);
 
   const onReportClick = () => {
@@ -407,6 +408,7 @@ const PeaAccountProfile = ({
 
                         <Grid item>
                           <PeaButton
+                            className={classes.followButton}
                             disabled={followDisabled}
                             variant={'contained'}
                             color={'primary'}

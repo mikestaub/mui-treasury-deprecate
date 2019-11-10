@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { pickBy } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -15,7 +14,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
-import Paper from '@material-ui/core/Paper';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
@@ -28,32 +26,11 @@ import PeaUserSettings from './PeaUserSettings';
 import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
-import PeaCategoryToggle from './PeaCategoryToggle';
+import PeaGroupSelector from './PeaGroupSelector';
 
-const useStyles = makeStyles(theme => ({
-  followPopover: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: theme.spacing(2),
-  },
-  followGroupContainer: {
-    display: 'flex',
-    minWidth: 400,
-    maxWidth: 400,
-    maxHeight: 250,
-    overflowY: 'scroll',
-    marginBottom: theme.spacing(2),
-  },
-  followGroupItem: {
-    width: '100%',
-  },
+const useStyles = makeStyles(() => ({
   followButton: {
     width: 160,
-  },
-  createGroupButton: {
-    width: 200,
   },
 }));
 
@@ -115,8 +92,6 @@ const PeaAccountProfile = ({
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
   const [openInviteDialog, setOpenInviteDialog] = useState(false);
-  const [followDisabled, setFollowDisabled] = useState(true);
-  const [checkedFollowGroup, setCheckedFollowGroup] = useState({});
   const [followButtonText, setFollowButtonText] = useState('Follow');
 
   const open = Boolean(anchorEl);
@@ -137,18 +112,7 @@ const PeaAccountProfile = ({
     setFollowButtonText(value);
   }, [setFollowButtonText, currentUserFollowing]);
 
-  const updateFollowDisabled = useCallback(() => {
-    let value = true;
-
-    if (currentUserFollowing === 'PENDING_APPROVAL') {
-      value = false;
-    }
-
-    setFollowDisabled(value);
-  }, [currentUserFollowing]);
-
   useEffect(updateFollowButtonText, [currentUserFollowing]);
-  useEffect(updateFollowDisabled, [currentUserFollowing, followAnchorEl]);
 
   const toggleFollowButtonText = useCallback(() => {
     if (!currentUserFollowing || followAnchorEl) {
@@ -190,24 +154,10 @@ const PeaAccountProfile = ({
   };
 
   const onFollowPopClose = () => {
-    setCheckedFollowGroup({});
     setFollowAnchorEl(null);
   };
 
-  const onFollowGroupChange = id => () => {
-    const followGroups = {
-      ...checkedFollowGroup,
-      [id]: !checkedFollowGroup[id],
-    };
-    setCheckedFollowGroup(followGroups);
-    const hasOneChecked = !!Object.keys(pickBy(followGroups)).length;
-    setFollowDisabled(!hasOneChecked);
-  };
-
-  const onFollowByGroupIds = async () => {
-    const groupIds = Object.keys(checkedFollowGroup).filter(
-      key => checkedFollowGroup[key],
-    );
+  const handleOnFollow = async groupIds => {
     await onFollow(groupIds);
     onFollowPopClose();
   };
@@ -367,77 +317,17 @@ const PeaAccountProfile = ({
                     anchorEl={followAnchorEl}
                     onClose={onFollowPopClose}
                   >
-                    <Paper className={classes.followPopover}>
-                      {followButtonText === 'Follow' &&
-                        !!followableGroups.length && (
-                          <Grid
-                            container
-                            spacing={1}
-                            className={classes.followGroupContainer}
-                          >
-                            {followableGroups.map(
-                              ({ id, name: groupName, profilePhoto }) => (
-                                <Grid item key={id} xs={12}>
-                                  <PeaCategoryToggle
-                                    isHorizontal
-                                    label={groupName}
-                                    src={profilePhoto}
-                                    checked={checkedFollowGroup[id]}
-                                    onChange={onFollowGroupChange(id)}
-                                  />
-                                </Grid>
-                              ),
-                            )}
-                            <Grid item xs={12}>
-                              <Grid
-                                container
-                                alignItems="center"
-                                justify="center"
-                              >
-                                <PeaButton
-                                  className={classes.createGroupButton}
-                                  variant={'contained'}
-                                  color={'primary'}
-                                  size={'small'}
-                                  onClick={onCreateGroupClicked}
-                                >
-                                  Create Personal Group
-                                </PeaButton>
-                              </Grid>
-                            </Grid>
-                          </Grid>
-                        )}
-
-                      <Grid container spacing={2} justify="center">
-                        {!followableGroups.length && (
-                          <Grid item>
-                            <PeaButton
-                              className={classes.createGroupButton}
-                              variant={'contained'}
-                              color={'primary'}
-                              size={'small'}
-                              onClick={onCreateGroupClicked}
-                            >
-                              Create Personal Group
-                            </PeaButton>
-                          </Grid>
-                        )}
-
-                        <Grid item>
-                          <PeaButton
-                            className={classes.followButton}
-                            disabled={followDisabled}
-                            variant={'contained'}
-                            color={'primary'}
-                            size={'small'}
-                            loading={followLoading}
-                            onClick={onFollowByGroupIds}
-                          >
-                            {followButtonText}
-                          </PeaButton>
-                        </Grid>
-                      </Grid>
-                    </Paper>
+                    <PeaGroupSelector
+                      followButtonText={followButtonText}
+                      followableGroups={
+                        followButtonText === 'Follow'
+                          ? followableGroups
+                          : undefined
+                      }
+                      followLoading={followLoading}
+                      onCreateGroupClicked={onCreateGroupClicked}
+                      onSubmit={handleOnFollow}
+                    />
                   </Popover>
                 </>
               )}

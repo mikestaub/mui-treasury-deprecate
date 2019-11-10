@@ -44,8 +44,6 @@ const PeaGroupSelector = ({
   const [followDisabled, setFollowDisabled] = useState(true);
   const [checkedFollowGroup, setCheckedFollowGroup] = useState({});
 
-  const isDeleteRequest = followButtonText === 'Delete Request';
-
   const onFollowGroupChange = id => () => {
     const followGroups = {
       ...checkedFollowGroup,
@@ -55,6 +53,15 @@ const PeaGroupSelector = ({
     const hasOneChecked = !!Object.keys(pickBy(followGroups)).length;
     setFollowDisabled(!hasOneChecked);
   };
+
+  useEffect(() => {
+    // TODO: this is brittle
+    const validValues = ['Delete Request', 'Unfollow'];
+
+    const value = !validValues.includes(followButtonText);
+
+    setFollowDisabled(value);
+  }, [followButtonText, setFollowDisabled]);
 
   const onFollowByGroupIds = async () => {
     const groupIds = Object.keys(checkedFollowGroup).filter(
@@ -97,7 +104,7 @@ const PeaGroupSelector = ({
       )}
 
       <Grid container spacing={2} justify="center">
-        {!followableGroups.length && !isDeleteRequest && (
+        {!followableGroups.length && followDisabled && (
           <Grid item>
             <PeaButton
               className={classes.createGroupButton}
@@ -114,7 +121,7 @@ const PeaGroupSelector = ({
         <Grid item>
           <PeaButton
             className={classes.followButton}
-            disabled={followDisabled && !isDeleteRequest}
+            disabled={followDisabled}
             variant={'contained'}
             color={'primary'}
             size={'small'}

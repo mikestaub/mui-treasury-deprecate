@@ -93,17 +93,17 @@ const PeaAccountProfile = ({
   const [delModalOpen, setDelModalOpen] = useState(false);
   const [openInviteDialog, setOpenInviteDialog] = useState(false);
   const [followButtonText, setFollowButtonText] = useState('Follow');
+  const [confirmText, setConfirmText] = useState('Follow');
 
   const open = Boolean(anchorEl);
-  const openFollowPopover = Boolean(followAnchorEl);
-  const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
+  const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
   const followBtnDisabled = followLoading;
 
   const isFollower = followerState === 'FOLLOWING';
   const followerRequested = followerState === 'PENDING_APPROVAL';
 
   const updateFollowButtonText = useCallback(() => {
-    let value = currentUserFollowing === 'FOLLOWING' ? 'Unfollow' : 'Follow';
+    let value = currentUserFollowing === 'FOLLOWING' ? 'Following' : 'Follow';
 
     if (currentUserFollowing === 'PENDING_APPROVAL') {
       value = 'Follow Requested';
@@ -114,28 +114,26 @@ const PeaAccountProfile = ({
 
   useEffect(updateFollowButtonText, [currentUserFollowing]);
 
-  const toggleFollowButtonText = useCallback(() => {
-    if (!currentUserFollowing || followAnchorEl) {
+  const onMouseOver = () => {
+    if (!currentUserFollowing) {
+      setConfirmText('Follow');
       return;
     }
 
-    if (currentUserFollowing === 'FOLLOWING') {
-      setFollowButtonText(
-        followButtonText === 'Follow' ? 'Unfollow' : 'Follow',
-      );
+    const text =
+      currentUserFollowing === 'FOLLOWING' ? 'Unfollow' : 'Delete Request';
+
+    setFollowButtonText(text);
+    setConfirmText(text);
+  };
+
+  const onMouseOut = () => {
+    if (followAnchorEl) {
+      setTimeout(updateFollowButtonText, 200);
     } else {
-      setFollowButtonText(
-        followButtonText === 'Follow Requested'
-          ? 'Delete Request'
-          : 'Follow Requested',
-      );
+      updateFollowButtonText();
     }
-  }, [
-    setFollowButtonText,
-    currentUserFollowing,
-    followButtonText,
-    followAnchorEl,
-  ]);
+  };
 
   const onReportClick = () => {
     setAnchor(null);
@@ -303,22 +301,22 @@ const PeaAccountProfile = ({
                     disabled={followBtnDisabled}
                     loading={followLoading}
                     onClick={onFollowBtnClick}
-                    onMouseOver={toggleFollowButtonText}
-                    onMouseOut={toggleFollowButtonText}
-                    onFocus={toggleFollowButtonText}
-                    onBlur={toggleFollowButtonText}
+                    onMouseOver={onMouseOver}
+                    onMouseOut={onMouseOut}
+                    onFocus={() => {}}
+                    onBlur={() => {}}
                   >
                     {followButtonText}
                   </PeaButton>
 
                   <Popover
                     id={followAriaId}
-                    open={openFollowPopover}
+                    open={!!followAnchorEl}
                     anchorEl={followAnchorEl}
                     onClose={onFollowPopClose}
                   >
                     <PeaGroupSelector
-                      followButtonText={followButtonText}
+                      followButtonText={confirmText}
                       followableGroups={
                         followButtonText === 'Follow'
                           ? followableGroups

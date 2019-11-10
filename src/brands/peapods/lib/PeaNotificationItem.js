@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
+import Popover from '@material-ui/core/Popover';
+
 import PeaButton from './PeaButton';
 import PeaAvatar from './PeaAvatar';
 import PeaIcon from './PeaIcon';
 import Logo from './assets/peapods-logo-circle.svg';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
+import PeaGroupSelector from './PeaGroupSelector';
 
 const PeaNotificationItem = ({
   id,
@@ -22,8 +25,17 @@ const PeaNotificationItem = ({
   unread,
   actionLoading,
   onAction,
+  followableGroups,
+  onCreateGroupClicked,
+  needGroups,
 }) => {
   const count = Array.isArray(src) ? src.length : 0;
+
+  const [followAnchorEl, setFollowAnchorEl] = useState(null);
+
+  const openFollowPopover = Boolean(followAnchorEl);
+  const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
+
   const stickers = {
     follow: 'person',
     pea_request: 'pea',
@@ -34,6 +46,7 @@ const PeaNotificationItem = ({
     followed: 'added',
     group: 'person',
   };
+
   const renderSticker = () => {
     if (!stickers[type]) return null;
     if (stickers[type] === 'pea') {
@@ -46,6 +59,23 @@ const PeaNotificationItem = ({
         {stickers[type]}
       </PeaIcon>
     );
+  };
+
+  const onFollowBtnClick = actionId => event => {
+    if (needGroups) {
+      setFollowAnchorEl(event.currentTarget);
+    } else {
+      onAction({ id: actionId, type: 'accept' });
+    }
+  };
+
+  const onFollowPopClose = () => {
+    setFollowAnchorEl(null);
+  };
+
+  const handleOnFollow = actionId => async groupIds => {
+    await onAction({ id: actionId, type: 'accept', groupIds });
+    onFollowPopClose();
   };
 
   return (
@@ -107,7 +137,7 @@ const PeaNotificationItem = ({
               elongated={false}
               variant={'contained'}
               color={'primary'}
-              onClick={() => onAction({ id, type: 'accept' })}
+              onClick={onFollowBtnClick(id)}
               disabled={actionLoading[id] && actionLoading[id].accept}
             >
               {actionLoading[id] && actionLoading[id].accept ? (
@@ -116,6 +146,31 @@ const PeaNotificationItem = ({
                 'Accept'
               )}
             </PeaButton>
+
+            {needGroups && (
+              <Popover
+                id={followAriaId}
+                open={openFollowPopover}
+                anchorEl={followAnchorEl}
+                onClose={onFollowPopClose}
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+              >
+                <PeaGroupSelector
+                  followButtonText={'Accept'}
+                  followableGroups={followableGroups}
+                  followLoading={actionLoading[id] && actionLoading[id].accept}
+                  onCreateGroupClicked={onCreateGroupClicked}
+                  onSubmit={handleOnFollow(id)}
+                />
+              </Popover>
+            )}
           </Grid>
         </Grid>
       )}
@@ -149,16 +204,25 @@ PeaNotificationItem.propTypes = {
   unread: PropTypes.bool,
   actionLoading: PropTypes.shape({}),
   onAction: PropTypes.func,
+  followableGroups: PropTypes.arrayOf({}),
+  onCreateGroupClicked: PropTypes.func,
+  needGroups: PropTypes.bool,
 };
+
 PeaNotificationItem.defaultProps = {
   actions: false,
   unread: false,
   actionLoading: {},
   onAction: () => {},
+  onCreateGroupClicked: () => {},
+  followableGroups: [],
+  needGroups: false,
 };
+
 PeaNotificationItem.metadata = {
   name: 'Pea Notification Item',
 };
+
 PeaNotificationItem.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 export default PeaNotificationItem;

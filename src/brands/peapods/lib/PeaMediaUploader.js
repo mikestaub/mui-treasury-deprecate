@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Script from 'react-load-script';
 import PropTypes from 'prop-types';
+import Dialog from '@material-ui/core/Dialog';
 
 import theme from './theme';
 
@@ -45,6 +46,7 @@ const defaultConfig = {
       },
     },
   },
+  inlineContainer: '.cloudinary-peapods-uploader',
 };
 
 class MediaUploader extends Component {
@@ -182,4 +184,46 @@ MediaUploader.metadata = {
   name: 'Pea Media Uploader',
 };
 
-export default MediaUploader;
+const MediaUploaderWrapper = ({
+  isVisible,
+  onClose,
+  getConfig,
+  onWidgetEvent,
+  onScriptLoadFailed,
+}) => (
+  <Dialog
+    open={isVisible}
+    maxWidth="xl"
+    onBackdropClick={onClose}
+    onClose={onClose}
+  >
+    <div
+      className="cloudinary-peapods-uploader"
+      style={{
+        width: '80vw',
+        height: 500,
+      }}
+    />
+    <MediaUploader
+      isVisible={isVisible}
+      onClose={onClose}
+      getConfig={getConfig}
+      onWidgetEvent={onWidgetEvent}
+      onScriptLoadFailed={onScriptLoadFailed}
+    />
+  </Dialog>
+);
+
+MediaUploaderWrapper.propTypes = {
+  getConfig: PropTypes.func.isRequired,
+  onWidgetEvent: PropTypes.func.isRequired,
+  onScriptLoadFailed: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isVisible: PropTypes.bool,
+};
+
+MediaUploaderWrapper.defaultProps = {
+  isVisible: false,
+};
+
+export default MediaUploaderWrapper;

@@ -95,22 +95,28 @@ const PeaAccountProfile = ({
   const [followButtonText, setFollowButtonText] = useState('Follow');
   const [confirmText, setConfirmText] = useState('Follow');
 
-  const open = Boolean(anchorEl);
-  const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
-  const followBtnDisabled = followLoading;
-
   const isFollower = followerState === 'FOLLOWING';
   const followerRequested = followerState === 'PENDING_APPROVAL';
 
-  const updateFollowButtonText = useCallback(() => {
-    let value = currentUserFollowing === 'FOLLOWING' ? 'Following' : 'Follow';
+  const isFollowing = currentUserFollowing === 'FOLLOWING';
+  const followRequested = currentUserFollowing === 'PENDING_APPROVAL';
 
-    if (currentUserFollowing === 'PENDING_APPROVAL') {
+  const needsGroups = !isFollowing && !followRequested && !isFollower;
+
+  const open = Boolean(anchorEl);
+  const groupSelectorOpen = Boolean(followAnchorEl) && needsGroups;
+  const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
+  const followBtnDisabled = followLoading;
+
+  const updateFollowButtonText = useCallback(() => {
+    let value = isFollowing ? 'Following' : 'Follow';
+
+    if (followRequested) {
       value = 'Follow Requested';
     }
 
     setFollowButtonText(value);
-  }, [setFollowButtonText, currentUserFollowing]);
+  }, [setFollowButtonText, isFollowing, followRequested]);
 
   useEffect(updateFollowButtonText, [currentUserFollowing]);
 
@@ -147,10 +153,6 @@ const PeaAccountProfile = ({
     setOpenInviteDialog(true);
   };
 
-  const onFollowBtnClick = event => {
-    setFollowAnchorEl(event.currentTarget);
-  };
-
   const onFollowPopClose = () => {
     setFollowAnchorEl(null);
   };
@@ -158,6 +160,14 @@ const PeaAccountProfile = ({
   const handleOnFollow = async groupIds => {
     await onFollow(groupIds);
     onFollowPopClose();
+  };
+
+  const onFollowBtnClick = event => {
+    if (needsGroups) {
+      setFollowAnchorEl(event.currentTarget);
+    } else {
+      handleOnFollow({});
+    }
   };
 
   if (editing) {
@@ -311,7 +321,7 @@ const PeaAccountProfile = ({
 
                   <Popover
                     id={followAriaId}
-                    open={!!followAnchorEl}
+                    open={groupSelectorOpen}
                     anchorEl={followAnchorEl}
                     onClose={onFollowPopClose}
                   >

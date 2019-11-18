@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
@@ -28,13 +28,30 @@ const PeaNotificationItem = ({
   followableGroups,
   onCreateGroupClicked,
   needGroups,
+  isFollowing,
+  requestApproved,
 }) => {
   const count = Array.isArray(src) ? src.length : 0;
 
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
 
-  const openFollowPopover = Boolean(followAnchorEl);
+  const [openFollowPopover, setOpenFollowPopover] = useState(false);
+
+  useEffect(() => {
+    const state = followAnchorEl && needGroups;
+    // TODO: this is a gotcha when using Popover component
+    // if you set the open prop to true again it opens a 2nd popover
+    if (openFollowPopover !== state) {
+      setOpenFollowPopover(state);
+    }
+  }, [followAnchorEl, needGroups, setOpenFollowPopover, openFollowPopover]);
+
   const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
+
+  const requestDenied = !unread && !requestApproved;
+
+  const acceptText = requestApproved ? 'Approved' : 'Accept';
+  const denyText = requestDenied ? 'Denied' : 'Deny';
 
   const stickers = {
     follow: 'person',
@@ -62,19 +79,16 @@ const PeaNotificationItem = ({
   };
 
   const onFollowBtnClick = actionId => event => {
-    if (needGroups) {
-      setFollowAnchorEl(event.currentTarget);
-    } else {
-      onAction({ id: actionId, type: 'accept' });
-    }
+    setFollowAnchorEl(event.currentTarget);
+    onAction({ id: actionId, type: 'accept' });
   };
 
   const onFollowPopClose = () => {
     setFollowAnchorEl(null);
   };
 
-  const handleOnFollow = actionId => async groupIds => {
-    await onAction({ id: actionId, type: 'accept', groupIds });
+  const handleOnFollow = actionId => async ({ groupIds, followBack }) => {
+    await onAction({ id: actionId, type: 'accept', groupIds, followBack });
     onFollowPopClose();
   };
 
@@ -109,6 +123,7 @@ const PeaNotificationItem = ({
         }}
         secondary={time}
       />
+
       {actions && (
         <Grid
           container
@@ -122,15 +137,21 @@ const PeaNotificationItem = ({
               className={'PeaButton-ignore'}
               size={'small'}
               onClick={() => onAction({ id, type: 'deny' })}
-              disabled={actionLoading[id] && actionLoading[id].deny}
+              disabled={
+                // TODO: implement deleteFollower mutation
+                (actionLoading[id] && actionLoading[id].deny) ||
+                requestDenied ||
+                requestApproved
+              }
             >
               {actionLoading[id] && actionLoading[id].deny ? (
                 <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
               ) : (
-                'Deny'
+                <p>{denyText}</p>
               )}
             </PeaButton>
           </Grid>
+
           <Grid item>
             <PeaButton
               size={'small'}
@@ -138,42 +159,44 @@ const PeaNotificationItem = ({
               variant={'contained'}
               color={'primary'}
               onClick={onFollowBtnClick(id)}
-              disabled={actionLoading[id] && actionLoading[id].accept}
+              disabled={
+                (actionLoading[id] && actionLoading[id].accept) ||
+                requestApproved
+              }
             >
               {actionLoading[id] && actionLoading[id].accept ? (
                 <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
               ) : (
-                'Accept'
+                <p>{acceptText}</p>
               )}
             </PeaButton>
-
-            {needGroups && (
-              <Popover
-                id={followAriaId}
-                open={openFollowPopover}
-                anchorEl={followAnchorEl}
-                onClose={onFollowPopClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'center',
-                }}
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'center',
-                }}
-              >
-                <PeaGroupSelector
-                  followButtonText={'Accept'}
-                  followableGroups={followableGroups}
-                  followLoading={actionLoading[id] && actionLoading[id].accept}
-                  onCreateGroupClicked={onCreateGroupClicked}
-                  onSubmit={handleOnFollow(id)}
-                />
-              </Popover>
-            )}
           </Grid>
         </Grid>
       )}
+
+      <Popover
+        id={followAriaId}
+        open={openFollowPopover}
+        anchorEl={followAnchorEl}
+        onClose={onFollowPopClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <PeaGroupSelector
+          followButtonText={'Accept'}
+          followableGroups={followableGroups}
+          followLoading={actionLoading[id] && actionLoading[id].accept}
+          onCreateGroupClicked={onCreateGroupClicked}
+          onSubmit={handleOnFollow(id)}
+          showFollowBack={!isFollowing}
+        />
+      </Popover>
     </ListItem>
   );
 };
@@ -207,6 +230,8 @@ PeaNotificationItem.propTypes = {
   followableGroups: PropTypes.arrayOf({}),
   onCreateGroupClicked: PropTypes.func,
   needGroups: PropTypes.bool,
+  requestApproved: PropTypes.bool,
+  isFollowing: PropTypes.bool,
 };
 
 PeaNotificationItem.defaultProps = {
@@ -217,6 +242,8 @@ PeaNotificationItem.defaultProps = {
   onCreateGroupClicked: () => {},
   followableGroups: [],
   needGroups: false,
+  requestApproved: false,
+  isFollowing: false,
 };
 
 PeaNotificationItem.metadata = {
@@ -225,4 +252,4 @@ PeaNotificationItem.metadata = {
 
 PeaNotificationItem.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaNotificationItem;
+export default memo(PeaNotificationItem);

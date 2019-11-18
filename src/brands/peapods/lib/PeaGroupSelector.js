@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import PropTypes from 'prop-types';
 import { pickBy } from 'lodash';
 import { makeStyles } from '@material-ui/styles';
@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
     minWidth: 400,
     maxWidth: 400,
     maxHeight: 250,
-    overflowY: 'scroll',
+    overflowY: 'auto',
     marginBottom: theme.spacing(2),
   },
   followButton: {
@@ -38,6 +38,7 @@ const PeaGroupSelector = ({
   followLoading,
   onCreateGroupClicked,
   onSubmit,
+  showFollowBack,
 }) => {
   const classes = useStyles();
 
@@ -63,11 +64,11 @@ const PeaGroupSelector = ({
     setFollowDisabled(value);
   }, [followButtonText, setFollowDisabled]);
 
-  const onFollowByGroupIds = async () => {
+  const onFollowByGroupIds = followBack => async () => {
     const groupIds = Object.keys(checkedFollowGroup).filter(
       key => checkedFollowGroup[key],
     );
-    onSubmit(groupIds);
+    onSubmit({ groupIds, followBack });
   };
 
   useEffect(() => setCheckedFollowGroup({}), []);
@@ -87,6 +88,7 @@ const PeaGroupSelector = ({
               />
             </Grid>
           ))}
+
           <Grid item xs={12}>
             <Grid container alignItems="center" justify="center">
               <PeaButton
@@ -126,11 +128,27 @@ const PeaGroupSelector = ({
             color={'primary'}
             size={'small'}
             loading={followLoading}
-            onClick={onFollowByGroupIds}
+            onClick={onFollowByGroupIds(false)}
           >
             {followButtonText}
           </PeaButton>
         </Grid>
+
+        {showFollowBack && (
+          <Grid item>
+            <PeaButton
+              className={classes.followButton}
+              disabled={followDisabled}
+              variant={'contained'}
+              color={'primary'}
+              size={'small'}
+              loading={followLoading}
+              onClick={onFollowByGroupIds(true)}
+            >
+              Accept and Follow
+            </PeaButton>
+          </Grid>
+        )}
       </Grid>
     </Paper>
   );
@@ -142,6 +160,7 @@ PeaGroupSelector.propTypes = {
   followLoading: PropTypes.bool,
   onCreateGroupClicked: PropTypes.func,
   onSubmit: PropTypes.func,
+  showFollowBack: PropTypes.bool,
 };
 
 PeaGroupSelector.defaultProps = {
@@ -150,6 +169,7 @@ PeaGroupSelector.defaultProps = {
   followLoading: false,
   onCreateGroupClicked: () => {},
   onSubmit: () => {},
+  showFollowBack: false,
 };
 
-export default PeaGroupSelector;
+export default memo(PeaGroupSelector);

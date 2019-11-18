@@ -1,75 +1,95 @@
-import React from 'react';
+import React, { useState, useEffect, memo } from 'react';
 import cx from 'classnames';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
+import Popover from '@material-ui/core/Popover';
+
 import PeaButton from './PeaButton';
 import PeaAvatar from './PeaAvatar';
 import PeaIcon from './PeaIcon';
 import Logo from './assets/peapods-logo-circle.svg';
+import PeaLoadingSpinner from './PeaLoadingSpinner';
+import PeaGroupSelector from './PeaGroupSelector';
 
-const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
+const PeaNotificationItem = ({
+  id,
+  src,
+  name,
+  text,
+  time,
+  type,
+  actions,
+  unread,
+  actionLoading,
+  onAction,
+  followableGroups,
+  onCreateGroupClicked,
+  needGroups,
+  isFollowing,
+  requestApproved,
+}) => {
   const count = Array.isArray(src) ? src.length : 0;
-  const details = {
-    follow: {
-      sticker: 'person',
-      description: 'requested to follow you',
-      bgColor: 'secondary',
-    },
-    pea_request: {
-      sticker: 'pea',
-      description: 'has requested to join your pod for EVENT_NAME',
-      bgColor: '',
-    },
-    pea_invite: {
-      sticker: 'pea',
-      description: 'has invited you to pod Y',
-      bgColor: '',
-    },
-    cancel: {
-      sticker: 'clear',
-      description: 'has been canceled',
-      bgColor: 'danger',
-    },
-    accept: {
-      sticker: 'check',
-      description: 'has accepted your friend request',
-      bgColor: 'secondary',
-    },
-    left: {
-      sticker: 'remove',
-      description: 'has left your pod for EVENT_NAME',
-      bgColor: 'danger',
-    },
-    followed: {
-      sticker: 'added',
-      description: 'is now following you',
-      bgColor: 'secondary',
-    },
-    group: {
-      sticker: 'person',
-      description: `and ${count - 2} others requested to follow you`,
-      bgColor: 'secondary',
-    },
+
+  const [followAnchorEl, setFollowAnchorEl] = useState(null);
+
+  const [openFollowPopover, setOpenFollowPopover] = useState(false);
+
+  useEffect(() => {
+    const state = followAnchorEl && needGroups;
+    // TODO: this is a gotcha when using Popover component
+    // if you set the open prop to true again it opens a 2nd popover
+    if (openFollowPopover !== state) {
+      setOpenFollowPopover(state);
+    }
+  }, [followAnchorEl, needGroups, setOpenFollowPopover, openFollowPopover]);
+
+  const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
+
+  const requestDenied = !unread && !requestApproved;
+
+  const acceptText = requestApproved ? 'Approved' : 'Accept';
+  const denyText = requestDenied ? 'Denied' : 'Deny';
+
+  const stickers = {
+    follow: 'person',
+    pea_request: 'pea',
+    pea_invite: 'pea',
+    cancel: 'clear',
+    accept: 'check',
+    left: 'remove',
+    followed: 'added',
+    group: 'person',
   };
+
   const renderSticker = () => {
-    if (!details[type].sticker) return null;
-    if (details[type].sticker === 'pea') {
+    if (!stickers[type]) return null;
+    if (stickers[type] === 'pea') {
       return (
         <img src={Logo} alt="pea-invite" className={'MuiIcon-root -pea'} />
       );
     }
     return (
-      <PeaIcon
-        className={'-sticker'}
-        shape={'circular'}
-        bgColor={details[type].bgColor}
-      >
-        {details[type].sticker}
+      <PeaIcon className={'-sticker'} shape={'circular'}>
+        {stickers[type]}
       </PeaIcon>
     );
+  };
+
+  const onFollowBtnClick = actionId => event => {
+    setFollowAnchorEl(event.currentTarget);
+    onAction({ id: actionId, type: 'accept' });
+  };
+
+  const onFollowPopClose = () => {
+    setFollowAnchorEl(null);
+  };
+
+  const handleOnFollow = actionId => async ({ groupIds, followBack }) => {
+    await onAction({ id: actionId, type: 'accept', groupIds, followBack });
+    onFollowPopClose();
   };
 
   return (
@@ -95,7 +115,7 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
         primary={
           <span>
             <b>{type === 'group' ? name.slice(0, 2).join(', ') : name}</b>{' '}
-            {details[type].description}
+            {text}
           </span>
         }
         primaryTypographyProps={{
@@ -103,35 +123,86 @@ const PeaNotificationItem = ({ src, name, time, type, actions, unread }) => {
         }}
         secondary={time}
       />
+
       {actions && (
         <Grid
           container
           spacing={1}
           className={'PeaNotificationItem-actions'}
           justify={'flex-end'}
+          wrap="nowrap"
         >
           <Grid item>
-            <PeaButton className={'PeaButton-ignore'} size={'small'}>
-              Deny
+            <PeaButton
+              className={'PeaButton-ignore'}
+              size={'small'}
+              onClick={() => onAction({ id, type: 'deny' })}
+              disabled={
+                // TODO: implement deleteFollower mutation
+                (actionLoading[id] && actionLoading[id].deny) ||
+                requestDenied ||
+                requestApproved
+              }
+            >
+              {actionLoading[id] && actionLoading[id].deny ? (
+                <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
+              ) : (
+                <p>{denyText}</p>
+              )}
             </PeaButton>
           </Grid>
+
           <Grid item>
             <PeaButton
               size={'small'}
               elongated={false}
               variant={'contained'}
               color={'primary'}
+              onClick={onFollowBtnClick(id)}
+              disabled={
+                (actionLoading[id] && actionLoading[id].accept) ||
+                requestApproved
+              }
             >
-              Accept
+              {actionLoading[id] && actionLoading[id].accept ? (
+                <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
+              ) : (
+                <p>{acceptText}</p>
+              )}
             </PeaButton>
           </Grid>
         </Grid>
       )}
+
+      <Popover
+        id={followAriaId}
+        open={openFollowPopover}
+        anchorEl={followAnchorEl}
+        onClose={onFollowPopClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        <PeaGroupSelector
+          followButtonText={'Accept'}
+          followableGroups={followableGroups}
+          followLoading={actionLoading[id] && actionLoading[id].accept}
+          onCreateGroupClicked={onCreateGroupClicked}
+          onSubmit={handleOnFollow(id)}
+          showFollowBack={!isFollowing}
+        />
+      </Popover>
     </ListItem>
   );
 };
 
 PeaNotificationItem.propTypes = {
+  id: PropTypes.string.isRequired,
   src: PropTypes.oneOfType([
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
@@ -140,6 +211,7 @@ PeaNotificationItem.propTypes = {
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.string),
   ]).isRequired,
+  text: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
   type: PropTypes.oneOf([
     'follow',
     'pea_invite',
@@ -153,14 +225,31 @@ PeaNotificationItem.propTypes = {
   time: PropTypes.string.isRequired,
   actions: PropTypes.bool,
   unread: PropTypes.bool,
+  actionLoading: PropTypes.shape({}),
+  onAction: PropTypes.func,
+  followableGroups: PropTypes.arrayOf({}),
+  onCreateGroupClicked: PropTypes.func,
+  needGroups: PropTypes.bool,
+  requestApproved: PropTypes.bool,
+  isFollowing: PropTypes.bool,
 };
+
 PeaNotificationItem.defaultProps = {
   actions: false,
   unread: false,
+  actionLoading: {},
+  onAction: () => {},
+  onCreateGroupClicked: () => {},
+  followableGroups: [],
+  needGroups: false,
+  requestApproved: false,
+  isFollowing: false,
 };
+
 PeaNotificationItem.metadata = {
   name: 'Pea Notification Item',
 };
+
 PeaNotificationItem.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaNotificationItem;
+export default memo(PeaNotificationItem);

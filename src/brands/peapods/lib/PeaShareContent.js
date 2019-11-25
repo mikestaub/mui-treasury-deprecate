@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import CopyIcon from '@material-ui/icons/FileCopyOutlined';
+import CheckIcon from '@material-ui/icons/Check';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 import {
   LinkedinShareButton,
   FacebookShareButton,
@@ -13,17 +16,35 @@ import {
   EmailIcon,
 } from 'react-share';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   item: {
     display: 'flex',
     alignItems: 'center',
     margin: 20,
     cursor: 'pointer',
   },
-});
+  copyContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    margin: 20,
+  },
+  copyIcon: {
+    width: 40,
+    height: 40,
+    cursor: 'pointer',
+    color: theme.palette.grey[700],
+  },
+}));
 
 const PeaShareContent = ({ shareText, shareLink, onShare }) => {
   const classes = useStyles();
+
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = () => {
+    setCopied(true);
+  };
 
   return (
     <Grid container>
@@ -64,6 +85,15 @@ const PeaShareContent = ({ shareText, shareLink, onShare }) => {
       >
         <LinkedinIcon size={40} round />
       </LinkedinShareButton>
+      <CopyToClipboard text={shareLink} onCopy={onCopy}>
+        <Grid className={classes.copyContainer}>
+          {copied ? (
+            <CheckIcon className={classes.copyIcon} />
+          ) : (
+            <CopyIcon className={classes.copyIcon} />
+          )}
+        </Grid>
+      </CopyToClipboard>
     </Grid>
   );
 };

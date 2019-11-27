@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -31,6 +31,21 @@ import PeaGroupSelector from './PeaGroupSelector';
 const useStyles = makeStyles(() => ({
   followButton: {
     width: 160,
+  },
+  scrollHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 50,
+    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
+    padding: '0 10px',
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  backIcon: {
+    marginRight: 5,
   },
 }));
 
@@ -88,6 +103,9 @@ const PeaAccountProfile = ({
 }) => {
   const classes = useStyles();
 
+  const rootRef = useRef(null);
+
+  const [isBottom, setIsBottom] = useState(false);
   const [anchorEl, setAnchor] = useState(null);
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
@@ -170,6 +188,15 @@ const PeaAccountProfile = ({
     }
   };
 
+  const handleScroll = () => {
+    const { scrollHeight, scrollTop, clientHeight } = rootRef.current;
+    setIsBottom(scrollHeight - scrollTop === clientHeight);
+  };
+
+  const scrollToTop = () => {
+    rootRef.current.scrollTo(0, 0);
+  };
+
   if (editing) {
     return (
       <PeaProfileEditor
@@ -235,7 +262,11 @@ const PeaAccountProfile = ({
   );
 
   return (
-    <Card className={'PeaAccountProfile-root'}>
+    <Card
+      className={'PeaAccountProfile-root'}
+      ref={rootRef}
+      onScroll={handleScroll}
+    >
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
       <CardContent className={'MuiCardContent-root'}>
         <Grid container justify={'space-between'} spacing={2}>
@@ -426,62 +457,77 @@ const PeaAccountProfile = ({
           </Grid>
         </Grid>
       </CardContent>
+      {isBottom && (
+        <Grid className={classes.scrollHeader}>
+          <Box className={classes.backBox} onClick={scrollToTop}>
+            <PeaIcon
+              color={'secondary'}
+              size={'small'}
+              className={classes.backIcon}
+            >
+              arrow_back
+            </PeaIcon>
+            <PeaText color={'secondary'}>{name}</PeaText>
+          </Box>
+        </Grid>
+      )}
+      <Grid style={{ height: isBottom ? `calc(100% - 50px)` : '100%' }}>
+        <PeaSwipeableTabs
+          activeIndex={activeTabIndex}
+          tabs={[
+            { label: 'Hosting' },
+            { label: 'Pods' },
+            { label: 'About' },
+            { label: 'Groups' },
+          ]}
+          enableFeedback={isMobile}
+          onTabChange={onTabChange}
+        >
+          <Box height={1}>{eventList}</Box>
 
-      <PeaSwipeableTabs
-        activeIndex={activeTabIndex}
-        tabs={[
-          { label: 'Hosting' },
-          { label: 'Pods' },
-          { label: 'About' },
-          { label: 'Groups' },
-        ]}
-        enableFeedback={isMobile}
-        onTabChange={onTabChange}
-      >
-        <Box minHeight={500}>{eventList}</Box>
+          <Box height={1}>{podList}</Box>
 
-        <Box minHeight={500}>{podList}</Box>
+          <Box p={2} textAlign={'left'}>
+            <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
+              About
+            </PeaText>
+            <PeaText gutterBottom>
+              <PeaText link underline={'none'}>
+                <b>Age :</b>
+              </PeaText>{' '}
+              {age}
+            </PeaText>
+            <PeaText gutterBottom>
+              <PeaText link underline={'none'}>
+                <b>Gender :</b>
+              </PeaText>{' '}
+              {gender}
+            </PeaText>
+            <PeaText link underline={'none'} gutterBottom>
+              <b>Groups</b>
+            </PeaText>
+            <PeaText gutterBottom />
+            <br />
+            <PeaText link underline={'none'} gutterBottom>
+              <b>Tags</b>
+            </PeaText>
+            <PeaText gutterBottom />
+            <Grid container spacing={1}>
+              {tags.map(item => (
+                <Grid item key={item.label}>
+                  <PeaTag
+                    color={'secondary'}
+                    label={`#${item.label}`}
+                    onClick={() => {}}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
 
-        <Box p={2} textAlign={'left'}>
-          <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
-            About
-          </PeaText>
-          <PeaText gutterBottom>
-            <PeaText link underline={'none'}>
-              <b>Age :</b>
-            </PeaText>{' '}
-            {age}
-          </PeaText>
-          <PeaText gutterBottom>
-            <PeaText link underline={'none'}>
-              <b>Gender :</b>
-            </PeaText>{' '}
-            {gender}
-          </PeaText>
-          <PeaText link underline={'none'} gutterBottom>
-            <b>Groups</b>
-          </PeaText>
-          <PeaText gutterBottom />
-          <br />
-          <PeaText link underline={'none'} gutterBottom>
-            <b>Tags</b>
-          </PeaText>
-          <PeaText gutterBottom />
-          <Grid container spacing={1}>
-            {tags.map(item => (
-              <Grid item key={item.label}>
-                <PeaTag
-                  color={'secondary'}
-                  label={`#${item.label}`}
-                  onClick={() => {}}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
-
-        <Box minHeight={500}>{groupList}</Box>
-      </PeaSwipeableTabs>
+          <Box height={1}>{groupList}</Box>
+        </PeaSwipeableTabs>
+      </Grid>
 
       <PeaInvitationDialog
         person={userName}

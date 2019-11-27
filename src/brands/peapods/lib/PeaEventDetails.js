@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useState, memo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -9,6 +9,8 @@ import Link from '@material-ui/core/Link';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Box from '@material-ui/core/Box';
+import { makeStyles } from '@material-ui/styles';
 import cx from 'classnames';
 
 import PeaButton from './PeaButton';
@@ -84,6 +86,24 @@ const renderAboutDetails = ({
   },
 ];
 
+const useStyles = makeStyles(() => ({
+  scrollHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 100,
+    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
+    padding: '0 10px',
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  backIcon: {
+    marginRight: 5,
+  },
+}));
+
 const PeaEventDetails = ({
   id,
   profile,
@@ -109,6 +129,12 @@ const PeaEventDetails = ({
   isLoading,
   onReport,
 }) => {
+  const classes = useStyles();
+
+  const rootRef = useRef(null);
+
+  const [isBottom, setIsBottom] = useState(false);
+
   const tabs = [
     { label: 'Pods' },
     { label: 'About' },
@@ -176,8 +202,21 @@ const PeaEventDetails = ({
     </Menu>
   );
 
+  const handleScroll = () => {
+    const { scrollHeight, scrollTop, clientHeight } = rootRef.current;
+    setIsBottom(scrollHeight - scrollTop === clientHeight);
+  };
+
+  const scrollToTop = () => {
+    rootRef.current.scrollTo(0, 0);
+  };
+
   return (
-    <Card className={'PeaGroupProfile-root'}>
+    <Card
+      className={'PeaGroupProfile-root'}
+      onScroll={handleScroll}
+      ref={rootRef}
+    >
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
@@ -240,106 +279,123 @@ const PeaEventDetails = ({
         </Grid>
       </CardContent>
 
-      <PeaSwipeableTabs
-        tabs={tabs}
-        enableFeedback={isMobile}
-        onTabChange={onTabChange}
-      >
-        {renderPods()}
+      {isBottom && (
+        <Grid className={classes.scrollHeader}>
+          <Box className={classes.backBox} onClick={scrollToTop}>
+            <PeaIcon
+              color={'secondary'}
+              size={'small'}
+              className={classes.backIcon}
+            >
+              arrow_back
+            </PeaIcon>
+            <PeaText color={'secondary'}>{title}</PeaText>
+          </Box>
+        </Grid>
+      )}
 
-        <>
-          <PeaText color={'secondary'} gutterBottom>
-            <b>Details</b>
-          </PeaText>
+      <Grid style={{ height: isBottom ? `calc(100% - 100px)` : '100%' }}>
+        <PeaSwipeableTabs
+          tabs={tabs}
+          enableFeedback={isMobile}
+          onTabChange={onTabChange}
+        >
+          {renderPods()}
 
-          <Grid container direction="row">
-            <Grid container direction="column">
-              {renderAboutDetails({
-                profile,
-                timeString,
-                mapOrigin,
-                location,
-                podCount,
-                attendingCount: stats ? stats.attending : null,
-                interestedCount: stats ? stats.interested : null,
-                limit: stats ? stats.limit : null,
-              }).map(item => (
-                <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
-                  <Grid item>
-                    {typeof item.icon === 'string' ? (
-                      <PeaIcon
-                        size={'big'}
-                        color={'secondary'}
-                        icon={item.icon}
-                        shape="square"
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          fontSize: '28px',
-                        }}
-                        className={cx(
-                          'MuiIcon-root',
-                          '-size-big',
-                          '-shape-circular',
-                        )}
-                      >
-                        {item.icon}
-                      </div>
-                    )}
+          <>
+            <PeaText color={'secondary'} gutterBottom>
+              <b>Details</b>
+            </PeaText>
+
+            <Grid container direction="row">
+              <Grid container direction="column">
+                {renderAboutDetails({
+                  profile,
+                  timeString,
+                  mapOrigin,
+                  location,
+                  podCount,
+                  attendingCount: stats ? stats.attending : null,
+                  interestedCount: stats ? stats.interested : null,
+                  limit: stats ? stats.limit : null,
+                }).map(item => (
+                  <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
+                    <Grid item>
+                      {typeof item.icon === 'string' ? (
+                        <PeaIcon
+                          size={'big'}
+                          color={'secondary'}
+                          icon={item.icon}
+                          shape="square"
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            fontSize: '28px',
+                          }}
+                          className={cx(
+                            'MuiIcon-root',
+                            '-size-big',
+                            '-shape-circular',
+                          )}
+                        >
+                          {item.icon}
+                        </div>
+                      )}
+                    </Grid>
+                    <Grid item xs>
+                      <Typography color={'textSecondary'} variant={'caption'}>
+                        {item.renderText ? item.renderText() : item.text}
+                      </Typography>
+                    </Grid>
                   </Grid>
-                  <Grid item xs>
-                    <Typography color={'textSecondary'} variant={'caption'}>
-                      {item.renderText ? item.renderText() : item.text}
-                    </Typography>
-                  </Grid>
+                ))}
+              </Grid>
+            </Grid>
+
+            <PeaText color={'secondary'} gutterBottom>
+              <b>Description</b>
+            </PeaText>
+
+            {description && (
+              <div className={cx('MuiTypography-root', 'MuiTypography-body1')}>
+                {typeof description === 'string' ? (
+                  <PeaText>{description}</PeaText>
+                ) : (
+                  React.Children.map(description, text => (
+                    <div
+                      style={{
+                        marginBottom: 20,
+                      }}
+                    >
+                      {text}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
+            <PeaText color={'secondary'} gutterBottom>
+              <b>Tags</b>
+            </PeaText>
+
+            <PeaText gutterBottom />
+            <Grid container wrap="wrap" spacing={1}>
+              {tags.map(tag => (
+                <Grid item key={tag}>
+                  <PeaTag
+                    color={'secondary'}
+                    label={`#${tag}`}
+                    onClick={() => {}}
+                  />
                 </Grid>
               ))}
             </Grid>
-          </Grid>
+          </>
 
-          <PeaText color={'secondary'} gutterBottom>
-            <b>Description</b>
-          </PeaText>
-
-          {description && (
-            <div className={cx('MuiTypography-root', 'MuiTypography-body1')}>
-              {typeof description === 'string' ? (
-                <PeaText>{description}</PeaText>
-              ) : (
-                React.Children.map(description, text => (
-                  <div
-                    style={{
-                      marginBottom: 20,
-                    }}
-                  >
-                    {text}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-
-          <PeaText color={'secondary'} gutterBottom>
-            <b>Tags</b>
-          </PeaText>
-
-          <PeaText gutterBottom />
-          <Grid container wrap="wrap" spacing={1}>
-            {tags.map(tag => (
-              <Grid item key={tag}>
-                <PeaTag
-                  color={'secondary'}
-                  label={`#${tag}`}
-                  onClick={() => {}}
-                />
-              </Grid>
-            ))}
-          </Grid>
-        </>
-
-        {renderConnections()}
-      </PeaSwipeableTabs>
+          {renderConnections()}
+        </PeaSwipeableTabs>
+      </Grid>
     </Card>
   );
 };

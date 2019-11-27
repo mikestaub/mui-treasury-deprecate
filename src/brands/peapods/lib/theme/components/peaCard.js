@@ -270,6 +270,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         position: 'relative',
         width: '100%',
         overflowY: 'auto',
+        display: 'block',
         '& > .MuiCardMedia-root': {
           paddingTop: '44%',
           position: 'absolute',
@@ -447,6 +448,8 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       '&.PeaGroupProfile-root': {
         position: 'relative',
         textAlign: 'left',
+        display: 'block',
+        overflow: 'auto',
         '& .MuiCardMedia-root': {
           paddingTop: '56%',
           position: 'absolute',

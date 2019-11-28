@@ -51,6 +51,7 @@ const PeaProfileEditor = ({
   onChangeCoverPhotoClicked,
   onChangeProfilePhotosClicked,
   isUpdating,
+  onLinkSocial,
 }) => {
   const [user, setUser] = useState({
     name,
@@ -339,6 +340,7 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     size={'big'}
                     shadow
+                    onClick={onLinkSocial('twitter')}
                   />
                 </IconButton>
               </Grid>
@@ -351,6 +353,7 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     size={'big'}
                     shadow
+                    onClick={onLinkSocial('meetup')}
                   />
                 </IconButton>
               </Grid>
@@ -364,6 +367,7 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     shadow
                     size={'big'}
+                    onClick={onLinkSocial('facebook')}
                   />
                 </IconButton>
               </Grid>
@@ -376,6 +380,46 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     size={'big'}
                     shadow
+                    onClick={onLinkSocial('instagram')}
+                  />
+                </IconButton>
+              </Grid>
+
+              <Grid item>
+                <IconButton>
+                  <PeaIcon
+                    link
+                    icon={'fab fa-snapchat'}
+                    bgColor={'white'}
+                    size={'big'}
+                    shadow
+                    onClick={onLinkSocial('snapchat')}
+                  />
+                </IconButton>
+              </Grid>
+
+              <Grid item>
+                <IconButton>
+                  <PeaIcon
+                    link
+                    icon={'fab fa-linkedin'}
+                    bgColor={'white'}
+                    size={'big'}
+                    shadow
+                    onClick={onLinkSocial('linkedin')}
+                  />
+                </IconButton>
+              </Grid>
+
+              <Grid item>
+                <IconButton>
+                  <PeaIcon
+                    link
+                    icon={'fab fa-google'}
+                    bgColor={'white'}
+                    size={'big'}
+                    shadow
+                    onClick={onLinkSocial('google')}
                   />
                 </IconButton>
               </Grid>

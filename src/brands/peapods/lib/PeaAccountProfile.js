@@ -85,6 +85,7 @@ const PeaAccountProfile = ({
   isMobile,
   activeTabIndex,
   onTabChange,
+  onLinkSocial,
 }) => {
   const classes = useStyles();
 
@@ -191,6 +192,7 @@ const PeaAccountProfile = ({
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
+        onLinkSocial={onLinkSocial}
       />
     );
   }

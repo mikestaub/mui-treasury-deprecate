@@ -86,6 +86,7 @@ const PeaAccountProfile = ({
   activeTabIndex,
   onTabChange,
   onLinkSocial,
+  onChangeAccountStatus,
 }) => {
   const classes = useStyles();
 
@@ -146,6 +147,16 @@ const PeaAccountProfile = ({
     setAnchor(null);
     onReport();
   };
+
+  const onActivateClick = () => {
+    setAnchor(null);
+    onChangeAccountStatus({ accountStatus: 'ACTIVE' });
+  };
+
+  // const onAccountBanClick = () => {
+  //   setAnchor(null);
+  //   // TODO: display Account Ban Form
+  // };
 
   const onInviteClick = () => {
     if (onInviteClicked) {
@@ -233,6 +244,26 @@ const PeaAccountProfile = ({
           </PeaText>
         </ListItemText>
       </MenuItem>
+
+      {onChangeAccountStatus && (
+        <>
+          <MenuItem onClick={onActivateClick}>
+            <ListItemText disableTypography>
+              <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+                Activate Account
+              </PeaText>
+            </ListItemText>
+          </MenuItem>
+
+          {/* <MenuItem onClick={onAccountBanClick}>
+            <ListItemText disableTypography>
+              <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+                Ban Account
+              </PeaText>
+            </ListItemText>
+          </MenuItem> */}
+        </>
+      )}
     </Menu>
   );
 
@@ -553,6 +584,8 @@ PeaAccountProfile.propTypes = {
   onCreateGroupClicked: PropTypes.func.isRequired,
   onInviteClicked: PropTypes.func.isRequired,
   onAcceptFollowRequest: PropTypes.func.isRequired,
+  onLinkSocial: PropTypes.func.isRequired,
+  onChangeAccountStatus: PropTypes.func,
   invitingIds: PropTypes.object,
   invitedIds: PropTypes.object,
   followerState: PropTypes.string,
@@ -603,6 +636,7 @@ PeaAccountProfile.defaultProps = {
   invitedIds: {},
   followerState: undefined,
   acceptFollowLoading: false,
+  onChangeAccountStatus: undefined,
 };
 
 PeaAccountProfile.metadata = {

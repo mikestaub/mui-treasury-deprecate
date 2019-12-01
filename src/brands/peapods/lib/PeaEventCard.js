@@ -7,7 +7,6 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
-import PageviewIcon from '@material-ui/icons/Pageview';
 
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
@@ -120,30 +119,32 @@ const PeaEventCard = ({
 }) => {
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const openSharePopover = Boolean(shareAnchorEl);
-  const shareAriaId = openSharePopover ? 'share-popover' : undefined;
+  const shareAriaId = openSharePopover ? 'event-card-share' : undefined;
 
   const handleShareClick = event => {
     event.stopPropagation();
 
     if (window.navigator.share) {
-      onShareEventClicked('native');
-      window.navigator.share({
-        title: shareText,
-        url: shareLink,
-      });
-    } else {
+      window.navigator
+        .share({
+          title: shareText,
+          url: shareLink,
+        })
+        .then(() => {
+          onShareEventClicked('native');
+        });
+    } else if (!openSharePopover) {
       setShareAnchorEl(event.currentTarget);
     }
   };
 
-  const handleShareClose = event => {
-    event.stopPropagation();
+  const handleShareClose = () => {
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => event => {
+  const handleShareItemClick = item => () => {
     onShareEventClicked(item);
-    handleShareClose(event);
+    handleShareClose();
   };
 
   return (

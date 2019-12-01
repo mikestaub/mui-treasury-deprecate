@@ -31,7 +31,7 @@ const PeaShareContent = ({ shareText, shareLink, onShare }) => {
         url={shareLink}
         subject={shareText}
         className={classes.item}
-        beforeOnClick={() => onShare('email')}
+        onShareWindowClose={onShare('email')}
         openWindow
       >
         <EmailIcon size={40} round />
@@ -41,7 +41,7 @@ const PeaShareContent = ({ shareText, shareLink, onShare }) => {
         url={shareLink}
         quote={`${shareText} #peapods`}
         className={classes.item}
-        beforeOnClick={() => onShare('facebook')}
+        onShareWindowClose={onShare('facebook')}
       >
         <FacebookIcon size={40} round />
       </FacebookShareButton>
@@ -50,7 +50,7 @@ const PeaShareContent = ({ shareText, shareLink, onShare }) => {
         url={shareLink}
         title={`${shareText} #peapods`}
         className={classes.item}
-        beforeOnClick={() => onShare('twitter')}
+        onShareWindowClose={onShare('twitter')}
       >
         <TwitterIcon size={40} round />
       </TwitterShareButton>
@@ -59,7 +59,7 @@ const PeaShareContent = ({ shareText, shareLink, onShare }) => {
         url={shareLink}
         quote={`${shareText} #peapods`}
         className={classes.item}
-        beforeOnClick={() => onShare('linkedin')}
+        onShareWindowClose={onShare('linkedin')}
         openWindow
       >
         <LinkedinIcon size={40} round />

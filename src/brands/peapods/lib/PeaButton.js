@@ -93,7 +93,7 @@ const PeaButton = ({
         />
       )}
       {icon && iconPosition === 'start' && iconComponent}
-      {shape !== 'circular' && renderChildren()}
+      {renderChildren()}
       {icon && iconPosition === 'end' && iconComponent}
     </MuiButton>
   );
@@ -101,7 +101,11 @@ const PeaButton = ({
 
 PeaButton.propTypes = {
   className: PropTypes.string,
-  classes: PropTypes.shape({}),
+  classes: PropTypes.shape({
+    root: PropTypes.string,
+    label: PropTypes.string,
+    disabled: PropTypes.string,
+  }),
   color: PropTypes.oneOf([
     'default',
     'inherit',

@@ -2,6 +2,8 @@ import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import Popover from '@material-ui/core/Popover';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
@@ -17,6 +19,7 @@ import PeaAvatar from './PeaAvatar';
 import PeaIcon from './PeaIcon';
 import PeaTag from './PeaTag';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
+import PeaShareContent from './PeaShareContent';
 
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
@@ -100,8 +103,11 @@ const PeaEventDetails = ({
   location,
   stats,
   isPodMember,
+  shareLink,
+  shareText,
   onCreatePodClicked,
   onEditEventClicked,
+  onShareEventClicked,
   renderPods,
   renderConnections,
   isMobile,
@@ -134,6 +140,35 @@ const PeaEventDetails = ({
   const editEvent = () => {
     setAnchor(null);
     onEditEventClicked();
+  };
+
+  const [shareAnchorEl, setShareAnchorEl] = useState(null);
+  const shareAriaId = shareAnchorEl ? 'event-details-share' : undefined;
+
+  const handleShareClick = event => {
+    event.stopPropagation();
+
+    if (window.navigator.share) {
+      window.navigator
+        .share({
+          title: shareText,
+          url: shareLink,
+        })
+        .then(() => {
+          onShareEventClicked('native');
+        });
+    } else if (!shareAnchorEl) {
+      setShareAnchorEl(event.currentTarget);
+    }
+  };
+
+  const handleShareClose = () => {
+    setShareAnchorEl(null);
+  };
+
+  const handleShareItemClick = item => () => {
+    onShareEventClicked(item);
+    handleShareClose();
   };
 
   const renderMenu = () => (
@@ -214,6 +249,30 @@ const PeaEventDetails = ({
                     <PeaAvatar src={sourceImage} />
                   </button>
                 )}
+
+                <PeaButton
+                  shape={'circular'}
+                  icon={'share'}
+                  size={'small'}
+                  style={{ marginLeft: 8 }}
+                  onClick={handleShareClick}
+                >
+                  <Popover
+                    id={shareAriaId}
+                    open={shareAnchorEl}
+                    anchorEl={shareAnchorEl}
+                    onClose={handleShareClose}
+                  >
+                    <Paper>
+                      <PeaShareContent
+                        title={title}
+                        shareLink={shareLink}
+                        shareText={shareText}
+                        onShare={handleShareItemClick}
+                      />
+                    </Paper>
+                  </Popover>
+                </PeaButton>
 
                 <PeaButton
                   shape={'circular'}
@@ -361,6 +420,7 @@ PeaEventDetails.propTypes = {
   sourceLink: PropTypes.string,
   onCreatePodClicked: PropTypes.func.isRequired,
   onEditEventClicked: PropTypes.func,
+  onShareEventClicked: PropTypes.func.isRequired,
   renderConnections: PropTypes.func.isRequired,
   renderPods: PropTypes.func.isRequired,
   podCount: PropTypes.number,
@@ -376,6 +436,8 @@ PeaEventDetails.propTypes = {
   onChangeTab: PropTypes.func,
   isLoading: PropTypes.bool,
   onReport: PropTypes.func,
+  shareLink: PropTypes.string,
+  shareText: PropTypes.string,
 };
 
 PeaEventDetails.defaultProps = {
@@ -388,6 +450,8 @@ PeaEventDetails.defaultProps = {
   onChangeTab: undefined,
   onEditEventClicked: undefined,
   isLoading: false,
+  shareLink: undefined,
+  shareText: undefined,
   onReport: () => {},
 };
 

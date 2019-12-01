@@ -10,13 +10,15 @@ const UserSettings = () => {
 
   function handleSwitchChange(name, value) {
     setSwitchState({ ...switchState, [name]: value });
-  };
+  }
 
   return (
     <PeaUserSettings
       notifications={switchState.notifications}
       receiveEmail={switchState.receiveEmail}
-      onNotificationsChange={value => handleSwitchChange('notifications', value)}
+      onNotificationsChange={value =>
+        handleSwitchChange('notifications', value)
+      }
       onReceiveEmailChange={value => handleSwitchChange('receiveEmail', value)}
       onEditProfile={() => {}}
       onContactSupport={() => {}}
@@ -24,7 +26,7 @@ const UserSettings = () => {
       onDeleteProfile={() => {}}
     />
   );
-}
+};
 
 UserSettings.metadata = {
   name: 'Pea User Settings',

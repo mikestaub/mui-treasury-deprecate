@@ -87,6 +87,8 @@ const PeaAccountProfile = ({
   onTabChange,
   onLinkSocial,
   onChangeAccountStatus,
+  onChangeSettings,
+  onLogout,
 }) => {
   const classes = useStyles();
 
@@ -180,6 +182,23 @@ const PeaAccountProfile = ({
     } else {
       handleOnFollow({});
     }
+  };
+
+  const onNotificationsChange = enabled => {
+    onChangeSettings({
+      pushNotificationsDisabled: enabled ? !!enabled : null,
+    });
+  };
+
+  const onReceiveEmailChange = enabled => {
+    onChangeSettings({
+      emailNotificationsDisabled: enabled ? !!enabled : null,
+    });
+  };
+
+  const onContactSupport = () => {
+    const supportEmail = 'support@peapods.com';
+    window.open(`mailto:${supportEmail}`);
   };
 
   if (editing) {
@@ -316,11 +335,11 @@ const PeaAccountProfile = ({
               {isCurrentUser ? (
                 <>
                   <PeaUserSettings
-                    onNotificationsChange={() => {}}
-                    onReceiveEmailChange={() => {}}
+                    onNotificationsChange={onNotificationsChange}
+                    onReceiveEmailChange={onReceiveEmailChange}
                     onEditProfile={() => setEditing(true)}
-                    onContactSupport={() => {}}
-                    onLogout={() => {}}
+                    onContactSupport={onContactSupport}
+                    onLogout={onLogout}
                     onDeleteProfile={() => setDelModalOpen(true)}
                   />
 
@@ -586,6 +605,8 @@ PeaAccountProfile.propTypes = {
   onAcceptFollowRequest: PropTypes.func.isRequired,
   onLinkSocial: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
+  onLogout: PropTypes.func.isRequired,
+  onChangeSettings: PropTypes.func,
   invitingIds: PropTypes.object,
   invitedIds: PropTypes.object,
   followerState: PropTypes.string,
@@ -637,6 +658,7 @@ PeaAccountProfile.defaultProps = {
   followerState: undefined,
   acceptFollowLoading: false,
   onChangeAccountStatus: undefined,
+  onChangeSettings: undefined,
 };
 
 PeaAccountProfile.metadata = {

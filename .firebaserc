@@ -1,5 +1,20 @@
 {
   "projects": {
     "default": "mui-treasury"
+  },
+  "targets": {
+    "mui-treasury": {
+      "hosting": {
+        "next": [
+          "next-mui-treasury"
+        ],
+        "current": [
+          "mui-treasury"
+        ],
+        "deprecate": [
+          "deprecate-mui-treasury"
+        ]
+      }
+    }
   }
 }

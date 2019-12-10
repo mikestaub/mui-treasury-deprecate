@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -104,6 +105,7 @@ const PeaEventCard = ({
   shareText,
   title,
   subTitle,
+  renderTitle,
   timeString,
   location,
   podCount,
@@ -113,6 +115,7 @@ const PeaEventCard = ({
   onShowDetailsClicked,
   onShareEventClicked,
   onCreatePodClicked,
+  onUserClick,
   createPodText,
   isLoading,
   ...props
@@ -151,12 +154,20 @@ const PeaEventCard = ({
     <Card className={'PeaEventCard-root'} {...props}>
       <CardHeader
         avatar={<PeaAvatar src={profile && profile.image} />}
-        title={<b>{title}</b>}
+        title={renderTitle ? renderTitle() : title}
         subheader={subTitle}
         action={
           social ? <PeaAvatar src={social} externalLink={socialLink} /> : null
         }
       />
+
+      {renderTitle && (
+        <Box p={2} pt={0}>
+          <Typography variant={'body1'}>
+            <b>{title}</b>
+          </Typography>
+        </Box>
+      )}
 
       <PeaImageCarousel
         data={images.map((image, idx) => ({ image, id: idx }))}
@@ -278,6 +289,7 @@ PeaEventCard.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
+    username: PropTypes.string,
     image: PropTypes.string,
     link: PropTypes.string,
   }),
@@ -294,7 +306,8 @@ PeaEventCard.propTypes = {
   interestedPeas: PropTypes.arrayOf(PropTypes.string),
   onShowDetailsClicked: PropTypes.func.isRequired,
   onCreatePodClicked: PropTypes.func.isRequired,
-  onShareEventClicked: PropTypes.func,
+  onUserClick: PropTypes.func.isRequired,
+  onShareEventClicked: PropTypes.func.isRequired,
   stats: PropTypes.shape({
     interested: PropTypes.number,
     attending: PropTypes.number,
@@ -302,6 +315,7 @@ PeaEventCard.propTypes = {
   }),
   createPodText: PropTypes.string,
   isLoading: PropTypes.bool,
+  renderTitle: PropTypes.func,
 };
 
 PeaEventCard.defaultProps = {
@@ -311,11 +325,11 @@ PeaEventCard.defaultProps = {
   interestedPeas: [],
   social: undefined,
   socialLink: undefined,
-  onShareEventClicked: () => {},
   createPodText: 'Create Pod',
   isLoading: false,
   stats: undefined,
   profile: undefined,
+  renderTitle: undefined,
 };
 
 PeaEventCard.metadata = {

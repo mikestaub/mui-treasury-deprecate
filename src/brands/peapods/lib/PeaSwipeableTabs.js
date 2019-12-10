@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,7 +7,7 @@ import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 const PeaSwipeableTabs = ({
-  initialIndex,
+  tabIndex,
   tabs,
   onTabChange,
   enableFeedback,
@@ -15,20 +15,26 @@ const PeaSwipeableTabs = ({
   hasPadding,
   ...props
 }) => {
-  const [index, setIndex] = useState(initialIndex);
+  const [index, setIndex] = useState(tabIndex);
   const [fineIndex, setFineIndex] = useState(index);
+
   const indicatorRef = useRef(null);
+
   const getLeft = () => {
     const indicatorDOM = indicatorRef.current;
     if (!indicatorDOM) return {};
     const { clientWidth } = indicatorDOM;
     return { left: fineIndex * clientWidth };
   };
-  const onChange = i => {
-    setIndex(i);
-    setFineIndex(i);
-    onTabChange(i);
-  };
+
+  const onChange = useCallback(
+    i => {
+      setIndex(i);
+      setFineIndex(i);
+      onTabChange(i);
+    },
+    [setIndex, setFineIndex, onTabChange],
+  );
 
   const onSwitching = !enableFeedback
     ? undefined
@@ -38,6 +44,8 @@ const PeaSwipeableTabs = ({
           onChange(i);
         }
       };
+
+  useEffect(() => onChange(tabIndex), [onChange, tabIndex]);
 
   return (
     <Grid
@@ -100,6 +108,7 @@ const PeaSwipeableTabs = ({
                 <div
                   style={{
                     padding: hasPadding ? 16 : 0,
+                    height: 'calc(100% - 32px)',
                     minHeight: 'calc(100% - 32px)',
                   }}
                 >
@@ -117,6 +126,7 @@ const PeaSwipeableTabs = ({
 PeaSwipeableTabs.propTypes = {
   initialIndex: PropTypes.number,
   hasPadding: PropTypes.bool,
+  tabIndex: PropTypes.number,
   tabs: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.node }))
     .isRequired,
   children: PropTypes.node.isRequired,
@@ -128,6 +138,7 @@ PeaSwipeableTabs.propTypes = {
 PeaSwipeableTabs.defaultProps = {
   initialIndex: 0,
   hasPadding: true,
+  tabIndex: 0,
   enableFeedback: true,
   onTabChange: () => {},
 };

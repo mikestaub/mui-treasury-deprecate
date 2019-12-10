@@ -1,9 +1,8 @@
 /* eslint-disable react/forbid-prop-types */
 
-import Tab from '@material-ui/core/Tab/Tab';
-import Tabs from '@material-ui/core/Tabs/Tabs';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -14,21 +13,26 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
+import Popover from '@material-ui/core/Popover';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
 import PeaStatistic from './PeaStatistic';
 import PeaText from './PeaTypography';
-import PeaSocialAvatar from './PeaSocialAvatar';
 import PeaTag from './PeaTag';
 import PeaProfileEditor from './PeaProfileEditor';
 import PeaUserSettings from './PeaUserSettings';
 import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
-import PeaLoadingSpinner from './PeaLoadingSpinner';
+import PeaSwipeableTabs from './PeaSwipeableTabs';
+import PeaGroupSelector from './PeaGroupSelector';
 
-// TODO: refactor this to use PeaSwipeableTabs
+const useStyles = makeStyles(() => ({
+  followButton: {
+    width: 160,
+  },
+}));
 
 const PeaAccountProfile = ({
   isCurrentUser,
@@ -44,15 +48,16 @@ const PeaAccountProfile = ({
   birthday,
   age,
   gender,
-  groups,
   pods,
-  groupsOfCurrentUser,
+  invitableGroups,
+  followableGroups,
   tags,
   podsCount,
   reputation,
   followersCount,
   followingCount,
   isPrivate,
+  eventList,
   groupList,
   podList,
   onSubmit,
@@ -65,42 +70,135 @@ const PeaAccountProfile = ({
   invitedIds,
   followLoading,
   currentUserFollowing,
+  followerState,
+  acceptFollowLoading,
   onChangeCoverPhotoClicked,
   onChangeProfilePhotosClicked,
+  onAcceptFollowRequest,
   deleteProfile,
-  onCreateGroupClicked,
   onInvitePod,
   onInviteGroup,
   onInviteClicked,
+  onCreateGroupClicked,
   onFollow,
   onReport,
+  isMobile,
+  activeTabIndex,
+  onTabChange,
+  onLinkSocial,
+  onChangeAccountStatus,
+  onChangeSettings,
+  onLogout,
 }) => {
-  const [index, onChange] = useState(0);
+  const classes = useStyles();
+
   const [anchorEl, setAnchor] = useState(null);
+  const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
   const [openInviteDialog, setOpenInviteDialog] = useState(false);
-  const open = Boolean(anchorEl);
+  const [followButtonText, setFollowButtonText] = useState('Follow');
+  const [confirmText, setConfirmText] = useState('Follow');
 
-  const followBtnDisabled =
-    followLoading || currentUserFollowing === 'PENDING_APPROVAL';
-  let followBtnText = 'Follow';
-  if (currentUserFollowing === 'PENDING_APPROVAL') {
-    followBtnText = 'Follow Requested';
-  }
-  if (currentUserFollowing === 'FOLLOWING') {
-    followBtnText = 'Unfollow';
-  }
+  const isFollower = followerState === 'FOLLOWING';
+  const followerRequested = followerState === 'PENDING_APPROVAL';
+
+  const isFollowing = currentUserFollowing === 'FOLLOWING';
+  const followRequested = currentUserFollowing === 'PENDING_APPROVAL';
+
+  const needsGroups = !isFollowing && !followRequested && !isFollower;
+
+  const open = Boolean(anchorEl);
+  const groupSelectorOpen = Boolean(followAnchorEl) && needsGroups;
+  const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
+  const followBtnDisabled = followLoading;
+
+  const updateFollowButtonText = useCallback(() => {
+    let value = isFollowing ? 'Following' : 'Follow';
+
+    if (followRequested) {
+      value = 'Follow Requested';
+    }
+
+    setFollowButtonText(value);
+  }, [setFollowButtonText, isFollowing, followRequested]);
+
+  useEffect(updateFollowButtonText, [currentUserFollowing]);
+
+  const onMouseOver = () => {
+    if (!currentUserFollowing) {
+      setConfirmText('Follow');
+      return;
+    }
+
+    const text =
+      currentUserFollowing === 'FOLLOWING' ? 'Unfollow' : 'Delete Request';
+
+    setFollowButtonText(text);
+    setConfirmText(text);
+  };
+
+  const onMouseOut = () => {
+    if (followAnchorEl) {
+      setTimeout(updateFollowButtonText, 200);
+    } else {
+      updateFollowButtonText();
+    }
+  };
 
   const onReportClick = () => {
     setAnchor(null);
     onReport();
   };
 
+  const onActivateClick = () => {
+    setAnchor(null);
+    onChangeAccountStatus({ accountStatus: 'ACTIVE' });
+  };
+
+  // const onAccountBanClick = () => {
+  //   setAnchor(null);
+  //   // TODO: display Account Ban Form
+  // };
+
   const onInviteClick = () => {
     if (onInviteClicked) {
       onInviteClicked();
     }
     setOpenInviteDialog(true);
+  };
+
+  const onFollowPopClose = () => {
+    setFollowAnchorEl(null);
+  };
+
+  const handleOnFollow = async groupIds => {
+    await onFollow(groupIds);
+    onFollowPopClose();
+  };
+
+  const onFollowBtnClick = event => {
+    if (needsGroups) {
+      setFollowAnchorEl(event.currentTarget);
+    } else {
+      handleOnFollow({});
+    }
+  };
+
+  const onNotificationsChange = enabled => {
+    onChangeSettings({
+      pushNotificationsDisabled: enabled ? !!enabled : null,
+    });
+  };
+
+  const onReceiveEmailChange = enabled => {
+    onChangeSettings({
+      emailNotificationsDisabled: enabled ? !!enabled : null,
+    });
+  };
+
+  const onContactSupport = () => {
+    const supportEmail = 'support@peapods.com';
+    window.open(`mailto:${supportEmail}`);
   };
 
   if (editing) {
@@ -124,6 +222,7 @@ const PeaAccountProfile = ({
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
+        onLinkSocial={onLinkSocial}
       />
     );
   }
@@ -164,6 +263,26 @@ const PeaAccountProfile = ({
           </PeaText>
         </ListItemText>
       </MenuItem>
+
+      {onChangeAccountStatus && (
+        <>
+          <MenuItem onClick={onActivateClick}>
+            <ListItemText disableTypography>
+              <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+                Activate Account
+              </PeaText>
+            </ListItemText>
+          </MenuItem>
+
+          {/* <MenuItem onClick={onAccountBanClick}>
+            <ListItemText disableTypography>
+              <PeaText color={'error'} variant={'body1'} weight={'bold'}>
+                Ban Account
+              </PeaText>
+            </ListItemText>
+          </MenuItem> */}
+        </>
+      )}
     </Menu>
   );
 
@@ -194,16 +313,33 @@ const PeaAccountProfile = ({
         </Grid>
 
         <Box mt={4} mb={3}>
+          {followerRequested && (
+            <Grid container spacing={2} justify="center">
+              <Grid item>
+                <PeaButton
+                  variant={'contained'}
+                  color={'primary'}
+                  size={'small'}
+                  disabled={acceptFollowLoading}
+                  loading={acceptFollowLoading}
+                  onClick={onAcceptFollowRequest}
+                >
+                  {'Accept Follow Request'}
+                </PeaButton>
+              </Grid>
+            </Grid>
+          )}
+
           <Grid className={'MuiGrid-container -actions'} container spacing={1}>
             <Grid item>
               {isCurrentUser ? (
                 <>
                   <PeaUserSettings
-                    onNotificationsChange={() => {}}
-                    onReceiveEmailChange={() => {}}
+                    onNotificationsChange={onNotificationsChange}
+                    onReceiveEmailChange={onReceiveEmailChange}
                     onEditProfile={() => setEditing(true)}
-                    onContactSupport={() => {}}
-                    onLogout={() => {}}
+                    onContactSupport={onContactSupport}
+                    onLogout={onLogout}
                     onDeleteProfile={() => setDelModalOpen(true)}
                   />
 
@@ -218,19 +354,42 @@ const PeaAccountProfile = ({
                   />
                 </>
               ) : (
-                <PeaButton
-                  variant={'contained'}
-                  color={'primary'}
-                  size={'small'}
-                  disabled={followBtnDisabled}
-                  onClick={onFollow}
-                >
-                  {followLoading ? (
-                    <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
-                  ) : (
-                    followBtnText
-                  )}
-                </PeaButton>
+                <>
+                  <PeaButton
+                    className={classes.followButton}
+                    variant={'contained'}
+                    color={'primary'}
+                    size={'small'}
+                    disabled={followBtnDisabled}
+                    loading={followLoading}
+                    onClick={onFollowBtnClick}
+                    onMouseOver={onMouseOver}
+                    onMouseOut={onMouseOut}
+                    onFocus={() => {}}
+                    onBlur={() => {}}
+                  >
+                    {followButtonText}
+                  </PeaButton>
+
+                  <Popover
+                    id={followAriaId}
+                    open={groupSelectorOpen}
+                    anchorEl={followAnchorEl}
+                    onClose={onFollowPopClose}
+                  >
+                    <PeaGroupSelector
+                      followButtonText={confirmText}
+                      followableGroups={
+                        followButtonText === 'Follow'
+                          ? followableGroups
+                          : undefined
+                      }
+                      followLoading={followLoading}
+                      onCreateGroupClicked={onCreateGroupClicked}
+                      onSubmit={handleOnFollow}
+                    />
+                  </Popover>
+                </>
               )}
             </Grid>
 
@@ -246,11 +405,13 @@ const PeaAccountProfile = ({
                     Invite
                   </PeaButton>
                 </Grid>
+
                 <Grid item>
                   <PeaButton icon={'email'} size={'small'} shape={'circular'}>
                     message
                   </PeaButton>
                 </Grid>
+
                 <Grid item>
                   <PeaButton
                     icon={'more_vert'}
@@ -291,6 +452,7 @@ const PeaAccountProfile = ({
         </PeaText>
 
         <PeaText gutterBottom>{`@${userName}`}</PeaText>
+        {isFollower && <PeaText gutterBottom>{'follows you'}</PeaText>}
         <br />
 
         <Grid container wrap={'nowrap'} spacing={1}>
@@ -317,21 +479,21 @@ const PeaAccountProfile = ({
         </Grid>
       </CardContent>
 
-      <Tabs
-        className={'MuiTabs-root'}
-        variant={'fullWidth'}
-        centered
-        value={index}
-        onChange={(e, val) => onChange(val)}
+      <PeaSwipeableTabs
+        activeIndex={activeTabIndex}
+        tabs={[
+          { label: 'Hosting' },
+          { label: 'Pods' },
+          { label: 'About' },
+          { label: 'Groups' },
+        ]}
+        enableFeedback={isMobile}
+        onTabChange={onTabChange}
       >
-        <Tab label="Pods" disableRipple />
-        <Tab label="About" disableRipple />
-        <Tab label="Groups" disableRipple />
-      </Tabs>
+        <Box minHeight={500}>{eventList}</Box>
 
-      {index === 0 && <Box minHeight={500}>{podList}</Box>}
+        <Box minHeight={500}>{podList}</Box>
 
-      {index === 1 && (
         <Box p={2} textAlign={'left'}>
           <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
             About
@@ -352,13 +514,6 @@ const PeaAccountProfile = ({
             <b>Groups</b>
           </PeaText>
           <PeaText gutterBottom />
-          <Grid container spacing={2}>
-            {groupsOfCurrentUser.map(item => (
-              <Grid item key={item.id}>
-                <PeaSocialAvatar {...item} />
-              </Grid>
-            ))}
-          </Grid>
           <br />
           <PeaText link underline={'none'} gutterBottom>
             <b>Tags</b>
@@ -376,34 +531,14 @@ const PeaAccountProfile = ({
             ))}
           </Grid>
         </Box>
-      )}
 
-      {index === 2 && (
-        <Box minHeight={500} style={{ position: 'relative' }}>
-          {groupList}
-          <PeaIcon
-            icon={'add'}
-            bgColor={'lightPrimary'}
-            size={'big'}
-            inverted
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              cursor: 'pointer',
-            }}
-            onClick={onCreateGroupClicked}
-          />
-        </Box>
-      )}
+        <Box minHeight={500}>{groupList}</Box>
+      </PeaSwipeableTabs>
 
       <PeaInvitationDialog
         person={userName}
         pods={pods}
-        groups={groups}
+        groups={invitableGroups}
         loading={loadingInvitableList}
         onInvitePod={onInvitePod}
         onInviteGroup={onInviteGroup}
@@ -433,13 +568,8 @@ PeaAccountProfile.propTypes = {
       id: PropTypes.string,
     }),
   ),
-  groups: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string,
-      src: PropTypes.string,
-    }),
-  ),
-  groupsOfCurrentUser: PropTypes.arrayOf(PropTypes.shape({})),
+  invitableGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  followableGroups: PropTypes.arrayOf(PropTypes.shape({})),
   tags: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string,
@@ -459,8 +589,6 @@ PeaAccountProfile.propTypes = {
   editing: PropTypes.bool,
   isUpdating: PropTypes.bool,
   isDeleting: PropTypes.bool,
-  isInvitingInfo: PropTypes.object,
-  invitedInfo: PropTypes.object,
   followLoading: PropTypes.bool,
   currentUserFollowing: PropTypes.string,
   onSubmit: PropTypes.func,
@@ -468,35 +596,48 @@ PeaAccountProfile.propTypes = {
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
   onChangeProfilePhotosClicked: PropTypes.func.isRequired,
   deleteProfile: PropTypes.func,
-  onCreateGroupClicked: PropTypes.func,
-  onInvite: PropTypes.func,
   onFollow: PropTypes.func,
   onReport: PropTypes.func,
   onInvitePod: PropTypes.func.isRequired,
   onInviteGroup: PropTypes.func.isRequired,
+  onCreateGroupClicked: PropTypes.func.isRequired,
   onInviteClicked: PropTypes.func.isRequired,
+  onAcceptFollowRequest: PropTypes.func.isRequired,
+  onLinkSocial: PropTypes.func.isRequired,
+  onChangeAccountStatus: PropTypes.func,
+  onLogout: PropTypes.func.isRequired,
+  onChangeSettings: PropTypes.func,
   invitingIds: PropTypes.object,
   invitedIds: PropTypes.object,
+  followerState: PropTypes.string,
+  acceptFollowLoading: PropTypes.bool,
+  isMobile: PropTypes.bool,
+  activeTabIndex: PropTypes.number,
+  onTabChange: PropTypes.func.isRequired,
+  eventList: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 PeaAccountProfile.defaultProps = {
+  isMobile: true,
+  activeTabIndex: 0,
   loadingInvitableList: false,
   userName: '',
   bio: '',
   location: undefined,
   locationInput: undefined,
-  birthday: '',
-  age: 'unknown',
-  gender: '',
-  groups: [],
+  birthday: undefined,
+  age: undefined,
+  gender: undefined,
+  eventList: [],
   pods: [],
-  groupsOfCurrentUser: [],
+  invitableGroups: [],
+  followableGroups: [],
   tags: [],
   reputation: 0,
   podsCount: 0,
   isCurrentUser: false,
   email: '',
-  phoneNumber: '',
+  phoneNumber: undefined,
   followersCount: 0,
   followingCount: 0,
   isPrivate: false,
@@ -504,20 +645,20 @@ PeaAccountProfile.defaultProps = {
   isUpdating: false,
   isDeleting: false,
   groupList: undefined,
-  isInvitingInfo: {},
-  invitedInfo: {},
   followLoading: false,
   currentUserFollowing: undefined,
   podList: undefined,
   onSubmit: () => {},
   setEditing: () => {},
   deleteProfile: () => {},
-  onCreateGroupClicked: () => {},
-  onInvite: () => {},
   onFollow: () => {},
   onReport: () => {},
   invitingIds: {},
   invitedIds: {},
+  followerState: undefined,
+  acceptFollowLoading: false,
+  onChangeAccountStatus: undefined,
+  onChangeSettings: undefined,
 };
 
 PeaAccountProfile.metadata = {

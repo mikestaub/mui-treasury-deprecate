@@ -19,6 +19,7 @@ const PeaUserSettings = ({
   onReceiveEmailChange,
   onEditProfile,
   onContactSupport,
+  onLogout,
   onDeleteProfile,
 }) => {
   const [anchorEl, setAnchor] = useState(null);
@@ -140,6 +141,16 @@ const PeaUserSettings = ({
 
         <Divider variant={'middle'} />
 
+        <MenuItem onClick={onLogout}>
+          <ListItemText disableTypography>
+            <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
+              Log out
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+
+        <Divider variant={'middle'} />
+
         <MenuItem>
           <ListItemText disableTypography>
             <Grid
@@ -174,6 +185,7 @@ PeaUserSettings.propTypes = {
   onReceiveEmailChange: PropTypes.func.isRequired,
   onEditProfile: PropTypes.func.isRequired,
   onContactSupport: PropTypes.func.isRequired,
+  onLogout: PropTypes.func.isRequired,
   onDeleteProfile: PropTypes.func.isRequired,
 };
 

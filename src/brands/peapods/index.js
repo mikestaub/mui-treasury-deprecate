@@ -97,6 +97,7 @@ export { default as AccountProfile } from './lib/PeaAccountProfile';
 export { default as ThreadTitle } from './lib/PeaThreadTitle';
 export { default as ThreadHeader } from './lib/PeaThreadHeader';
 export { default as MessageInput } from './lib/PeaMessageInput';
+export { default as MessageContent } from './lib/PeaMessageContent';
 export { default as TrendingHashtagList } from './lib/PeaTrendingHashtagList';
 export { default as Toast } from './lib/PeaToast';
 export { default as SwipeableTabs } from './lib/PeaSwipeableTabs';

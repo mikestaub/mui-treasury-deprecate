@@ -1,4 +1,11 @@
-import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+  memo,
+  PureComponent,
+} from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -6,11 +13,46 @@ import Grid from '@material-ui/core/Grid';
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
+class SwipeableSlider extends PureComponent {
+  componentDidUpdate() {
+    setTimeout(() => {
+      const { swipeableViews } = this.context;
+      swipeableViews.slideUpdateHeight();
+    });
+  }
+
+  render() {
+    const { children } = this.props;
+
+    return (
+      <div
+        style={{
+          padding: 16,
+        }}
+      >
+        {children}
+      </div>
+    );
+  }
+}
+
+SwipeableSlider.contextTypes = {
+  swipeableViews: PropTypes.node.isRequired,
+};
+
+SwipeableSlider.propTypes = {
+  children: PropTypes.node.isRequired,
+};
+
 const PeaSwipeableTabs = ({
   tabIndex,
   tabs,
   onTabChange,
+  onSwipe,
+  onTabClick,
   enableFeedback,
+  scrollEnabled,
+  isStickyShown,
   children,
   ...props
 }) => {
@@ -44,6 +86,15 @@ const PeaSwipeableTabs = ({
         }
       };
 
+  const onChangeIndex = (indexCurrent, indexLatest, meta) => {
+    if (meta && meta.reason === 'swipe') {
+      onSwipe({
+        indexCurrent,
+        indexLatest,
+      });
+    }
+  };
+
   useEffect(() => onChange(tabIndex), [onChange, tabIndex]);
 
   return (
@@ -51,15 +102,24 @@ const PeaSwipeableTabs = ({
       container
       direction="column"
       {...props}
-      style={{
-        height: '100%',
-      }}
+      style={scrollEnabled ? { height: '100%' } : { position: 'relative' }}
     >
       <Grid
         item
-        style={{
-          width: '100%',
-        }}
+        style={
+          isStickyShown
+            ? {
+                width: '100%',
+                position: 'sticky',
+                top: 50,
+                zIndex: 9999,
+                backgroundColor: '#fff',
+                boxShadow: '3px 10px 10px rgba(0,0,0,0.2)',
+              }
+            : {
+                width: '100%',
+              }
+        }
       >
         <Tabs
           variant={'fullWidth'}
@@ -72,52 +132,65 @@ const PeaSwipeableTabs = ({
               ...(index !== fineIndex && { transition: 'none' }),
             },
           }}
+          style={{ color: 'red' }}
           onChange={(e, val) => onChange(val)}
         >
           {tabs.map(tab => (
-            <Tab key={tab.label} disableRipple {...tab} />
+            <Tab key={tab.label} disableRipple onClick={onTabClick} {...tab} />
           ))}
         </Tabs>
       </Grid>
 
-      <Grid
-        item
-        style={{
-          flex: 1,
-        }}
-      >
-        <AutoSizer>
-          {({ height, width }) => (
-            <SwipeableViews
-              style={{
-                height,
-                width,
-              }}
-              containerStyle={{
-                height: '100%',
-              }}
-              slideStyle={{
-                height: '100%',
-              }}
-              enableMouseEvents={enableFeedback}
-              index={index}
-              onSwitching={onSwitching}
-            >
-              {React.Children.map(children, child => (
-                <div
-                  style={{
-                    height: 'calc(100% - 32px)',
-                    minHeight: 'calc(100% - 32px)',
-                    padding: 16,
-                  }}
-                >
-                  {child}
-                </div>
-              ))}
-            </SwipeableViews>
-          )}
-        </AutoSizer>
-      </Grid>
+      {scrollEnabled ? (
+        <Grid item style={{ flex: 1 }}>
+          <AutoSizer>
+            {({ height, width }) => (
+              <SwipeableViews
+                style={{
+                  height,
+                  width,
+                }}
+                containerStyle={{
+                  height: '100%',
+                }}
+                slideStyle={{
+                  height: '100%',
+                }}
+                enableMouseEvents={enableFeedback}
+                index={index}
+                onSwitching={onSwitching}
+                onChangeIndex={onChangeIndex}
+              >
+                {React.Children.map(children, child => (
+                  <div
+                    style={{
+                      height: 'calc(100% - 32px)',
+                      minHeight: 'calc(100% - 32px)',
+                      padding: 16,
+                    }}
+                  >
+                    {child}
+                  </div>
+                ))}
+              </SwipeableViews>
+            )}
+          </AutoSizer>
+        </Grid>
+      ) : (
+        <Grid item style={{ width: '100%' }}>
+          <SwipeableViews
+            animateHeight
+            enableMouseEvents={enableFeedback}
+            index={index}
+            onSwitching={onSwitching}
+            onChangeIndex={onChangeIndex}
+          >
+            {React.Children.map(children, child => (
+              <SwipeableSlider>{child}</SwipeableSlider>
+            ))}
+          </SwipeableViews>
+        </Grid>
+      )}
     </Grid>
   );
 };
@@ -129,13 +202,21 @@ PeaSwipeableTabs.propTypes = {
   children: PropTypes.node.isRequired,
   // disable feedback to increase performance
   enableFeedback: PropTypes.bool,
+  scrollEnabled: PropTypes.bool,
+  isStickyShown: PropTypes.bool,
   onTabChange: PropTypes.func,
+  onSwipe: PropTypes.func,
+  onTabClick: PropTypes.func,
 };
 
 PeaSwipeableTabs.defaultProps = {
   tabIndex: 0,
   enableFeedback: true,
+  scrollEnabled: true,
+  isStickyShown: false,
   onTabChange: () => {},
+  onSwipe: () => {},
+  onTabClick: () => {},
 };
 
 PeaSwipeableTabs.metadata = {

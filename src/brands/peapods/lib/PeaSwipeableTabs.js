@@ -124,7 +124,6 @@ const PeaSwipeableTabs = ({
 };
 
 PeaSwipeableTabs.propTypes = {
-  initialIndex: PropTypes.number,
   hasPadding: PropTypes.bool,
   tabIndex: PropTypes.number,
   tabs: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.node }))
@@ -136,7 +135,6 @@ PeaSwipeableTabs.propTypes = {
 };
 
 PeaSwipeableTabs.defaultProps = {
-  initialIndex: 0,
   hasPadding: true,
   tabIndex: 0,
   enableFeedback: true,

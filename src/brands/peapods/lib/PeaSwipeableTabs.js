@@ -44,7 +44,7 @@ const PeaSwipeableTabs = ({
         }
       };
 
-  useEffect(() => onChange(tabIndex), [onChange, tabIndex]);
+  useEffect(onChange, [tabIndex]);
 
   return (
     <Grid
@@ -98,18 +98,21 @@ const PeaSwipeableTabs = ({
               }}
               slideStyle={{
                 height: '100%',
+                overflow: 'hidden',
               }}
               enableMouseEvents={enableFeedback}
               index={index}
               onSwitching={onSwitching}
             >
-              {React.Children.map(children, child => (
+              {React.Children.map(children, (child, idx) => (
                 <div
                   style={{
+                    overflowY: 'auto',
                     height: 'calc(100% - 32px)',
                     minHeight: 'calc(100% - 32px)',
                     padding: 16,
                   }}
+                  ref={tabs[idx].ref}
                 >
                   {child}
                 </div>
@@ -124,8 +127,9 @@ const PeaSwipeableTabs = ({
 
 PeaSwipeableTabs.propTypes = {
   tabIndex: PropTypes.number,
-  tabs: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.node }))
-    .isRequired,
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({ ref: PropTypes.func, label: PropTypes.node.isRequired }),
+  ).isRequired,
   children: PropTypes.node.isRequired,
   // disable feedback to increase performance
   enableFeedback: PropTypes.bool,

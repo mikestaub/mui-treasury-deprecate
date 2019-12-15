@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -14,6 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
+import normalizeWheel from 'normalize-wheel';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
@@ -98,6 +99,20 @@ const PeaAccountProfile = ({
   const [openInviteDialog, setOpenInviteDialog] = useState(false);
   const [followButtonText, setFollowButtonText] = useState('Follow');
   const [confirmText, setConfirmText] = useState('Follow');
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const contentRef = useRef();
+  const hostingRef = useRef();
+  const podsRef = useRef();
+  const aboutRef = useRef();
+  const groupsRef = useRef();
+
+  const tabs = [
+    { ref: hostingRef, label: 'Hosting' },
+    { ref: podsRef, label: 'Pods' },
+    { ref: aboutRef, label: 'About' },
+    { ref: groupsRef, label: 'Groups' },
+  ];
 
   const isFollower = followerState === 'FOLLOWING';
   const followerRequested = followerState === 'PENDING_APPROVAL';
@@ -201,6 +216,47 @@ const PeaAccountProfile = ({
     window.open(`mailto:${supportEmail}`);
   };
 
+  const onContentWheel = e => {
+    e.stopPropagation();
+
+    const touches = e.changedTouches;
+
+    if (touches) {
+      // TODO: make work on mobile
+    }
+
+    const normalized = normalizeWheel(e);
+    const deltaY = normalized.pixelY;
+
+    const content = contentRef.current;
+    const { ref } = tabs[tabIndex];
+
+    const offset = content.scrollHeight - content.clientHeight;
+
+    const shouldUpdateTab = content.scrollTop >= offset;
+    const shouldUpdateContent = content.scrollTop < offset;
+
+    if (ref.current.scrollTop <= 0 || shouldUpdateContent) {
+      content.scrollTop += deltaY;
+    }
+
+    if (shouldUpdateTab) {
+      ref.current.scrollTop += deltaY;
+    }
+  };
+
+  const handleTabChanged = newIndex => {
+    setTabIndex(newIndex);
+
+    if (onTabChange) {
+      onTabChange(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    setTabIndex(activeTabIndex);
+  }, [activeTabIndex]);
+
   if (editing) {
     return (
       <PeaProfileEditor
@@ -287,8 +343,15 @@ const PeaAccountProfile = ({
   );
 
   return (
-    <Card className={'PeaAccountProfile-root'}>
+    <Card
+      className={'PeaAccountProfile-root'}
+      style={{ display: 'block', overflow: 'hidden' }}
+      onWheel={onContentWheel}
+      onTouchMove={onContentWheel}
+      ref={contentRef}
+    >
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
+
       <CardContent className={'MuiCardContent-root'}>
         <Grid container justify={'space-between'} spacing={2}>
           <Grid item style={{ height: 0 }}>
@@ -480,19 +543,14 @@ const PeaAccountProfile = ({
       </CardContent>
 
       <PeaSwipeableTabs
-        activeIndex={activeTabIndex}
-        tabs={[
-          { label: 'Hosting' },
-          { label: 'Pods' },
-          { label: 'About' },
-          { label: 'Groups' },
-        ]}
+        activeIndex={tabIndex}
+        tabs={tabs}
         enableFeedback={isMobile}
-        onTabChange={onTabChange}
+        onTabChange={handleTabChanged}
       >
-        <Box minHeight={500}>{eventList}</Box>
+        <Box>{eventList}</Box>
 
-        <Box minHeight={500}>{podList}</Box>
+        <Box>{podList}</Box>
 
         <Box p={2} textAlign={'left'}>
           <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
@@ -532,7 +590,7 @@ const PeaAccountProfile = ({
           </Grid>
         </Box>
 
-        <Box minHeight={500}>{groupList}</Box>
+        <Box>{groupList}</Box>
       </PeaSwipeableTabs>
 
       <PeaInvitationDialog

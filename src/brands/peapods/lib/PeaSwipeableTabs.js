@@ -15,7 +15,7 @@ const PeaSwipeableTabs = ({
   ...props
 }) => {
   const [index, setIndex] = useState(tabIndex);
-  const [fineIndex, setFineIndex] = useState(index);
+  const [fineIndex, setFineIndex] = useState(tabIndex);
 
   const indicatorRef = useRef(null);
 
@@ -28,6 +28,9 @@ const PeaSwipeableTabs = ({
 
   const onChange = useCallback(
     i => {
+      if (i === undefined) {
+        return;
+      }
       setIndex(i);
       setFineIndex(i);
       onTabChange(i);

@@ -52,6 +52,7 @@
     "material-ui-pickers": "^2.2.4",
     "moment": "^2.24.0",
     "mui-layout": "^1.2.4",
+    "normalize-wheel": "1.0.1",
     "phone": "2.3.21",
     "prism-react-renderer": "^0.1.6",
     "prop-types": "^15.7.2",

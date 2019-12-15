@@ -224,9 +224,6 @@ const PeaAccountProfile = ({
   // we micromange the scrolling to provide a better UX
   const onContentWheel = useCallback(
     e => {
-      // e.preventDefault();
-      // e.stopPropagation();
-
       let deltaY = 0;
 
       if (e.changedTouches && lastTouchRef.current) {

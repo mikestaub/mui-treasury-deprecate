@@ -101,6 +101,7 @@ const PeaAccountProfile = ({
   const [confirmText, setConfirmText] = useState('Follow');
   const [tabIndex, setTabIndex] = useState(0);
 
+  const lastTouchRef = useRef();
   const contentRef = useRef();
   const hostingRef = useRef();
   const podsRef = useRef();
@@ -216,34 +217,51 @@ const PeaAccountProfile = ({
     window.open(`mailto:${supportEmail}`);
   };
 
-  const onContentWheel = e => {
-    e.stopPropagation();
-
-    const touches = e.changedTouches;
-
-    if (touches) {
-      // TODO: make work on mobile
-    }
-
-    const normalized = normalizeWheel(e);
-    const deltaY = normalized.pixelY;
-
-    const content = contentRef.current;
-    const { ref } = tabs[tabIndex];
-
-    const offset = content.scrollHeight - content.clientHeight;
-
-    const shouldUpdateTab = content.scrollTop >= offset;
-    const shouldUpdateContent = content.scrollTop < offset;
-
-    if (ref.current.scrollTop <= 0 || shouldUpdateContent) {
-      content.scrollTop += deltaY;
-    }
-
-    if (shouldUpdateTab) {
-      ref.current.scrollTop += deltaY;
-    }
+  const onTouchStart = e => {
+    [lastTouchRef.current] = e.touches;
   };
+
+  // we micromange the scrolling to provide a better UX
+  const onContentWheel = useCallback(
+    e => {
+      // e.preventDefault();
+      // e.stopPropagation();
+
+      let deltaY = 0;
+
+      if (e.changedTouches && lastTouchRef.current) {
+        const currentTouch = e.changedTouches[0];
+        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
+        lastTouchRef.current = currentTouch;
+      } else {
+        const normalized = normalizeWheel(e);
+        deltaY = normalized.pixelY;
+      }
+
+      const content = contentRef.current;
+      const { ref } = tabs[tabIndex];
+
+      const offset = content.scrollHeight - content.clientHeight;
+
+      const shouldUpdateTab = content.scrollTop >= offset;
+      const tabScrollTop = ref.current.scrollTop;
+      const shouldUpdateContent =
+        content.scrollTop < offset ||
+        (content.scrollTop >= offset && tabScrollTop === 0);
+
+      if (shouldUpdateContent) {
+        content.scrollTop += deltaY;
+      }
+
+      if (shouldUpdateTab) {
+        ref.current.style.overflow = 'auto';
+        ref.current.scrollTop += deltaY;
+      } else {
+        ref.current.style.overflow = 'hidden';
+      }
+    },
+    [tabIndex, tabs],
+  );
 
   const handleTabChanged = newIndex => {
     setTabIndex(newIndex);
@@ -254,7 +272,9 @@ const PeaAccountProfile = ({
   };
 
   useEffect(() => {
-    setTabIndex(activeTabIndex);
+    if (activeTabIndex !== undefined) {
+      setTabIndex(activeTabIndex);
+    }
   }, [activeTabIndex]);
 
   if (editing) {
@@ -347,6 +367,7 @@ const PeaAccountProfile = ({
       className={'PeaAccountProfile-root'}
       style={{ display: 'block', overflow: 'hidden' }}
       onWheel={onContentWheel}
+      onTouchStart={onTouchStart}
       onTouchMove={onContentWheel}
       ref={contentRef}
     >

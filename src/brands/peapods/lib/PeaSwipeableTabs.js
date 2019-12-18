@@ -12,6 +12,7 @@ const PeaSwipeableTabs = ({
   onTabChange,
   enableFeedback,
   children,
+  customStyle,
   ...props
 }) => {
   const [index, setIndex] = useState(tabIndex);
@@ -55,6 +56,7 @@ const PeaSwipeableTabs = ({
       direction="column"
       {...props}
       style={{
+        ...customStyle,
         height: '100%',
       }}
     >
@@ -134,6 +136,7 @@ PeaSwipeableTabs.propTypes = {
     PropTypes.shape({ ref: PropTypes.func, label: PropTypes.node.isRequired }),
   ).isRequired,
   children: PropTypes.node.isRequired,
+  customStyle: PropTypes.shape({}),
   // disable feedback to increase performance
   enableFeedback: PropTypes.bool,
   onTabChange: PropTypes.func,
@@ -142,6 +145,7 @@ PeaSwipeableTabs.propTypes = {
 PeaSwipeableTabs.defaultProps = {
   tabIndex: 0,
   enableFeedback: true,
+  customStyle: {},
   onTabChange: () => {},
 };
 

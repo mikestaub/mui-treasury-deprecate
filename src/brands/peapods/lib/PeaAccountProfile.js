@@ -50,8 +50,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     cursor: 'pointer',
   },
-  backIcon: {
-    marginRight: 5,
+  topAvatar: {
+    margin: '0 5px',
   },
 }));
 
@@ -394,6 +394,8 @@ const PeaAccountProfile = ({
   );
 
   const scrollToTop = () => {
+    const avatarElement = avatarRef.current.firstChild;
+    avatarElement.style.transform = 'translateY(-60%)';
     contentRef.current.scrollTo(0, 0);
     setShowTopBar(false);
   };
@@ -410,13 +412,14 @@ const PeaAccountProfile = ({
       {showTopBar && (
         <Grid className={classes.scrollHeader}>
           <Box className={classes.backBox} onClick={scrollToTop}>
-            <PeaIcon
-              color={'secondary'}
-              size={'small'}
-              className={classes.backIcon}
-            >
+            <PeaIcon color={'secondary'} size={'small'}>
               arrow_back
             </PeaIcon>
+            <PeaAvatar
+              src={image}
+              size={'small'}
+              className={classes.topAvatar}
+            />
             <PeaText color={'secondary'}>{name}</PeaText>
           </Box>
         </Grid>

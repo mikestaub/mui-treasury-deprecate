@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+
 import PeaAvatar from './PeaAvatar';
 import PeaText from './PeaTypography';
 
@@ -9,9 +10,6 @@ const useStyles = makeStyles(({ spacing }) => ({
   root: {
     position: 'relative',
     textAlign: 'center',
-    boxShadow: '3px 4px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '15px 15px 0 0',
-    backgroundColor: 'white',
   },
   avatar: {
     width: 62,
@@ -32,10 +30,10 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-const PeaThreadTitle = ({ title, subtitle, avatar }) => {
+const PeaThreadTitle = ({ title, subtitle, avatars }) => {
   const classes = useStyles();
   return (
-    <Grid container spacing={2} classes={{ container: classes.root }}>
+    <Grid container classes={{ container: classes.root }}>
       <Grid item xs={12}>
         <div className={classes.textContainer}>
           <PeaText
@@ -46,12 +44,18 @@ const PeaThreadTitle = ({ title, subtitle, avatar }) => {
           >
             {title}
           </PeaText>
+
           <PeaText variant="caption" className={classes.status}>
             {subtitle}
           </PeaText>
         </div>
+
+        <PeaAvatar.Group
+          images={avatars}
+          className={classes.avatar}
+          more={avatars.length > 10 ? avatars.length - 10 : undefined}
+        />
       </Grid>
-      <PeaAvatar className={classes.avatar} src={avatar} />
     </Grid>
   );
 };
@@ -59,24 +63,18 @@ const PeaThreadTitle = ({ title, subtitle, avatar }) => {
 PeaThreadTitle.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
-  avatar: PropTypes.string,
+  avatars: PropTypes.arrayOf(PropTypes.string),
 };
+
 PeaThreadTitle.defaultProps = {
   title: 'Unknown',
   subtitle: 'unknown',
-  avatar: '',
+  avatars: [],
 };
+
 PeaThreadTitle.metadata = {
   name: 'Thread title',
-  description: '', // optional
+  description: '',
 };
 
-PeaThreadTitle.getTheme = () => ({
-  'Mui{Component}': {
-    // this object will be injected to 'overrides' section
-    root: {},
-    // ...
-  },
-});
-
-export default PeaThreadTitle;
+export default memo(PeaThreadTitle);

@@ -455,6 +455,7 @@ PeaProfileEditor.propTypes = {
   onCancel: PropTypes.func,
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
   onChangeProfilePhotosClicked: PropTypes.func.isRequired,
+  onLinkSocial: PropTypes.func.isRequired,
 };
 
 PeaProfileEditor.defaultProps = {

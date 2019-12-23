@@ -97,6 +97,7 @@ PeaAvatar.propTypes = {
   size: PropTypes.oneOf(['tiny', 'small', 'big', 'large', 'huge']),
   alt: PropTypes.string,
   placeholderIcon: PropTypes.string,
+  src: PropTypes.string,
 };
 
 PeaAvatar.defaultProps = {
@@ -105,6 +106,7 @@ PeaAvatar.defaultProps = {
   className: '',
   more: undefined,
   size: undefined,
+  src: undefined,
   alt: '',
   placeholderIcon: 'fa fa-user',
 };

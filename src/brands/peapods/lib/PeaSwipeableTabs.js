@@ -12,6 +12,7 @@ const PeaSwipeableTabs = ({
   onTabChange,
   enableFeedback,
   children,
+  hasPadding,
   ...props
 }) => {
   const [index, setIndex] = useState(tabIndex);
@@ -110,10 +111,10 @@ const PeaSwipeableTabs = ({
               {React.Children.map(children, (child, idx) => (
                 <div
                   style={{
+                    padding: hasPadding ? 16 : 0,
                     overflowY: 'auto',
                     height: 'calc(100% - 32px)',
                     minHeight: 'calc(100% - 32px)',
-                    padding: 16,
                   }}
                   ref={tabs[idx].ref}
                 >
@@ -129,6 +130,7 @@ const PeaSwipeableTabs = ({
 };
 
 PeaSwipeableTabs.propTypes = {
+  hasPadding: PropTypes.bool,
   tabIndex: PropTypes.number,
   tabs: PropTypes.arrayOf(
     PropTypes.shape({ ref: PropTypes.func, label: PropTypes.node.isRequired }),
@@ -140,6 +142,7 @@ PeaSwipeableTabs.propTypes = {
 };
 
 PeaSwipeableTabs.defaultProps = {
+  hasPadding: true,
   tabIndex: 0,
   enableFeedback: true,
   onTabChange: () => {},

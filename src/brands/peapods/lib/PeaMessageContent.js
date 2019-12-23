@@ -5,40 +5,114 @@ import { Grid, Typography } from '@material-ui/core';
 
 import PeaAvatar from './PeaAvatar';
 
-const useStyles = makeStyles(({ palette, spacing }) => ({
-  root: {
-    padding: spacing(1),
-    alignItems: 'center',
-    justifyContent: ({ isCurrentUser }) =>
-      isCurrentUser ? 'flex-end' : 'flex-start',
-  },
-  contentContainer: {
-    marginLeft: spacing(1),
-  },
-  name: {
-    fontSize: 12,
-  },
-  content: {
-    padding: spacing(1),
-    backgroundColor: palette.secondary.main,
-    color: palette.common.white,
-    borderRadius: 12,
-  },
-}));
+const useStyles = makeStyles(({ palette, spacing }) => {
+  const radius = spacing(2.5);
 
-const PeaMessageContent = ({ name, profilePhoto, content, isCurrentUser }) => {
+  return {
+    root: {
+      alignItems: 'center',
+      justifyContent: ({ isCurrentUser }) =>
+        isCurrentUser ? 'flex-end' : 'flex-start',
+    },
+    avatar: {
+      position: 'absolute',
+    },
+    contentContainer: {
+      marginLeft: ({ isCurrentUser }) =>
+        isCurrentUser ? `0` : `${spacing(6)}px`,
+      marginRight: ({ isCurrentUser }) =>
+        isCurrentUser ? `${spacing(2)}px` : `0`,
+    },
+    name: {
+      fontSize: 12,
+    },
+    content: {
+      padding: spacing(1, 2, 1.25),
+      borderRadius: 4,
+      marginBottom: 4,
+      display: 'inline-block',
+      wordBreak: 'break-word',
+    },
+    left: {
+      borderTopRightRadius: radius,
+      borderBottomRightRadius: radius,
+      backgroundColor: palette.grey[100],
+    },
+    right: {
+      borderTopLeftRadius: radius,
+      borderBottomLeftRadius: radius,
+      backgroundColor: palette.secondary.main,
+      color: palette.common.white,
+    },
+    leftFirst: {
+      borderTopLeftRadius: radius,
+    },
+    leftLast: {
+      borderBottomLeftRadius: radius,
+    },
+    rightFirst: {
+      borderTopRightRadius: radius,
+    },
+    rightLast: {
+      borderBottomRightRadius: radius,
+    },
+  };
+});
+
+const PeaMessageContent = ({
+  name,
+  profilePhoto,
+  content,
+  isCurrentUser,
+  showAvatar,
+  isFirst,
+  isLast,
+}) => {
   const classes = useStyles({ isCurrentUser });
+
+  const side = isCurrentUser ? 'right' : 'left';
+
+  const attachClass = () => {
+    let classString = '';
+
+    if (isFirst) {
+      classString += ` ${classes[`${side}First`]}`;
+    }
+    if (isLast) {
+      classString += ` ${classes[`${side}Last`]}`;
+    }
+
+    return classString;
+  };
 
   return (
     <Grid container className={classes.root}>
       {isCurrentUser ? (
-        <Typography className={classes.content}>{content}</Typography>
+        <Grid className={classes.contentContainer}>
+          <Typography
+            variant={'body2'}
+            className={`${classes.content} ${classes[side]} ${attachClass()}`}
+          >
+            {content}
+          </Typography>
+        </Grid>
       ) : (
         <>
-          <PeaAvatar src={profilePhoto} />
+          {showAvatar && (
+            <PeaAvatar className={classes.avatar} src={profilePhoto} />
+          )}
+
           <Grid className={classes.contentContainer}>
-            <Typography className={classes.name}>{name}</Typography>
-            <Typography className={classes.content}>{content}</Typography>
+            {showAvatar && (
+              <Typography className={classes.name}>{name}</Typography>
+            )}
+
+            <Typography
+              variant={'body2'}
+              className={`${classes.content} ${classes[side]} ${attachClass()}`}
+            >
+              {content}
+            </Typography>
           </Grid>
         </>
       )}
@@ -51,6 +125,9 @@ PeaMessageContent.propTypes = {
   content: PropTypes.string,
   profilePhoto: PropTypes.string,
   isCurrentUser: PropTypes.bool,
+  showAvatar: PropTypes.bool,
+  isFirst: PropTypes.bool,
+  isLast: PropTypes.bool,
 };
 
 PeaMessageContent.defaultProps = {
@@ -58,6 +135,9 @@ PeaMessageContent.defaultProps = {
   content: undefined,
   profilePhoto: undefined,
   isCurrentUser: false,
+  showAvatar: false,
+  isLast: false,
+  isFirst: false,
 };
 
 PeaMessageContent.metadata = {

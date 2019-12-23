@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
@@ -27,6 +27,15 @@ const useStyles = makeStyles(() => ({
       opacity: 0.8,
     },
   },
+  emoji: {
+    width: 24,
+    height: 24,
+    cursor: 'pointer',
+    color: '#B7B6BC',
+    '&:hover': {
+      opacity: 0.8,
+    },
+  },
   inputRoot: {
     borderRadius: 40,
     backgroundColor: '#F2F2F4',
@@ -48,9 +57,9 @@ const PeaMessageInput = ({
   disabled,
   onChange,
   onSubmit,
-  accept,
-  multiple,
-  onUpload,
+  // accept,
+  // multiple,
+  // onUpload,
 }) => {
   const classes = useStyles({ disabled });
   const [showEmoji, setShowEmoji] = useState(false);
@@ -58,11 +67,22 @@ const PeaMessageInput = ({
   const handleChange = e => {
     onChange(e.target.value);
   };
+
   const toggleEmoji = () => setShowEmoji(!showEmoji);
+
   const handleSubmit = () => {
-    if (disabled) return;
+    if (disabled || !value) {
+      return;
+    }
     onSubmit(value);
   };
+
+  const onKeyUp = e => {
+    if (e.key === 'Enter') {
+      handleSubmit();
+    }
+  };
+
   const onEmojiSelect = e => {
     handleChange({
       target: {
@@ -96,7 +116,9 @@ const PeaMessageInput = ({
           </Grid>
         </ClickAwayListener>
       )}
-      <Grid item>
+
+      {/* TODO: implement file upload */}
+      {/* <Grid item>
         <label htmlFor="pea-message-input-upload">
           <input
             className={classes.fileInput}
@@ -108,7 +130,8 @@ const PeaMessageInput = ({
           />
           <PeaIcon icon="fas fa-paperclip" className={classes.icon} />
         </label>
-      </Grid>
+      </Grid> */}
+
       <Grid item classes={{ item: classes.flex }} container>
         <Input
           fullWidth
@@ -116,6 +139,7 @@ const PeaMessageInput = ({
           classes={{ root: classes.inputRoot }}
           margin="none"
           variant="outlined"
+          onKeyUp={onKeyUp}
           onChange={handleChange}
           value={value}
           placeholder="Type your message"
@@ -125,7 +149,7 @@ const PeaMessageInput = ({
                 <img
                   src={EmojiIcon}
                   alt="emoji-picker"
-                  className={classes.icon}
+                  className={classes.emoji}
                 />
               ) : (
                 <PeaIcon
@@ -138,6 +162,7 @@ const PeaMessageInput = ({
           }
         />
       </Grid>
+
       <Grid item>
         <PeaIcon
           icon="fa fa-paper-plane"
@@ -153,29 +178,24 @@ PeaMessageInput.propTypes = {
   value: PropTypes.string,
   disabled: PropTypes.bool,
   onChange: PropTypes.func,
-  onUpload: PropTypes.func,
   onSubmit: PropTypes.func,
-  accept: PropTypes.string,
-  multiple: PropTypes.bool,
+  // onUpload: PropTypes.func,
+  // accept: PropTypes.string,
+  // multiple: PropTypes.bool,
 };
+
 PeaMessageInput.defaultProps = {
   value: '',
   disabled: false,
   onChange: noop,
-  onUpload: noop,
   onSubmit: noop,
-  accept: 'image/*',
-  multiple: false,
+  // accept: 'image/*',
+  // onUpload: noop,
+  // multiple: false,
 };
+
 PeaMessageInput.metadata = {
   name: 'Pea Message input',
 };
-PeaMessageInput.getTheme = () => ({
-  'Mui{Component}': {
-    // this object will be injected to 'overrides' section
-    root: {},
-    // ...
-  },
-});
 
-export default PeaMessageInput;
+export default memo(PeaMessageInput);

@@ -15,6 +15,8 @@ import CodeHighlight from 'components/highlights/CodeHighlight';
 
 import MomentUtils from '@date-io/moment';
 
+// TODO: fix broken component stories
+
 import peapodsBanner from './lib/assets/register-poster.png';
 // PEAPODS THEME
 import peapodsTheme from './lib/theme';
@@ -47,7 +49,7 @@ import CardActions from './demo/CardActions';
 import ProfileCard from './demo/ProfileCard';
 import NotificationItem from './demo/NotificationItem';
 import Confirmation from './demo/Confirmation';
-import InvitationDialog from './demo/InvitationDialog';
+// import InvitationDialog from './demo/InvitationDialog';
 import GroupDialog from './demo/GroupDialog';
 import PodDialog from './demo/PodDialog';
 import Register from './demo/Register';
@@ -63,11 +65,11 @@ import SocialAvatar from './demo/SocialAvatar';
 import Connections from './demo/Connections';
 import PeaTypography from './demo/Typography';
 import UserCard from './demo/UserCard';
-import GroupProfile from './demo/GroupProfile';
+// import GroupProfile from './demo/GroupProfile';
 import GroupCard from './demo/GroupCard';
 import EventCard from './demo/EventCard';
 import Chat from './demo/Chat';
-import AccountProfile from './demo/AccountProfile';
+// import AccountProfile from './demo/AccountProfile';
 import ThreadTitle from './demo/ThreadTitle';
 import ThreadHeader from './demo/ThreadHeader';
 import MessageInput from './demo/MessageInput';
@@ -80,7 +82,7 @@ import Tooltip from './demo/Tooltip';
 import AutocompleteList from './demo/AutocompleteList';
 import AutocompleteHashtags from './demo/AutocompleteHashtags';
 import UserSettings from './demo/UserSettings';
-import ShareContent from './demo/ShareContent';
+// import ShareContent from './demo/ShareContent';
 import AudienceSelector from './demo/AudienceSelector';
 
 const components = [
@@ -164,7 +166,7 @@ const components = [
   },
   { component: ProfileCard },
   { component: Confirmation },
-  { component: InvitationDialog },
+  // { component: InvitationDialog },
   { component: GroupDialog },
   { component: PodDialog },
   { component: Register },
@@ -209,14 +211,14 @@ const components = [
   { component: UserCard },
   { component: UserSettings },
 
-  {
-    component: GroupProfile,
-    gridItemProps: {
-      sm: 10,
-      md: 7,
-      lg: 6,
-    },
-  },
+  // {
+  //   component: GroupProfile,
+  //   gridItemProps: {
+  //     sm: 10,
+  //     md: 7,
+  //     lg: 6,
+  //   },
+  // },
   {
     component: EventDetails,
     gridItemProps: {
@@ -243,13 +245,13 @@ const components = [
       md: 5,
     },
   },
-  {
-    component: AccountProfile,
-    gridItemProps: {
-      sm: 10,
-      lg: 8,
-    },
-  },
+  // {
+  //   component: AccountProfile,
+  //   gridItemProps: {
+  //     sm: 10,
+  //     lg: 8,
+  //   },
+  // },
   {
     component: ThreadTitle,
     gridItemProps: {
@@ -281,7 +283,7 @@ const components = [
   { component: Toast },
   { component: LoadingSpinner },
   { component: Tooltip, previewProps: { white: true } },
-  { component: ShareContent, previewProps: { white: true } },
+  // { component: ShareContent, previewProps: { white: true } },
 ];
 
 const PeapodsPage = () => {

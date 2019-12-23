@@ -141,9 +141,9 @@ const PeaGroupCard = ({
                   </PeaIcon>
                   {startCase(type.toLowerCase())}
                 </PeaText>
-                <PeaText>{`${humanFormat(memberCount, { decimals: 0 })} member${
-                  memberCount === 1 ? '' : 's'
-                }`}</PeaText>
+                <PeaText>{`${humanFormat(memberCount || 0, {
+                  decimals: 0,
+                })} member${memberCount === 1 ? '' : 's'}`}</PeaText>
               </Grid>
 
               <Grid item>

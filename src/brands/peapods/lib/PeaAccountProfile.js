@@ -29,6 +29,8 @@ import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaGroupSelector from './PeaGroupSelector';
 
+const AVATAR_SCROLL_FACTOR = 0.0055;
+
 const useStyles = makeStyles(() => ({
   followButton: {
     width: 160,
@@ -261,7 +263,8 @@ const PeaAccountProfile = ({
 
       const content = contentRef.current;
 
-      let avatarScale = Math.min(1 - content.scrollTop / 80, 1);
+      let avatarScale = 1 - content.scrollTop * AVATAR_SCROLL_FACTOR;
+
       if (avatarScale < 0.31) {
         avatarScale = 0.31;
         setShowTopBar(true);

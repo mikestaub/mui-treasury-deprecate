@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
+
 import PeaAvatar from './PeaAvatar';
 import PeaText from './PeaTypography';
 
@@ -49,6 +50,7 @@ const useStyles = makeStyles(({ palette, spacing }) => {
 
 const PeaChat = ({ avatar, messages, side }) => {
   const classes = useStyles();
+
   const attachClass = index => {
     if (index === 0) {
       return classes[`${side}First`];
@@ -58,6 +60,7 @@ const PeaChat = ({ avatar, messages, side }) => {
     }
     return '';
   };
+
   return (
     <Grid
       container
@@ -69,6 +72,7 @@ const PeaChat = ({ avatar, messages, side }) => {
           <PeaAvatar src={avatar} size={'small'} />
         </Grid>
       )}
+
       <Grid item xs={8}>
         {messages.map((msg, i) => (
           <div key={msg} className={classes[`${side}Row`]}>
@@ -91,14 +95,17 @@ PeaChat.propTypes = {
   messages: PropTypes.arrayOf(PropTypes.string),
   side: PropTypes.oneOf(['left', 'right']),
 };
+
 PeaChat.defaultProps = {
   avatar: '',
   messages: [],
   side: 'left',
 };
+
 PeaChat.metadata = {
   name: 'Pea Chat',
 };
+
 PeaChat.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 export default PeaChat;

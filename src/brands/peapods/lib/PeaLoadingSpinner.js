@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -8,13 +9,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PeaLoadingSpinner = props => {
+const PeaLoadingSpinner = ({ noMargin, ...props }) => {
   const classes = useStyles();
-  return <CircularProgress className={classes.progress} {...props} />;
+
+  const className = noMargin ? undefined : classes.progress;
+
+  return <CircularProgress className={className} {...props} />;
 };
 
-PeaLoadingSpinner.propTypes = {};
-PeaLoadingSpinner.defaultProps = {};
+PeaLoadingSpinner.propTypes = {
+  noMargin: PropTypes.bool,
+};
+
+PeaLoadingSpinner.defaultProps = {
+  noMargin: false,
+};
+
 PeaLoadingSpinner.metadata = {
   name: 'Pea Loading Spinner',
   libraries: [
@@ -24,6 +34,7 @@ PeaLoadingSpinner.metadata = {
     },
   ],
 };
+
 PeaLoadingSpinner.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
 export default PeaLoadingSpinner;

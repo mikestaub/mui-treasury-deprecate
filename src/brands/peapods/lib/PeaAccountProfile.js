@@ -44,6 +44,8 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     zIndex: 9999,
     background: '#fff',
+    transform: 'translateY(-100px)',
+    transition: 'transform .5s',
   },
   backBox: {
     display: 'flex',
@@ -260,8 +262,8 @@ const PeaAccountProfile = ({
       const content = contentRef.current;
 
       let avatarScale = Math.min(1 - content.scrollTop / 80, 1);
-      if (avatarScale < 0.4) {
-        avatarScale = 0.4;
+      if (avatarScale < 0.31) {
+        avatarScale = 0.31;
         setShowTopBar(true);
       } else {
         setShowTopBar(false);
@@ -409,21 +411,18 @@ const PeaAccountProfile = ({
       onTouchMove={onContentWheel}
       ref={contentRef}
     >
-      {showTopBar && (
-        <Grid className={classes.scrollHeader}>
-          <Box className={classes.backBox} onClick={scrollToTop}>
-            <PeaIcon color={'secondary'} size={'small'}>
-              arrow_back
-            </PeaIcon>
-            <PeaAvatar
-              src={image}
-              size={'small'}
-              className={classes.topAvatar}
-            />
-            <PeaText color={'secondary'}>{name}</PeaText>
-          </Box>
-        </Grid>
-      )}
+      <Grid
+        className={classes.scrollHeader}
+        style={showTopBar ? { transform: 'translateY(0)' } : {}}
+      >
+        <Box className={classes.backBox} onClick={scrollToTop}>
+          <PeaIcon color={'secondary'} size={'small'}>
+            arrow_back
+          </PeaIcon>
+          <PeaAvatar src={image} size={'small'} className={classes.topAvatar} />
+          <PeaText color={'secondary'}>{name}</PeaText>
+        </Box>
+      </Grid>
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>

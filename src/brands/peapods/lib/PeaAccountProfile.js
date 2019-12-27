@@ -29,9 +29,33 @@ import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaGroupSelector from './PeaGroupSelector';
 
+const AVATAR_SCROLL_FACTOR = 0.0055;
+
 const useStyles = makeStyles(() => ({
   followButton: {
     width: 160,
+  },
+  scrollHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 50,
+    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
+    padding: '0 10px',
+    position: 'sticky',
+    top: 0,
+    width: '100%',
+    zIndex: 9999,
+    background: '#fff',
+    transform: 'translateY(-100px)',
+    transition: 'transform .5s',
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+  },
+  topAvatar: {
+    margin: '0 5px',
   },
 }));
 
@@ -93,6 +117,7 @@ const PeaAccountProfile = ({
 }) => {
   const classes = useStyles();
 
+  const [showTopBar, setShowTopBar] = useState(false);
   const [anchorEl, setAnchor] = useState(null);
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
@@ -107,6 +132,7 @@ const PeaAccountProfile = ({
   const podsRef = useRef();
   const aboutRef = useRef();
   const groupsRef = useRef();
+  const avatarRef = useRef();
 
   const tabs = [
     { ref: hostingRef, label: 'Hosting' },
@@ -236,6 +262,19 @@ const PeaAccountProfile = ({
       }
 
       const content = contentRef.current;
+
+      let avatarScale = 1 - content.scrollTop * AVATAR_SCROLL_FACTOR;
+
+      if (avatarScale < 0.31) {
+        avatarScale = 0.31;
+        setShowTopBar(true);
+      } else {
+        setShowTopBar(false);
+      }
+      const avatarElement = avatarRef.current.firstChild;
+      avatarElement.style.transform = `translateY(-60%) scale(${avatarScale})`;
+      avatarElement.style.transition = 'transform .2s';
+
       const { ref } = tabs[tabIndex];
 
       const offset = content.scrollHeight - content.clientHeight;
@@ -359,6 +398,13 @@ const PeaAccountProfile = ({
     </Menu>
   );
 
+  const scrollToTop = () => {
+    const avatarElement = avatarRef.current.firstChild;
+    avatarElement.style.transform = 'translateY(-60%)';
+    contentRef.current.scrollTo(0, 0);
+    setShowTopBar(false);
+  };
+
   return (
     <Card
       className={'PeaAccountProfile-root'}
@@ -368,11 +414,23 @@ const PeaAccountProfile = ({
       onTouchMove={onContentWheel}
       ref={contentRef}
     >
+      <Grid
+        className={classes.scrollHeader}
+        style={showTopBar ? { transform: 'translateY(0)' } : {}}
+      >
+        <Box className={classes.backBox} onClick={scrollToTop}>
+          <PeaIcon color={'secondary'} size={'small'}>
+            arrow_back
+          </PeaIcon>
+          <PeaAvatar src={image} size={'small'} className={classes.topAvatar} />
+          <PeaText color={'secondary'}>{name}</PeaText>
+        </Box>
+      </Grid>
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container justify={'space-between'} spacing={2}>
-          <Grid item style={{ height: 0 }}>
+          <Grid item style={{ height: 0 }} ref={avatarRef}>
             <PeaAvatar className={'MuiAvatar-root-profilePic'} src={image} />
           </Grid>
           <Hidden only={'xs'}>
@@ -565,6 +623,7 @@ const PeaAccountProfile = ({
         tabs={tabs}
         enableFeedback={isMobile}
         onTabChange={handleTabChanged}
+        customStyle={{ paddingTop: showTopBar ? 50 : 0 }}
       >
         <Box>{eventList}</Box>
 

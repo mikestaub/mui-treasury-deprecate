@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { useRef, useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +12,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import cx from 'classnames';
+import normalizeWheel from 'normalize-wheel';
 
 import PeaButton from './PeaButton';
 import PeaText from './PeaTypography';
@@ -115,15 +116,74 @@ const PeaEventDetails = ({
   isLoading,
   onReport,
 }) => {
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const lastTouchRef = useRef();
+  const contentRef = useRef();
+  const podsRef = useRef();
+  const aboutRef = useRef();
+  const connectionRef = useRef();
+
   const tabs = [
-    { label: 'Pods' },
-    { label: 'About' },
-    { label: 'Connections' },
+    { ref: podsRef, label: 'Pods' },
+    { ref: aboutRef, label: 'About' },
+    { ref: connectionRef, label: 'Connections' },
   ];
+
+  const onTouchStart = e => {
+    [lastTouchRef.current] = e.touches;
+  };
+
+  // we micromange the scrolling to provide a better UX
+  const onContentWheel = useCallback(
+    e => {
+      let deltaY = 0;
+
+      if (e.changedTouches && lastTouchRef.current) {
+        const currentTouch = e.changedTouches[0];
+        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
+        lastTouchRef.current = currentTouch;
+      } else {
+        const normalized = normalizeWheel(e);
+        deltaY = normalized.pixelY;
+      }
+
+      const content = contentRef.current;
+      const { ref } = tabs[tabIndex];
+
+      const offset = content.scrollHeight - content.clientHeight;
+
+      const shouldUpdateTab = content.scrollTop >= offset;
+      const tabScrollTop = ref.current.scrollTop;
+      const shouldUpdateContent =
+        content.scrollTop < offset ||
+        (content.scrollTop >= offset && tabScrollTop === 0);
+
+      if (shouldUpdateContent) {
+        content.scrollTop += deltaY;
+      }
+
+      if (shouldUpdateTab) {
+        ref.current.style.overflow = 'auto';
+        ref.current.scrollTop += deltaY;
+      } else {
+        ref.current.style.overflow = 'hidden';
+      }
+    },
+    [tabIndex, tabs],
+  );
 
   const onTabChange = index => {
     if (onChangeTab) {
       onChangeTab(tabs[index].label);
+    }
+  };
+
+  const handleTabChanged = newIndex => {
+    setTabIndex(newIndex);
+
+    if (onTabChange) {
+      onTabChange(newIndex);
     }
   };
 
@@ -212,7 +272,14 @@ const PeaEventDetails = ({
   );
 
   return (
-    <Card className={'PeaGroupProfile-root'}>
+    <Card
+      className={'PeaGroupProfile-root'}
+      style={{ display: 'block', overflow: 'hidden' }}
+      onWheel={onContentWheel}
+      onTouchStart={onTouchStart}
+      onTouchMove={onContentWheel}
+      ref={contentRef}
+    >
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
@@ -300,9 +367,10 @@ const PeaEventDetails = ({
       </CardContent>
 
       <PeaSwipeableTabs
+        activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
-        onTabChange={onTabChange}
+        onTabChange={handleTabChanged}
       >
         {renderPods()}
 

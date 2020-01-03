@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import cx from 'classnames';
@@ -17,24 +17,45 @@ const PeaGroupProfile = ({
   isMobile,
   onChangeTab,
 }) => {
+  const podsRef = useRef();
+  const aboutRef = useRef();
+  const membersRef = useRef();
+  const messagesRef = useRef();
+
+  const [tabIndex, setTabIndex] = useState(0);
+
   const tabs = [
-    { label: 'Pods' },
-    { label: 'About' },
-    { label: 'Members' },
-    { label: 'Messages' },
+    { ref: podsRef, label: 'Pods' },
+    { ref: aboutRef, label: 'About' },
+    { ref: membersRef, label: 'Members' },
+    { ref: messagesRef, label: 'Messages' },
   ];
 
   const onTabChange = index => {
     if (onChangeTab) {
-      onChangeTab(tabs[index].label);
+      onChangeTab(tabs[index]);
     }
   };
 
+  const handleTabChanged = newIndex => {
+    setTabIndex(newIndex);
+
+    if (onTabChange) {
+      onTabChange(newIndex);
+    }
+  };
+
+  useEffect(() => {
+    handleTabChanged(0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <PeaSwipeableTabs
+      activeIndex={tabIndex}
       tabs={tabs}
       enableFeedback={isMobile}
-      onTabChange={onTabChange}
+      onTabChange={handleTabChanged}
     >
       {renderPodList()}
 

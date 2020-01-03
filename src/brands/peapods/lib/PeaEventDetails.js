@@ -1,6 +1,8 @@
 import React, { useRef, useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
@@ -24,6 +26,34 @@ import PeaShareContent from './PeaShareContent';
 
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
+
+const useStyles = makeStyles(() => ({
+  scrollHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 50,
+    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
+    padding: '0 10px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 9999,
+    background: '#fff',
+    transform: 'translateY(-100px)',
+    transition: 'transform .5s',
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    width: '100%',
+  },
+  backTitle: {
+    marginLeft: 5,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+}));
 
 const renderAboutDetails = ({
   profile,
@@ -116,6 +146,9 @@ const PeaEventDetails = ({
   isLoading,
   onReport,
 }) => {
+  const classes = useStyles();
+
+  const [showTopBar, setShowTopBar] = useState(false);
   const [tabIndex, setTabIndex] = useState(0);
 
   const lastTouchRef = useRef();
@@ -162,6 +195,8 @@ const PeaEventDetails = ({
       if (shouldUpdateContent) {
         content.scrollTop += deltaY;
       }
+
+      setShowTopBar(shouldUpdateTab);
 
       if (shouldUpdateTab) {
         ref.current.style.overflow = 'auto';
@@ -271,6 +306,11 @@ const PeaEventDetails = ({
     </Menu>
   );
 
+  const scrollToTop = () => {
+    contentRef.current.scrollTo(0, 0);
+    setShowTopBar(false);
+  };
+
   return (
     <Card
       className={'PeaGroupProfile-root'}
@@ -280,6 +320,19 @@ const PeaEventDetails = ({
       onTouchMove={onContentWheel}
       ref={contentRef}
     >
+      <Grid
+        className={classes.scrollHeader}
+        style={showTopBar ? { transform: 'translateY(0)' } : {}}
+      >
+        <Box className={classes.backBox} onClick={scrollToTop}>
+          <PeaIcon color={'secondary'} size={'small'}>
+            arrow_back
+          </PeaIcon>
+          <PeaText color={'secondary'} className={classes.backTitle}>
+            {title}
+          </PeaText>
+        </Box>
+      </Grid>
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
@@ -371,6 +424,7 @@ const PeaEventDetails = ({
         tabs={tabs}
         enableFeedback={isMobile}
         onTabChange={handleTabChanged}
+        customStyle={{ paddingTop: showTopBar ? 50 : 0 }}
       >
         {renderPods()}
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { memo, useRef, useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 10px',
     position: 'sticky',
     top: 0,
-    zIndex: 9999,
+    zIndex: 1000,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .5s',
@@ -106,6 +106,7 @@ const PeaGroupCard = ({
     [lastTouchRef.current] = e.touches;
   };
 
+  // TODO: this logic is used in 3 components, refactor into custom hook
   const onContentWheel = useCallback(
     e => {
       let deltaY = 0;
@@ -124,7 +125,8 @@ const PeaGroupCard = ({
 
       const offset = content.scrollHeight - content.clientHeight;
 
-      const shouldUpdateTab = content.scrollTop >= offset;
+      const extraPadding = showTopBar ? 50 : 0;
+      const shouldUpdateTab = content.scrollTop + extraPadding >= offset;
       const tabScrollTop = ref.current.scrollTop;
       const shouldUpdateContent =
         content.scrollTop < offset ||
@@ -143,7 +145,7 @@ const PeaGroupCard = ({
         ref.current.style.overflow = 'hidden';
       }
     },
-    [selectedTab],
+    [selectedTab, showTopBar],
   );
 
   const scrollToTop = () => {
@@ -348,4 +350,4 @@ PeaGroupCard.metadata = {
 
 PeaGroupCard.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaGroupCard;
+export default memo(PeaGroupCard);

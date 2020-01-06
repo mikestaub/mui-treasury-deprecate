@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 10px',
     position: 'sticky',
     top: 0,
-    zIndex: 9999,
+    zIndex: 1000,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .5s',
@@ -186,7 +186,8 @@ const PeaEventDetails = ({
 
       const offset = content.scrollHeight - content.clientHeight;
 
-      const shouldUpdateTab = content.scrollTop >= offset;
+      const extraPadding = showTopBar ? 50 : 0;
+      const shouldUpdateTab = content.scrollTop + extraPadding >= offset;
       const tabScrollTop = ref.current.scrollTop;
       const shouldUpdateContent =
         content.scrollTop < offset ||
@@ -205,7 +206,7 @@ const PeaEventDetails = ({
         ref.current.style.overflow = 'hidden';
       }
     },
-    [tabIndex, tabs],
+    [tabIndex, tabs, showTopBar],
   );
 
   const onTabChange = index => {

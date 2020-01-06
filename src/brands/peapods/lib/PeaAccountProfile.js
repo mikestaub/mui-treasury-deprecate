@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 
-import React, { useRef, useState, useEffect, useCallback } from 'react';
+import React, { memo, useRef, useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     position: 'sticky',
     top: 0,
     width: '100%',
-    zIndex: 9999,
+    zIndex: 1000,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .5s',
@@ -802,4 +802,4 @@ PeaAccountProfile.metadata = {
 
 PeaAccountProfile.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaAccountProfile;
+export default memo(PeaAccountProfile);

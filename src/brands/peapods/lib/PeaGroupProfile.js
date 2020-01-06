@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { memo, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import cx from 'classnames';
@@ -138,4 +138,4 @@ PeaGroupProfile.metadata = {
   name: 'Pea Group Profile',
 };
 
-export default PeaGroupProfile;
+export default memo(PeaGroupProfile);

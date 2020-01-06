@@ -1,6 +1,8 @@
-import React, { useState, memo } from 'react';
+import React, { useRef, useState, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Popover from '@material-ui/core/Popover';
@@ -12,6 +14,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import cx from 'classnames';
+import normalizeWheel from 'normalize-wheel';
 
 import PeaButton from './PeaButton';
 import PeaText from './PeaTypography';
@@ -23,6 +26,34 @@ import PeaShareContent from './PeaShareContent';
 
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
+
+const useStyles = makeStyles(() => ({
+  scrollHeader: {
+    display: 'flex',
+    alignItems: 'center',
+    height: 50,
+    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
+    padding: '0 10px',
+    position: 'sticky',
+    top: 0,
+    zIndex: 1000,
+    background: '#fff',
+    transform: 'translateY(-100px)',
+    transition: 'transform .5s',
+  },
+  backBox: {
+    display: 'flex',
+    alignItems: 'center',
+    cursor: 'pointer',
+    width: '100%',
+  },
+  backTitle: {
+    marginLeft: 5,
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+  },
+}));
 
 const renderAboutDetails = ({
   profile,
@@ -115,15 +146,80 @@ const PeaEventDetails = ({
   isLoading,
   onReport,
 }) => {
+  const classes = useStyles();
+
+  const [showTopBar, setShowTopBar] = useState(false);
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const lastTouchRef = useRef();
+  const contentRef = useRef();
+  const podsRef = useRef();
+  const aboutRef = useRef();
+  const connectionRef = useRef();
+
   const tabs = [
-    { label: 'Pods' },
-    { label: 'About' },
-    { label: 'Connections' },
+    { ref: podsRef, label: 'Pods' },
+    { ref: aboutRef, label: 'About' },
+    { ref: connectionRef, label: 'Connections' },
   ];
+
+  const onTouchStart = e => {
+    [lastTouchRef.current] = e.touches;
+  };
+
+  // we micromange the scrolling to provide a better UX
+  const onContentWheel = useCallback(
+    e => {
+      let deltaY = 0;
+
+      if (e.changedTouches && lastTouchRef.current) {
+        const currentTouch = e.changedTouches[0];
+        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
+        lastTouchRef.current = currentTouch;
+      } else {
+        const normalized = normalizeWheel(e);
+        deltaY = normalized.pixelY;
+      }
+
+      const content = contentRef.current;
+      const { ref } = tabs[tabIndex];
+
+      const offset = content.scrollHeight - content.clientHeight;
+
+      const extraPadding = showTopBar ? 50 : 0;
+      const shouldUpdateTab = content.scrollTop + extraPadding >= offset;
+      const tabScrollTop = ref.current.scrollTop;
+      const shouldUpdateContent =
+        content.scrollTop < offset ||
+        (content.scrollTop >= offset && tabScrollTop === 0);
+
+      if (shouldUpdateContent) {
+        content.scrollTop += deltaY;
+      }
+
+      setShowTopBar(shouldUpdateTab);
+
+      if (shouldUpdateTab) {
+        ref.current.style.overflow = 'auto';
+        ref.current.scrollTop += deltaY;
+      } else {
+        ref.current.style.overflow = 'hidden';
+      }
+    },
+    [tabIndex, tabs, showTopBar],
+  );
 
   const onTabChange = index => {
     if (onChangeTab) {
       onChangeTab(tabs[index].label);
+    }
+  };
+
+  const handleTabChanged = newIndex => {
+    setTabIndex(newIndex);
+
+    if (onTabChange) {
+      onTabChange(newIndex);
     }
   };
 
@@ -211,8 +307,33 @@ const PeaEventDetails = ({
     </Menu>
   );
 
+  const scrollToTop = () => {
+    contentRef.current.scrollTo(0, 0);
+    setShowTopBar(false);
+  };
+
   return (
-    <Card className={'PeaGroupProfile-root'}>
+    <Card
+      className={'PeaGroupProfile-root'}
+      style={{ display: 'block', overflow: 'hidden' }}
+      onWheel={onContentWheel}
+      onTouchStart={onTouchStart}
+      onTouchMove={onContentWheel}
+      ref={contentRef}
+    >
+      <Grid
+        className={classes.scrollHeader}
+        style={showTopBar ? { transform: 'translateY(0)' } : {}}
+      >
+        <Box className={classes.backBox} onClick={scrollToTop}>
+          <PeaIcon color={'secondary'} size={'small'}>
+            arrow_back
+          </PeaIcon>
+          <PeaText color={'secondary'} className={classes.backTitle}>
+            {title}
+          </PeaText>
+        </Box>
+      </Grid>
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
@@ -300,9 +421,11 @@ const PeaEventDetails = ({
       </CardContent>
 
       <PeaSwipeableTabs
+        activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
-        onTabChange={onTabChange}
+        onTabChange={handleTabChanged}
+        customStyle={{ paddingTop: showTopBar ? 50 : 0 }}
       >
         {renderPods()}
 

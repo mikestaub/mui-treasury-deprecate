@@ -7,6 +7,22 @@ export default ({ spacing, breakpoints, white, palette }) => ({
           marginTop: spacing(1),
         },
       },
+      '&.PeaEventDialog': {
+        '& .PeaEventForm-photoBtn': {
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '100%',
+          borderRadius: 6,
+          background: 'rgba(0,0,0,0.4)',
+          '& .material-icons': {
+            fontSize: 48,
+          },
+        },
+      },
       '&.PeaDialog': {
         '& .DialogTitle--contained + .DialogContent--root': {
           paddingTop: 24,
@@ -34,7 +50,7 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         },
         '& .DialogContent--root': {
           maxWidth: 400,
-          minWidth: 343,
+          minWidth: 400,
         },
         '& .DialogActions-root': {
           marginBottom: spacing(2),
@@ -49,7 +65,7 @@ export default ({ spacing, breakpoints, white, palette }) => ({
           border: `2px dashed ${palette.secondary.main}`,
           borderRadius: 8,
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
           '&:hover': {
             cursor: 'pointer',
@@ -64,10 +80,9 @@ export default ({ spacing, breakpoints, white, palette }) => ({
       },
       '&.PeaInvitationDialog': {
         '& .DialogContent--root': {
-          paddingLeft: 0,
-          paddingRight: 0,
-          paddingBottom: 8,
-          minWidth: 343,
+          padding: '0px !important',
+          minWidth: 400,
+          minHeight: 450,
         },
         '& .ListSubheader-typography': {
           color: palette.secondary.main,
@@ -77,11 +92,15 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         '& .ListItem-secondaryErrorText': {
           color: palette.error.main,
         },
+        '& .List-Container': {
+          height: 300,
+          overflowY: 'auto',
+        },
       },
       '&.PeaDialog.PeaEventDialog': {
         '& .DialogContent--root': {
           maxWidth: 600,
-          minWidth: 343,
+          minWidth: 400,
         },
       },
     },

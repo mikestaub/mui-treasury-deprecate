@@ -1,4 +1,4 @@
-import React, { useState, useRef, memo } from 'react';
+import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -7,26 +7,38 @@ import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
 
 const PeaSwipeableTabs = ({
+  tabIndex,
   tabs,
   onTabChange,
   enableFeedback,
   children,
+  customStyle,
+  hasPadding,
   ...props
 }) => {
-  const [index, setIndex] = useState(0);
-  const [fineIndex, setFineIndex] = useState(index);
+  const [index, setIndex] = useState(tabIndex);
+  const [fineIndex, setFineIndex] = useState(tabIndex);
+
   const indicatorRef = useRef(null);
+
   const getLeft = () => {
     const indicatorDOM = indicatorRef.current;
     if (!indicatorDOM) return {};
     const { clientWidth } = indicatorDOM;
     return { left: fineIndex * clientWidth };
   };
-  const onChange = i => {
-    setIndex(i);
-    setFineIndex(i);
-    onTabChange(i);
-  };
+
+  const onChange = useCallback(
+    i => {
+      if (i === undefined) {
+        return;
+      }
+      setIndex(i);
+      setFineIndex(i);
+      onTabChange(i);
+    },
+    [setIndex, setFineIndex, onTabChange],
+  );
 
   const onSwitching = !enableFeedback
     ? undefined
@@ -37,12 +49,15 @@ const PeaSwipeableTabs = ({
         }
       };
 
+  useEffect(onChange, [tabIndex]);
+
   return (
     <Grid
       container
       direction="column"
       {...props}
       style={{
+        ...customStyle,
         height: '100%',
       }}
     >
@@ -89,17 +104,21 @@ const PeaSwipeableTabs = ({
               }}
               slideStyle={{
                 height: '100%',
+                overflow: 'hidden',
               }}
               enableMouseEvents={enableFeedback}
               index={index}
               onSwitching={onSwitching}
             >
-              {React.Children.map(children, child => (
+              {React.Children.map(children, (child, idx) => (
                 <div
                   style={{
-                    padding: 16,
-                    minHeight: '100%',
+                    padding: hasPadding ? 16 : 0,
+                    overflowY: 'auto',
+                    height: 'calc(100% - 32px)',
+                    minHeight: 'calc(100% - 32px)',
                   }}
+                  ref={tabs[idx].ref}
                 >
                   {child}
                 </div>
@@ -113,16 +132,23 @@ const PeaSwipeableTabs = ({
 };
 
 PeaSwipeableTabs.propTypes = {
-  tabs: PropTypes.arrayOf(PropTypes.shape({ label: PropTypes.node }))
-    .isRequired,
+  hasPadding: PropTypes.bool,
+  tabIndex: PropTypes.number,
+  tabs: PropTypes.arrayOf(
+    PropTypes.shape({ ref: PropTypes.func, label: PropTypes.node.isRequired }),
+  ).isRequired,
   children: PropTypes.node.isRequired,
+  customStyle: PropTypes.shape({}),
   // disable feedback to increase performance
   enableFeedback: PropTypes.bool,
   onTabChange: PropTypes.func,
 };
 
 PeaSwipeableTabs.defaultProps = {
+  hasPadding: true,
+  tabIndex: 0,
   enableFeedback: true,
+  customStyle: {},
   onTabChange: () => {},
 };
 

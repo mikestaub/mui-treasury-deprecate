@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
 import Select, {
   AsyncCreatable,
   Creatable,
@@ -9,7 +9,6 @@ import cx from 'clsx';
 import { uniqBy } from 'lodash';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
 import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
 
@@ -19,7 +18,7 @@ import PeaSearchInputControl from './PeaSearchInputControl';
 const useStyles = makeStyles(theme => ({
   root: {
     width: 360,
-    padding: 4,
+    padding: props => (props.removeSpacing ? 0 : 4),
     '&.fullWidth': {
       width: '100%',
     },
@@ -35,8 +34,11 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'center',
     overflow: 'hidden',
-    minHeight: 36,
-    marginLeft: 10,
+    marginLeft: props => (props.removeSpacing ? 0 : 10),
+    '& > div': {
+      margin: 0,
+      padding: 0,
+    },
   },
   noOptionsMessage: {
     padding: theme.spacing(1, 2),
@@ -168,26 +170,6 @@ ValueContainer.propTypes = {
   selectProps: PropTypes.object.isRequired,
 };
 
-function Menu({ innerProps, children, selectProps }) {
-  return (
-    <Paper square className={selectProps.classes.paper} {...innerProps}>
-      {children}
-    </Paper>
-  );
-}
-
-Menu.defaultProps = {
-  children: null,
-  innerProps: null,
-  selectProps: null,
-};
-
-Menu.propTypes = {
-  children: PropTypes.node,
-  innerProps: PropTypes.object,
-  selectProps: PropTypes.object,
-};
-
 const PeaAutocompleteList = ({
   label,
   noOptionsMessage,
@@ -199,20 +181,41 @@ const PeaAutocompleteList = ({
   OptionComponent,
   onChange,
   isMulti,
+  isLoading,
   fullWidth,
   hideSuggestions,
   clearAfterEnter,
   value: propValue,
+  removeSpacing,
+  menuPlacement,
+  autoFocus,
 }) => {
-  const classes = useStyles();
+  const classes = useStyles({ removeSpacing, isUpsideDown: true });
+
   const theme = useTheme();
+
+  const selectRef = useRef(null);
+
+  const [preserveFocus, setPreserveFocus] = useState(false);
   const [value, setValue] = useState(propValue);
   const [inputValue, setInputValue] = useState('');
   const isAsync = !!getSuggestions;
 
+  const focusInput = useCallback(() => {
+    // TODO: this seems hacky
+    if (preserveFocus && selectRef.current) {
+      selectRef.current.select.focus();
+    }
+  }, [preserveFocus]);
+
   useEffect(() => {
     setValue(propValue);
-  }, [propValue]);
+    focusInput();
+  }, [propValue, focusInput]);
+
+  useEffect(() => {
+    focusInput();
+  }, [inputValue, focusInput]);
 
   function handleSelectChange(val) {
     let newValue = val;
@@ -236,7 +239,6 @@ const PeaAutocompleteList = ({
   };
 
   const components = {
-    Menu,
     NoOptionsMessage,
     Option: OptionComponent,
     MultiValue,
@@ -246,7 +248,7 @@ const PeaAutocompleteList = ({
   };
 
   const handleKeyDown = event => {
-    if (!canCreate || !inputValue) {
+    if (!canCreate) {
       return;
     }
     const newVal = { label: inputValue, value: inputValue };
@@ -298,16 +300,26 @@ const PeaAutocompleteList = ({
     }
   };
 
+  const onFocus = () => {
+    setPreserveFocus(true);
+  };
+
   return (
     <div className={cx(classes.root, fullWidth && 'fullWidth')}>
       <SelectComponent
         key={key}
+        ref={ref => {
+          selectRef.current = ref;
+        }}
         classes={classes}
         styles={selectStyles}
         inputId="react-select-single"
         placeholder={placeholder}
-        autoFocus
+        autoFocus={autoFocus}
         value={value}
+        // TODO: verify this prop is working when we upgrade packages
+        // https://github.com/JedWatson/react-select/pull/3690
+        isLoading={isLoading}
         inputValue={inputValue.length ? inputValue : undefined}
         isClearable
         openMenuOnClick={!isAsync}
@@ -317,7 +329,10 @@ const PeaAutocompleteList = ({
         components={components}
         onChange={handleSelectChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         isMulti={isMulti}
+        menuShouldScrollIntoView
+        menuPlacement={menuPlacement}
         TextFieldProps={{
           label,
         }}
@@ -343,6 +358,9 @@ PeaAutocompleteList.defaultProps = {
   isMulti: false,
   InputControl: PeaSearchInputControl,
   OptionComponent: Option,
+  removeSpacing: false,
+  menuPlacement: 'auto',
+  autoFocus: false,
 };
 
 PeaAutocompleteList.propTypes = {
@@ -366,6 +384,9 @@ PeaAutocompleteList.propTypes = {
   onChange: PropTypes.func.isRequired,
   hideSuggestions: PropTypes.bool,
   clearAfterEnter: PropTypes.bool,
+  removeSpacing: PropTypes.bool,
+  menuPlacement: PropTypes.string,
+  autoFocus: PropTypes.bool,
 };
 
 PeaAutocompleteList.metadata = {
@@ -373,4 +394,4 @@ PeaAutocompleteList.metadata = {
 };
 PeaAutocompleteList.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaAutocompleteList;
+export default memo(PeaAutocompleteList);

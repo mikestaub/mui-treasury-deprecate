@@ -1,9 +1,19 @@
 export default ({ spacing, palette, typography, breakpoints }) => ({
+  MuiCardContent: {
+    root: {
+      display: 'flex',
+      flexDirection: 'column',
+      flex: 1,
+    },
+  },
   MuiCard: {
     root: {
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
+      maxWidth: 500,
+      marginLeft: 'auto',
+      marginRight: 'auto',
       '&.PeaEventCardSmall-root': {
         transition: '0.3s',
         margin: 'auto',
@@ -44,7 +54,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),
@@ -53,13 +63,12 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       },
       '&.PeaEventCard-root': {
         transition: '0.3s',
-        margin: 'auto',
         minWidth: 375,
-        maxWidth: 500,
         // boxShadow: '0 8px 40px -12px rgba(0,0,0,0.3)',
         // '&:hover': {
         //   boxShadow: '0 16px 70px -12.125px rgba(0,0,0,0.3)',
         // },
+
         '& > .MuiCardMedia-root': {
           paddingTop: '56.25%',
           position: 'relative',
@@ -94,7 +103,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),
@@ -138,7 +147,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           lineHeight: 1.8,
         },
         '& .MuiAvatar-root': {
-          display: 'inline-block',
+          display: 'flex',
           border: '2px solid white',
           '&:not(:first-of-type)': {
             marginLeft: -spacing(1),
@@ -354,9 +363,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
             },
           },
         },
-        '& .PeaPodCard-root': {
-          boxShadow: 'none',
-        },
       },
       '&.PeaPodCard-root': {
         textAlign: 'left',
@@ -452,7 +458,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
             paddingTop: '56%',
           },
         },
-        '& .MuiCardContent-root': {
+        '& >.MuiCardContent-root': {
           position: 'relative',
           textAlign: 'left',
           zIndex: 2,
@@ -466,8 +472,11 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
             marginLeft: -16,
             marginRight: -16,
             width: 'auto',
-            minWidth: 500,
           },
+        },
+        '& .MuiNoItems-root': {
+          paddingTop: 50,
+          textAlign: 'center',
         },
         '& .MuiCardActions-root': {
           position: 'relative',

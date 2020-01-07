@@ -32,7 +32,6 @@ export default ({ palette, spacing, transitions, shadows }) => {
     // icon
     '& .MuiIcon--fa': {
       verticalAlign: 'unset',
-      padding: 2,
       '&.svg-inline--fa': {
         width: '1em',
       },
@@ -55,7 +54,7 @@ export default ({ palette, spacing, transitions, shadows }) => {
     '&.-size-big': {
       fontSize: 28,
       '& i.MuiIcon--fa:before': {
-        fontSize: 24,
+        fontSize: 22,
       },
     },
     '&.-size-large': {
@@ -121,14 +120,15 @@ export default ({ palette, spacing, transitions, shadows }) => {
     '& .fa-hashtag': {
       color: '#5039e5',
     },
-    '& .fa-users': {
-      color: '#e58124',
-    },
   };
   return {
     MuiIcon: {
       root: {
         ...props,
+        display: 'inline-flex',
+        '& i': {
+          margin: 'auto',
+        },
       },
     },
     MuiSvgIcon: {

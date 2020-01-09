@@ -136,6 +136,7 @@ const PeaEventDetails = ({
   isPodMember,
   shareLink,
   shareText,
+  facebookAppId,
   onCreatePodClicked,
   onEditEventClicked,
   onShareEventClicked,
@@ -389,6 +390,7 @@ const PeaEventDetails = ({
                         title={title}
                         shareLink={shareLink}
                         shareText={shareText}
+                        facebookAppId={facebookAppId}
                         onShare={handleShareItemClick}
                       />
                     </Paper>
@@ -561,6 +563,7 @@ PeaEventDetails.propTypes = {
   onReport: PropTypes.func,
   shareLink: PropTypes.string,
   shareText: PropTypes.string,
+  facebookAppId: PropTypes.string,
 };
 
 PeaEventDetails.defaultProps = {
@@ -575,6 +578,7 @@ PeaEventDetails.defaultProps = {
   isLoading: false,
   shareLink: undefined,
   shareText: undefined,
+  facebookAppId: '',
   onReport: () => {},
 };
 

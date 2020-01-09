@@ -118,6 +118,7 @@ const PeaEventCard = ({
   onUserClick,
   createPodText,
   isLoading,
+  facebookAppId,
   ...props
 }) => {
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
@@ -266,6 +267,7 @@ const PeaEventCard = ({
                   title={title}
                   shareLink={shareLink}
                   shareText={shareText}
+                  facebookAppId={facebookAppId}
                   onShare={handleShareItemClick}
                 />
               </Paper>
@@ -316,6 +318,7 @@ PeaEventCard.propTypes = {
   createPodText: PropTypes.string,
   isLoading: PropTypes.bool,
   renderTitle: PropTypes.func,
+  facebookAppId: PropTypes.string,
 };
 
 PeaEventCard.defaultProps = {
@@ -330,6 +333,7 @@ PeaEventCard.defaultProps = {
   stats: undefined,
   profile: undefined,
   renderTitle: undefined,
+  facebookAppId: '',
 };
 
 PeaEventCard.metadata = {

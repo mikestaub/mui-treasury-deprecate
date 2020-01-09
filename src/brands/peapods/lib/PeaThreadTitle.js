@@ -12,11 +12,7 @@ const useStyles = makeStyles(({ spacing }) => ({
     textAlign: 'center',
   },
   avatar: {
-    width: 62,
-    height: 62,
-    position: 'absolute',
-    right: 20,
-    top: 20,
+    justifyContent: 'center',
   },
   status: {
     color: '#A4A4A4',
@@ -28,10 +24,18 @@ const useStyles = makeStyles(({ spacing }) => ({
   title: {
     lineHeight: 1,
   },
+  avatarGroupContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: spacing(2),
+  },
 }));
 
 const PeaThreadTitle = ({ title, subtitle, avatars }) => {
   const classes = useStyles();
+
+  const maxAvatarCount = 5;
+
   return (
     <Grid container classes={{ container: classes.root }}>
       <Grid item xs={12}>
@@ -50,11 +54,17 @@ const PeaThreadTitle = ({ title, subtitle, avatars }) => {
           </PeaText>
         </div>
 
-        <PeaAvatar.Group
-          images={avatars}
-          className={classes.avatar}
-          more={avatars.length > 10 ? avatars.length - 10 : undefined}
-        />
+        <div className={classes.avatarGroupContainer}>
+          <PeaAvatar.Group
+            images={avatars.slice(0, maxAvatarCount)}
+            className={classes.avatar}
+            more={
+              avatars.length > maxAvatarCount
+                ? avatars.length - maxAvatarCount
+                : undefined
+            }
+          />
+        </div>
       </Grid>
     </Grid>
   );

@@ -11,7 +11,6 @@ const PeaGroupProfile = ({
   description,
   tags,
   renderPodList,
-  renderConnections,
   renderMemberList,
   renderMessages,
   isMobile,
@@ -105,8 +104,6 @@ const PeaGroupProfile = ({
             </Grid>
           </>
         )}
-
-        {renderConnections()}
       </>
 
       {renderMemberList()}
@@ -118,7 +115,6 @@ const PeaGroupProfile = ({
 
 PeaGroupProfile.propTypes = {
   renderPodList: PropTypes.func.isRequired,
-  renderConnections: PropTypes.func.isRequired,
   renderMemberList: PropTypes.func.isRequired,
   renderMessages: PropTypes.func.isRequired,
   description: PropTypes.string,

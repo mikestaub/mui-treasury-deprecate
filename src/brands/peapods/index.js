@@ -44,6 +44,7 @@ export {
   Forum as ChatIcon,
   Help as HelpIcon,
   Info as InfoIcon,
+  Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
 } from '@material-ui/icons';
 export { useTheme, makeStyles } from '@material-ui/styles';

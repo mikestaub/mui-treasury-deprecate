@@ -146,6 +146,7 @@ const PeaEventDetails = ({
   onChangeTab,
   isLoading,
   onReport,
+  onAddToCalendar,
 }) => {
   const classes = useStyles();
 
@@ -234,6 +235,11 @@ const PeaEventDetails = ({
     setAnchor(null);
   };
 
+  const onAddToCalendarClicked = () => {
+    onAddToCalendar();
+    setAnchor(null);
+  };
+
   const editEvent = () => {
     setAnchor(null);
     onEditEventClicked();
@@ -288,6 +294,16 @@ const PeaEventDetails = ({
         },
       }}
     >
+      {timeString && (
+        <MenuItem onClick={onAddToCalendarClicked}>
+          <ListItemText disableTypography>
+            <PeaText variant={'body1'} weight={'bold'}>
+              Add to Calendar
+            </PeaText>
+          </ListItemText>
+        </MenuItem>
+      )}
+
       <MenuItem onClick={onReportClicked}>
         <ListItemText disableTypography>
           <PeaText variant={'body1'} weight={'bold'}>
@@ -561,6 +577,7 @@ PeaEventDetails.propTypes = {
   onChangeTab: PropTypes.func,
   isLoading: PropTypes.bool,
   onReport: PropTypes.func,
+  onAddToCalendar: PropTypes.func,
   shareLink: PropTypes.string,
   shareText: PropTypes.string,
   facebookAppId: PropTypes.string,
@@ -580,6 +597,7 @@ PeaEventDetails.defaultProps = {
   shareText: undefined,
   facebookAppId: '',
   onReport: () => {},
+  onAddToCalendar: () => {},
 };
 
 PeaEventDetails.metadata = {

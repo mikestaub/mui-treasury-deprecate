@@ -1,7 +1,7 @@
 export default () => ({
   MuiBackdrop: {
     root: {
-      zIndex: 0,
+      zIndex: 1000,
     },
   },
 });

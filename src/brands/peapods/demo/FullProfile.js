@@ -43,7 +43,7 @@ const FullProfile = () => {
       <br />
       <PeaFullProfile
         cover={
-          'https://beinglol.com/media/facebook-cover/Iron-Man-3-Facebook-Covers-1598.jpeg'
+          'https://coverfiles.alphacoders.com/107/107369.jpg'
         }
         image={
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZYEi7-MP_fJqbD6yYkrykoIOo-65rj95h2lyI2dPQ8sDtgj9cpA'
@@ -143,7 +143,7 @@ FullProfile.code = `
         <br />
         <PeaFullProfile
           cover={
-            'https://beinglol.com/media/facebook-cover/Iron-Man-3-Facebook-Covers-1598.jpeg'
+            'https://coverfiles.alphacoders.com/107/107369.jpg'
           }
           image={
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZYEi7-MP_fJqbD6yYkrykoIOo-65rj95h2lyI2dPQ8sDtgj9cpA'

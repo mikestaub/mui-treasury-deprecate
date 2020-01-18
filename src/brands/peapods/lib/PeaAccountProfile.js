@@ -147,7 +147,7 @@ const PeaAccountProfile = ({
   const isFollowing = currentUserFollowing === 'FOLLOWING';
   const followRequested = currentUserFollowing === 'PENDING_APPROVAL';
 
-  const needsGroups = !isFollowing && !followRequested && !isFollower;
+  const needsGroups = !isFollowing && !followRequested;
 
   const open = Boolean(anchorEl);
   const groupSelectorOpen = Boolean(followAnchorEl) && needsGroups;

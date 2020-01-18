@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import Box from '@material-ui/core/Box';
 import ButtonBase from '@material-ui/core/ButtonBase';
@@ -10,7 +10,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
-import IconButton from '@material-ui/core/IconButton';
+// import IconButton from '@material-ui/core/IconButton';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import TextField from '@material-ui/core/TextField';
 import { uniqBy } from 'lodash';
@@ -51,7 +51,7 @@ const PeaProfileEditor = ({
   onChangeCoverPhotoClicked,
   onChangeProfilePhotosClicked,
   isUpdating,
-  onLinkSocial,
+  // onLinkSocial,
 }) => {
   const [user, setUser] = useState({
     name,
@@ -69,21 +69,23 @@ const PeaProfileEditor = ({
   const [error, setError] = useState({});
 
   const onUserChange = field => event => {
-    let { value } = event.target;
+    let value = event.target.value || '';
     if (field === 'privateAccount') {
       value = event.target.checked;
     }
-    if (field === 'email') {
-      setError({ ...error, email: value && !emailValidator.validate(value) });
-    }
-    if (field === 'phoneNumber') {
-      const [formattedPhoneNumber] = phone(value);
-      setError({ ...error, phoneNumber: value && !formattedPhoneNumber });
-    }
+
     setUser({
       ...user,
       [field]: value,
     });
+
+    if (field === 'email') {
+      setError({ ...error, email: !!value && !emailValidator.validate(value) });
+    }
+    if (field === 'phoneNumber') {
+      const [formattedPhoneNumber] = phone(value);
+      setError({ ...error, phoneNumber: !!value && !formattedPhoneNumber });
+    }
   };
 
   const onLocationChange = res => {
@@ -163,6 +165,7 @@ const PeaProfileEditor = ({
               </Box>
             </ButtonBase>
           </Grid>
+
           <Grid item>
             <PeaButton
               size={'small'}
@@ -171,6 +174,7 @@ const PeaProfileEditor = ({
             >
               Cancel
             </PeaButton>
+
             <PeaButton
               size={'small'}
               onClick={onSubmit(user)}
@@ -187,6 +191,7 @@ const PeaProfileEditor = ({
             </PeaButton>
           </Grid>
         </Grid>
+
         <Hidden smUp>
           <Grid container justify={'space-evenly'} style={{ marginTop: -32 }}>
             <Grid item>
@@ -201,9 +206,11 @@ const PeaProfileEditor = ({
           </Grid>
           <br />
         </Hidden>
+
         <Hidden only={'xs'}>
           <div style={{ marginTop: -32 }} />
         </Hidden>
+
         <div>
           <TextField
             margin={'normal'}
@@ -214,6 +221,7 @@ const PeaProfileEditor = ({
             onChange={onUserChange('name')}
           />
         </div>
+
         <div>
           <TextField
             margin={'normal'}
@@ -224,11 +232,13 @@ const PeaProfileEditor = ({
             onChange={onUserChange('username')}
           />
         </div>
+
         <PeaTextArea
           label={'Bio'}
           value={user.bio}
           onChange={onUserChange('bio')}
         />
+
         {LocationInput && (
           <LocationInput
             removeSpacing
@@ -236,7 +246,9 @@ const PeaProfileEditor = ({
             value={user.location && user.location.formattedAddress}
           />
         )}
+
         <br />
+
         <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
           About
         </PeaText>
@@ -253,11 +265,11 @@ const PeaProfileEditor = ({
 
         <div>
           <FormControl margin={'normal'} component="fieldset">
-            <FormLabel component="legend">Status</FormLabel>
+            <FormLabel component="legend">Gender</FormLabel>
             <RadioGroup
               aria-label="status"
               name="gender"
-              value={user.gender}
+              value={user.gender || ''}
               row
               onChange={onUserChange('gender')}
             >
@@ -300,12 +312,13 @@ const PeaProfileEditor = ({
 
         <>
           <TextField
+            id={'stauby'}
             label={'Email'}
             value={user.email}
             margin={'normal'}
             fullWidth
             error={error.email}
-            helperText={error.email ? 'Invalid Email' : ''}
+            helperText={error.email && 'Invalid Email'}
             onChange={onUserChange('email')}
           />
 
@@ -316,7 +329,7 @@ const PeaProfileEditor = ({
             margin={'normal'}
             fullWidth
             error={error.phoneNumber}
-            helperText={error.phoneNumber ? 'Invalid Phone Number' : ''}
+            helperText={error.phoneNumber && 'Invalid Phone Number'}
             onChange={onUserChange('phoneNumber')}
           />
 
@@ -328,11 +341,12 @@ const PeaProfileEditor = ({
             />
           </FormControl>
 
-          <FormControl margin={'normal'} fullWidth>
+          {/* TODO: implement connections feature */}
+          {/* <FormControl margin={'normal'} fullWidth>
             <FormLabel>Linked accounts</FormLabel>
             <Grid container>
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('twitter')}>
                   <PeaIcon
                     link
                     icon={'fab fa-twitter'}
@@ -340,26 +354,24 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('twitter')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('meetup')}>
                   <PeaIcon
                     link
                     icon={'fab fa-meetup'}
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('meetup')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('facebook')}>
                   <PeaIcon
                     link
                     color={'red'}
@@ -367,64 +379,59 @@ const PeaProfileEditor = ({
                     bgColor={'white'}
                     shadow
                     size={'big'}
-                    onClick={onLinkSocial('facebook')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('instagram')}>
                   <PeaIcon
                     link
                     icon={'fab fa-instagram'}
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('instagram')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('snapchat')}>
                   <PeaIcon
                     link
                     icon={'fab fa-snapchat'}
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('snapchat')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('linkedin')}>
                   <PeaIcon
                     link
                     icon={'fab fa-linkedin'}
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('linkedin')}
                   />
                 </IconButton>
               </Grid>
 
               <Grid item>
-                <IconButton>
+                <IconButton onClick={onLinkSocial('google')}>
                   <PeaIcon
                     link
                     icon={'fab fa-google'}
                     bgColor={'white'}
                     size={'big'}
                     shadow
-                    onClick={onLinkSocial('google')}
                   />
                 </IconButton>
               </Grid>
             </Grid>
-          </FormControl>
+          </FormControl> */}
         </>
       </CardContent>
     </Card>
@@ -455,7 +462,7 @@ PeaProfileEditor.propTypes = {
   onCancel: PropTypes.func,
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
   onChangeProfilePhotosClicked: PropTypes.func.isRequired,
-  onLinkSocial: PropTypes.func.isRequired,
+  // onLinkSocial: PropTypes.func.isRequired,
 };
 
 PeaProfileEditor.defaultProps = {
@@ -477,4 +484,4 @@ PeaProfileEditor.propTypes = {};
 
 PeaProfileEditor.defaultProps = {};
 
-export default PeaProfileEditor;
+export default memo(PeaProfileEditor);

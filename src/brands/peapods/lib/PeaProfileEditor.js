@@ -306,7 +306,6 @@ const PeaProfileEditor = ({
             isMulti
             hideSuggestions
             removeSpacing
-            autoFocus
           />
         </FormControl>
 

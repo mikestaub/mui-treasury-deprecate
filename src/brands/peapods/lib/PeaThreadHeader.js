@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
+
 import PeaAvatar from './PeaAvatar';
 import PeaText from './PeaTypography';
 
@@ -42,6 +43,7 @@ const PeaThreadHeader = ({
       <Grid item>
         <PeaAvatar src={avatar} className={classes.avatar} />
       </Grid>
+
       <Grid item classes={{ item: classes.flex }}>
         <PeaText align={'left'} variant="subtitle2" weight={600}>
           {title}
@@ -50,6 +52,7 @@ const PeaThreadHeader = ({
           {subtitle}
         </PeaText>
       </Grid>
+
       <Grid item>
         <PeaText align="right" variant="body2">
           {timestamp}
@@ -60,20 +63,24 @@ const PeaThreadHeader = ({
 };
 
 PeaThreadHeader.propTypes = {
-  avatar: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   subtitle: PropTypes.string.isRequired,
   timestamp: PropTypes.string.isRequired,
+  avatar: PropTypes.string,
   selected: PropTypes.bool,
   onClick: PropTypes.func,
 };
+
 PeaThreadHeader.defaultProps = {
   selected: false,
   onClick: noop,
+  avatar: undefined,
 };
+
 PeaThreadHeader.metadata = {
   name: 'Pea thread header',
 };
+
 PeaThreadHeader.getTheme = () => ({
   'Mui{Component}': {
     // this object will be injected to 'overrides' section

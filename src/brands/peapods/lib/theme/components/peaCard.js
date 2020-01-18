@@ -197,7 +197,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'absolute',
           width: '100%',
           top: 0,
-          zIndex: 1,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
             paddingTop: '32%',
@@ -210,7 +209,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           transform: 'translateY(-60%)',
           left: 0,
           border: '4px solid #ffffff',
-          zIndex: 3,
           [breakpoints.up('sm')]: {
             width: 104,
             height: 104,
@@ -236,7 +234,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
               width: '100%',
               height: '100%',
             },
-            zIndex: 0,
             transform: 'none',
             left: 0,
           },
@@ -257,7 +254,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         '& .MuiCardContent-root': {
           position: 'relative',
           textAlign: 'left',
-          zIndex: 2,
           background: palette.common.white,
           marginTop: '36%',
           borderRadius: spacing(2),
@@ -275,7 +271,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'absolute',
           width: '100%',
           top: 0,
-          zIndex: 1,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
             paddingTop: '32%',
@@ -288,7 +283,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           transform: 'translateY(-60%)',
           left: 0,
           border: '4px solid #ffffff',
-          zIndex: 3,
           [breakpoints.up('sm')]: {
             width: 104,
             height: 104,
@@ -314,7 +308,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
               width: '100%',
               height: '100%',
             },
-            zIndex: 0,
             transform: 'none',
             left: 0,
           },
@@ -335,7 +328,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         '& > .MuiCardContent-root': {
           position: 'relative',
           textAlign: 'left',
-          zIndex: 2,
           background: palette.common.white,
           marginTop: '36%',
           borderRadius: spacing(2),
@@ -452,7 +444,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'absolute',
           width: '100%',
           top: 0,
-          zIndex: 1,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
             paddingTop: '56%',
@@ -461,7 +452,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         '& >.MuiCardContent-root': {
           position: 'relative',
           textAlign: 'left',
-          zIndex: 2,
           background: palette.common.white,
           marginTop: '53%',
           borderRadius: spacing(2),
@@ -480,7 +470,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         },
         '& .MuiCardActions-root': {
           position: 'relative',
-          zIndex: 3,
           boxShadow: '0 0 8px 0 rgba(0,0,0,0.12)',
           '& .MuiInputBase-root': {
             padding: '0 16px',

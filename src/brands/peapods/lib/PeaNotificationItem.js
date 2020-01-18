@@ -32,6 +32,7 @@ const PeaNotificationItem = ({
   requestApproved,
 }) => {
   const count = Array.isArray(src) ? src.length : 0;
+  const avatarSrc = Array.isArray(src) ? src[0] : src;
 
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
 
@@ -103,10 +104,11 @@ const PeaNotificationItem = ({
             overlap={-32}
           />
         ) : (
-          <PeaAvatar src={src} size={'big'} />
+          <PeaAvatar src={avatarSrc} size={'big'} />
         )}
         {renderSticker()}
       </Box>
+
       <ListItemText
         classes={{
           primary: 'MuiListItemText-primary',
@@ -176,7 +178,7 @@ const PeaNotificationItem = ({
 
       <Popover
         id={followAriaId}
-        open={openFollowPopover}
+        open={!!openFollowPopover}
         anchorEl={followAnchorEl}
         onClose={onFollowPopClose}
         anchorOrigin={{

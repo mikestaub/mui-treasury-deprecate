@@ -201,7 +201,7 @@ const MediaUploaderWrapper = ({
       className="cloudinary-peapods-uploader"
       style={{
         width: '80vw',
-        height: 500,
+        height: 600,
       }}
     />
     <MediaUploader

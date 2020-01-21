@@ -48,6 +48,7 @@ const PeaProfileEditor = ({
   isPrivate,
   onCancel,
   onSubmit,
+  onChange,
   onChangeCoverPhotoClicked,
   onChangeProfilePhotosClicked,
   isUpdating,
@@ -68,13 +69,21 @@ const PeaProfileEditor = ({
 
   const [error, setError] = useState({});
 
+  const changeUser = userParams => {
+    setUser(userParams);
+
+    if (onChange) {
+      onChange(userParams);
+    }
+  };
+
   const onUserChange = field => event => {
     let value = event.target.value || '';
     if (field === 'privateAccount') {
       value = event.target.checked;
     }
 
-    setUser({
+    changeUser({
       ...user,
       [field]: value,
     });
@@ -102,21 +111,21 @@ const PeaProfileEditor = ({
       lng,
       formattedAddress,
     };
-    setUser({
+    changeUser({
       ...user,
       location: newLocation,
     });
   };
 
   const onBirthdayChange = date => {
-    setUser({
+    changeUser({
       ...user,
       birthday: date,
     });
   };
 
   const onTagsChanged = values => {
-    setUser({
+    changeUser({
       ...user,
       tags: uniqBy(values, 'value'),
     });
@@ -457,6 +466,7 @@ PeaProfileEditor.propTypes = {
   phoneNumber: PropTypes.string,
   isPrivate: PropTypes.bool,
   isUpdating: PropTypes.bool,
+  onChange: PropTypes.func,
   onSubmit: PropTypes.func,
   onCancel: PropTypes.func,
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
@@ -475,12 +485,9 @@ PeaProfileEditor.defaultProps = {
   gender: undefined,
   isPrivate: false,
   isUpdating: false,
+  onChange: () => {},
   onSubmit: () => {},
   onCancel: () => {},
 };
-
-PeaProfileEditor.propTypes = {};
-
-PeaProfileEditor.defaultProps = {};
 
 export default memo(PeaProfileEditor);

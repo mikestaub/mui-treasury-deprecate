@@ -85,6 +85,7 @@ const PeaAccountProfile = ({
   eventList,
   groupList,
   podList,
+  onChange,
   onSubmit,
   editing,
   isUpdating,
@@ -331,6 +332,7 @@ const PeaAccountProfile = ({
         isPrivate={isPrivate}
         onSubmit={onSubmit}
         isUpdating={isUpdating}
+        onChange={onChange}
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
@@ -726,6 +728,7 @@ PeaAccountProfile.propTypes = {
   isDeleting: PropTypes.bool,
   followLoading: PropTypes.bool,
   currentUserFollowing: PropTypes.string,
+  onChange: PropTypes.func,
   onSubmit: PropTypes.func,
   setEditing: PropTypes.func,
   onChangeCoverPhotoClicked: PropTypes.func.isRequired,
@@ -783,6 +786,7 @@ PeaAccountProfile.defaultProps = {
   followLoading: false,
   currentUserFollowing: undefined,
   podList: undefined,
+  onChange: () => {},
   onSubmit: () => {},
   setEditing: () => {},
   deleteProfile: () => {},

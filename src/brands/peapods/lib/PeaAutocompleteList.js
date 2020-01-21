@@ -253,18 +253,23 @@ const PeaAutocompleteList = ({
     }
     const newVal = { label: inputValue, value: inputValue };
 
-    switch (event.key) {
-      default:
-        return;
-      case 'Enter':
-      case 'Tab':
-        event.preventDefault();
-        setInputValue('');
-        if (isMulti) {
-          handleSelectChange([...value, newVal]);
-        } else {
-          handleSelectChange(newVal);
-        }
+    const codes = [
+      13, // enter
+      9, // tab
+      32, // space
+    ];
+
+    const isNewValue =
+      inputValue && !value.map(i => i.value).includes(inputValue.trim());
+
+    if (isNewValue && codes.includes(event.keyCode)) {
+      event.preventDefault();
+      setInputValue('');
+      if (isMulti) {
+        handleSelectChange([...value, newVal]);
+      } else {
+        handleSelectChange(newVal);
+      }
     }
   };
 

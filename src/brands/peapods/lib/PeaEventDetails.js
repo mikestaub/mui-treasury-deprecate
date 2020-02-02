@@ -147,6 +147,7 @@ const PeaEventDetails = ({
   isLoading,
   onReport,
   onAddToCalendar,
+  renderMap,
 }) => {
   const classes = useStyles();
 
@@ -448,6 +449,7 @@ const PeaEventDetails = ({
         {renderPods()}
 
         <>
+          {isMobile && renderMap()}
           <PeaText color={'secondary'} gutterBottom>
             <b>Details</b>
           </PeaText>
@@ -581,6 +583,7 @@ PeaEventDetails.propTypes = {
   shareLink: PropTypes.string,
   shareText: PropTypes.string,
   facebookAppId: PropTypes.string,
+  renderMap: PropTypes.func,
 };
 
 PeaEventDetails.defaultProps = {
@@ -598,6 +601,7 @@ PeaEventDetails.defaultProps = {
   facebookAppId: '',
   onReport: () => {},
   onAddToCalendar: () => {},
+  renderMap: () => {},
 };
 
 PeaEventDetails.metadata = {

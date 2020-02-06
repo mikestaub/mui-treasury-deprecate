@@ -60,6 +60,11 @@ const PeaProfileCard = ({
     </Menu>
   );
 
+  const handleMoreClick = e => {
+    e.stopPropagation();
+    setAnchor(e.currentTarget);
+  };
+
   return (
     <Card className={'PeaProfileCard-root'}>
       <CardMedia className={'MuiCardMedia-root'} image={cover}>
@@ -73,7 +78,7 @@ const PeaProfileCard = ({
           <IconButton
             className={'MuiIconButton--tiny'}
             style={{ marginLeft: 8 }}
-            onClick={e => setAnchor(e.currentTarget)}
+            onClick={handleMoreClick}
           >
             <PeaIcon>more_vert</PeaIcon>
           </IconButton>

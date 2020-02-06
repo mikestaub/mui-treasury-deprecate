@@ -2,6 +2,15 @@
 export default ({ spacing, breakpoints, white, palette }) => ({
   MuiDialog: {
     root: {
+      [breakpoints.only('xs')]: {
+        '& .MuiDialog-paper': {
+          borderRadius: 0,
+          maxHeight: 'unset',
+          height: '100%',
+          margin: 0,
+          animation: 'slideUp .5s',
+        }
+      },
       '&.PeaPodDialog': {
         '& .PeaCounter-root': {
           marginTop: spacing(1),
@@ -51,6 +60,10 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         '& .DialogContent--root': {
           maxWidth: 400,
           minWidth: 400,
+          [breakpoints.only('xs')]: {
+            maxWidth: 'unset',
+            minWidth: 'unset',
+          },
         },
         '& .DialogActions-root': {
           marginBottom: spacing(2),
@@ -101,6 +114,10 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         '& .DialogContent--root': {
           maxWidth: 600,
           minWidth: 400,
+          [breakpoints.only('xs')]: {
+            maxWidth: 'unset',
+            minWidth: 'unset',
+          },
         },
       },
     },

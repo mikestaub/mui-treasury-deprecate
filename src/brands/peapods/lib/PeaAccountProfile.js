@@ -71,7 +71,6 @@ const PeaAccountProfile = ({
   location,
   locationInput,
   birthday,
-  age,
   gender,
   pods,
   invitableGroups,
@@ -632,25 +631,12 @@ const PeaAccountProfile = ({
         <Box>{podList}</Box>
 
         <Box p={2} textAlign={'left'}>
-          <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
-            About
-          </PeaText>
           <PeaText gutterBottom>
             <PeaText link underline={'none'}>
-              <b>Age :</b>
+              <b>Bio :</b>
             </PeaText>{' '}
-            {age}
+            {bio}
           </PeaText>
-          <PeaText gutterBottom>
-            <PeaText link underline={'none'}>
-              <b>Gender :</b>
-            </PeaText>{' '}
-            {gender}
-          </PeaText>
-          <PeaText link underline={'none'} gutterBottom>
-            <b>Groups</b>
-          </PeaText>
-          <PeaText gutterBottom />
           <br />
           <PeaText link underline={'none'} gutterBottom>
             <b>Tags</b>
@@ -697,7 +683,6 @@ PeaAccountProfile.propTypes = {
   bio: PropTypes.string,
   location: PropTypes.object,
   locationInput: PropTypes.func,
-  age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   birthday: PropTypes.string,
   gender: PropTypes.string,
   pods: PropTypes.arrayOf(
@@ -764,7 +749,6 @@ PeaAccountProfile.defaultProps = {
   location: undefined,
   locationInput: undefined,
   birthday: undefined,
-  age: undefined,
   gender: undefined,
   eventList: [],
   pods: [],

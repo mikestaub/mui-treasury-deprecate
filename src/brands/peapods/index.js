@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 import React from 'react';
-import MomentUtils from '@date-io/moment';
+import DateFnsUtils from '@date-io/dayjs';
 import {
   MuiPickersUtilsProvider,
   KeyboardTimePicker,
@@ -13,19 +13,19 @@ import images from './lib/assets';
 const { logo } = images;
 
 const TimePicker = props => (
-  <MuiPickersUtilsProvider utils={MomentUtils}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardTimePicker {...props} />
   </MuiPickersUtilsProvider>
 );
 
 const DatePicker = props => (
-  <MuiPickersUtilsProvider utils={MomentUtils}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardDatePicker {...props} />
   </MuiPickersUtilsProvider>
 );
 
 const DateTimePicker = props => (
-  <MuiPickersUtilsProvider utils={MomentUtils}>
+  <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <InnerDateTimePicker {...props} />
   </MuiPickersUtilsProvider>
 );

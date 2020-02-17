@@ -11,10 +11,10 @@ import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
 import PeaStatistic from './PeaStatistic';
 
-const PeaProfileCard = ({ cover, image, name, tag, AvatarProps }) => (
+const PeaProfileCard = ({ cover, image, name, tag, AvatarProps, onUserClick }) => (
   <Card className={'PeaProfileCard-root'}>
     <CardMedia className={'MuiCardMedia-root'} image={cover}>
-      <PeaAvatar src={image} size={'large'} {...AvatarProps} />
+      <PeaAvatar src={image} size={'large'} {...AvatarProps} onClick={onUserClick} />
     </CardMedia>
     <CardContent className={'MuiCardContent-root'}>
       <div className={'PeaProfileCard-actions'}>
@@ -25,8 +25,8 @@ const PeaProfileCard = ({ cover, image, name, tag, AvatarProps }) => (
           <PeaIcon>more_vert</PeaIcon>
         </IconButton>
       </div>
-      <Typography className={'MuiTypography--heading'}>{name}</Typography>
-      <Typography className={'MuiTypography--subheading'}>{tag}</Typography>
+      <Typography className={'MuiTypography--heading'} onClick={onUserClick}>{name}</Typography>
+      <Typography className={'MuiTypography--subheading'} onClick={onUserClick}>{tag}</Typography>
       <Grid container justify={'space-between'}>
         <Grid item>
           <PeaStatistic label={'Pods'} value={2} />
@@ -48,10 +48,12 @@ PeaProfileCard.propTypes = {
   name: PropTypes.string.isRequired,
   tag: PropTypes.string,
   AvatarProps: PropTypes.shape({}),
+  onUserClick: PropTypes.func,
 };
 PeaProfileCard.defaultProps = {
   tag: '',
   AvatarProps: {},
+  onUserClick: () => {},
 };
 PeaProfileCard.metadata = {
   name: 'Pea Profile Card',

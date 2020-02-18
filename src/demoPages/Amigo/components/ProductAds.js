@@ -73,7 +73,7 @@ const ProductAds = ({
         textAlign={sides[contentSide]}
         position={'relative'}
         zIndex={1}
-        {...contentSide === 'right' && { ml: 'auto' }}
+        {...(contentSide === 'right' && { ml: 'auto' })}
         {...contentBoxProps}
       >
         {tag && (

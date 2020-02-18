@@ -53,7 +53,7 @@ const Showcase = ({
   return (
     <div className={cx('Showcase-root', classes.root, className)} {...props}>
       <Sheet
-        {...inverted && { bgColor: 'dark' }}
+        {...(inverted && { bgColor: 'dark' })}
         {...sheetProps}
         className={cx(classes.sheet, sheetProps.className)}
       >

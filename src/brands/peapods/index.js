@@ -46,6 +46,7 @@ export {
   Info as InfoIcon,
   Close as CloseIcon,
   ExpandMore as ExpandMoreIcon,
+  MyLocation as MyLocationIcon,
 } from '@material-ui/icons';
 export { useTheme, makeStyles } from '@material-ui/styles';
 

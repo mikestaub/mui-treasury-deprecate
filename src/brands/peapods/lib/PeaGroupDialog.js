@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField/TextField';
 import CardMedia from '@material-ui/core/CardMedia';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Box from '@material-ui/core/Box';
 
@@ -37,31 +38,6 @@ const PeaGroupDialog = ({
     titleVariant={'secondaryCentered'}
     content={
       <>
-        <FormLabel component="legend">Cover Picture</FormLabel>
-
-        <Box
-          style={{
-            marginTop: 16,
-            marginBottom: 16,
-          }}
-        >
-          <CardMedia
-            className={'MuiCardMedia-root'}
-            image={profilePhoto}
-            style={profilePhoto && { border: 'none' }}
-            onClick={onChangeCoverPhotoClicked}
-          >
-            <ButtonBase className={'PeaGroup-coverImgBtn'}>
-              <PeaIcon
-                inverted
-                icon={'add'}
-                shape={'square'}
-                style={{ fontSize: 100 }}
-              />
-            </ButtonBase>
-          </CardMedia>
-        </Box>
-
         <TextField
           required
           fullWidth
@@ -73,6 +49,37 @@ const PeaGroupDialog = ({
           value={name}
           onChange={onChange('name')}
         />
+
+        <FormControl margin={'normal'} fullWidth>
+          <FormLabel component="legend">Cover Picture</FormLabel>
+
+          <Box
+            style={{
+              marginTop: 16,
+              marginBottom: 16,
+            }}
+          >
+            <CardMedia
+              className={'MuiCardMedia-root'}
+              image={profilePhoto}
+              style={{
+                position: 'relative',
+                minHeight: 200,
+                border: profilePhoto && 'none',
+              }}
+              onClick={onChangeCoverPhotoClicked}
+            >
+              <ButtonBase className={'PeaGroupForm-photoBtn'}>
+                <PeaIcon
+                  inverted
+                  icon={'add'}
+                  shape={'square'}
+                  style={{ fontSize: 100 }}
+                />
+              </ButtonBase>
+            </CardMedia>
+          </Box>
+        </FormControl>
 
         <TextField
           fullWidth

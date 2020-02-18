@@ -189,10 +189,10 @@ const NestedMenu01 = ({ menus, selectedKey, openKeys }) => {
               handleToggle(key)();
             }
           }}
-          {...subMenus && {
+          {...(subMenus && {
             toggle: true,
             onToggle: handleToggle(key),
-          }}
+          })}
           {...rest}
         />
       ) : (

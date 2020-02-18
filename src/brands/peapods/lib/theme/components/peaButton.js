@@ -55,7 +55,7 @@ export default ({ palette, spacing, breakpoints, shadows }) => {
     if (icon % 2 === 0) {
       return icon;
     }
-    return icon + 1;
+    return icon + 6;
   };
   const getBgIconSize = btnSize => {
     const mapping = {
@@ -210,6 +210,10 @@ export default ({ palette, spacing, breakpoints, shadows }) => {
           padding: spacing(1.25),
           maxWidth: btnHeights.small,
           maxHeight: btnHeights.small,
+          '& .MuiButton-label': {
+            width: 18,
+            height: 18,
+          },
         },
         '&.-shape-circular.-size-normal, &.-shape-square.-size-normal': {
           padding: spacing(1.25),

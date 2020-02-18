@@ -18,9 +18,7 @@ class FontFamily extends React.Component {
     if (fonts.length <= 1) {
       axios
         .get(
-          `https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key=${
-            process.env.REACT_APP_GOOGLE_FONT_API_KEY
-          }`,
+          `https://www.googleapis.com/webfonts/v1/webfonts?sort=popularity&key=${process.env.REACT_APP_GOOGLE_FONT_API_KEY}`,
         )
         .then(({ data }) => this.setState({ fonts: data.items }));
     }

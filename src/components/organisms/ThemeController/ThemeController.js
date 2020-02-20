@@ -133,9 +133,7 @@ class ThemeController extends React.Component {
       <React.Fragment>
         <Helmet>
           <link
-            href={`https://fonts.googleapis.com/css?family=${
-              displayedTheme.typography.fontFamily
-            }`}
+            href={`https://fonts.googleapis.com/css?family=${displayedTheme.typography.fontFamily}`}
             rel="stylesheet"
           />
         </Helmet>

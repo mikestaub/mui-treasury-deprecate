@@ -1,6 +1,7 @@
 import React, { memo, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
+import Box from '@material-ui/core/Box';
 import cx from 'classnames';
 
 import PeaSwipeableTabs from './PeaSwipeableTabs';
@@ -15,6 +16,7 @@ const PeaGroupProfile = ({
   renderMemberList,
   renderMessages,
   isMobile,
+  activeTabIndex,
   onChangeTab,
 }) => {
   const podsRef = useRef();
@@ -22,13 +24,11 @@ const PeaGroupProfile = ({
   const membersRef = useRef();
   const messagesRef = useRef();
 
-  const [tabIndex, setTabIndex] = useState(0);
-
   const tabs = [
-    { ref: podsRef, label: 'Pods' },
-    { ref: aboutRef, label: 'About' },
-    { ref: membersRef, label: 'Members' },
-    { ref: messagesRef, label: 'Messages' },
+    { index: 0, ref: podsRef, label: 'Pods' },
+    { index: 1, ref: aboutRef, label: 'About' },
+    { index: 2, ref: membersRef, label: 'Members' },
+    { index: 3, ref: messagesRef, label: 'Messages' },
   ];
 
   const onTabChange = index => {
@@ -37,25 +37,16 @@ const PeaGroupProfile = ({
     }
   };
 
-  const handleTabChanged = newIndex => {
-    setTabIndex(newIndex);
-
-    if (onTabChange) {
-      onTabChange(newIndex);
-    }
-  };
-
   useEffect(() => {
-    handleTabChanged(0);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    onTabChange(0);
   }, []);
 
   return (
     <PeaSwipeableTabs
-      activeIndex={tabIndex}
+      tabIndex={activeTabIndex}
       tabs={tabs}
       enableFeedback={isMobile}
-      onTabChange={handleTabChanged}
+      onTabChange={onTabChange}
     >
       {renderPodList()}
 
@@ -117,6 +108,7 @@ const PeaGroupProfile = ({
 };
 
 PeaGroupProfile.propTypes = {
+  activeTabIndex: PropTypes.number,
   renderPodList: PropTypes.func.isRequired,
   renderConnections: PropTypes.func.isRequired,
   renderMemberList: PropTypes.func.isRequired,
@@ -128,6 +120,7 @@ PeaGroupProfile.propTypes = {
 };
 
 PeaGroupProfile.defaultProps = {
+  activeTabIndex: 0,
   isMobile: false,
   onChangeTab: () => {},
   description: '',

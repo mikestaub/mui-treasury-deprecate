@@ -1,6 +1,12 @@
-import React, { memo, useRef, useState, useCallback } from 'react';
+import React, {
+  memo,
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  forwardRef,
+} from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -12,39 +18,10 @@ import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import { startCase } from 'lodash';
 import humanFormat from 'human-format';
-import normalizeWheel from 'normalize-wheel';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
 import PeaText from './PeaTypography';
-
-const useStyles = makeStyles(() => ({
-  scrollHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    height: 50,
-    boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
-    padding: '0 10px',
-    position: 'sticky',
-    top: 0,
-    zIndex: 1000,
-    background: '#fff',
-    transform: 'translateY(-100px)',
-    transition: 'transform .5s',
-  },
-  backBox: {
-    display: 'flex',
-    alignItems: 'center',
-    cursor: 'pointer',
-    width: '100%',
-  },
-  backTitle: {
-    marginLeft: 5,
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-}));
 
 const PeaGroupCard = ({
   isMember,
@@ -59,16 +36,16 @@ const PeaGroupCard = ({
   onDelete,
   onReport,
   onMessage,
+  onScrollToTop,
+  onScroll,
   actionText,
   hasBorderRadius,
   children,
   selectedTab,
   scrollSupported,
+  innerRef,
+  renderTopBar,
 }) => {
-  const classes = useStyles();
-
-  const [showTopBar, setShowTopBar] = useState(false);
-
   const lastTouchRef = useRef();
   const contentRef = useRef();
 
@@ -104,53 +81,6 @@ const PeaGroupCard = ({
 
   const onTouchStart = e => {
     [lastTouchRef.current] = e.touches;
-  };
-
-  // TODO: this logic is used in 3 components, refactor into custom hook
-  const onContentWheel = useCallback(
-    e => {
-      let deltaY = 0;
-
-      if (e.changedTouches && lastTouchRef.current) {
-        const currentTouch = e.changedTouches[0];
-        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
-        lastTouchRef.current = currentTouch;
-      } else {
-        const normalized = normalizeWheel(e);
-        deltaY = normalized.pixelY;
-      }
-
-      const content = contentRef.current;
-      const { ref } = selectedTab;
-
-      const offset = content.scrollHeight - content.clientHeight;
-
-      const extraPadding = showTopBar ? 50 : 0;
-      const shouldUpdateTab = content.scrollTop + extraPadding >= offset;
-      const tabScrollTop = ref.current.scrollTop;
-      const shouldUpdateContent =
-        content.scrollTop < offset ||
-        (content.scrollTop >= offset && tabScrollTop === 0);
-
-      if (shouldUpdateContent) {
-        content.scrollTop += deltaY;
-      }
-
-      setShowTopBar(shouldUpdateTab);
-
-      if (shouldUpdateTab) {
-        ref.current.style.overflow = 'auto';
-        ref.current.scrollTop += deltaY;
-      } else {
-        ref.current.style.overflow = 'hidden';
-      }
-    },
-    [selectedTab, showTopBar],
-  );
-
-  const scrollToTop = () => {
-    contentRef.current.scrollTo(0, 0);
-    setShowTopBar(false);
   };
 
   const renderMenu = () => (
@@ -212,35 +142,10 @@ const PeaGroupCard = ({
       className={
         hasBorderRadius ? 'PeaGroupProfile-root' : 'PeaProfileCard-root'
       }
-      style={
-        scrollSupported
-          ? {
-              display: 'block',
-              overflow: 'hidden',
-              paddingTop: showTopBar ? 50 : 0,
-            }
-          : {}
-      }
-      onWheel={scrollSupported ? onContentWheel : null}
-      onTouchStart={scrollSupported ? onTouchStart : null}
-      onTouchMove={scrollSupported ? onContentWheel : null}
-      ref={contentRef}
+      ref={innerRef}
+      onScroll={onScroll}
     >
-      {scrollSupported && (
-        <Grid
-          className={classes.scrollHeader}
-          style={showTopBar ? { transform: 'translateY(-50px)' } : {}}
-        >
-          <Box className={classes.backBox} onClick={scrollToTop}>
-            <PeaIcon color={'secondary'} size={'small'}>
-              arrow_back
-            </PeaIcon>
-            <PeaText color={'secondary'} className={classes.backTitle}>
-              {name}
-            </PeaText>
-          </Box>
-        </Grid>
-      )}
+      {renderTopBar && renderTopBar()}
 
       <CardMedia className={'MuiCardMedia-root'} image={image} />
 
@@ -319,6 +224,8 @@ PeaGroupCard.propTypes = {
   actionText: PropTypes.string,
   isMember: PropTypes.bool,
   isLoading: PropTypes.bool,
+  onScrollToTop: PropTypes.func,
+  onScroll: PropTypes.func,
   onJoin: PropTypes.func,
   onLeave: PropTypes.func,
   children: PropTypes.node,
@@ -342,6 +249,8 @@ PeaGroupCard.defaultProps = {
   selectedTab: undefined,
   hasBorderRadius: false,
   scrollSupported: false,
+  onScrollToTop: () => {},
+  onScroll: () => {},
 };
 
 PeaGroupCard.metadata = {
@@ -350,4 +259,6 @@ PeaGroupCard.metadata = {
 
 PeaGroupCard.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default memo(PeaGroupCard);
+export default memo(
+  forwardRef((props, ref) => <PeaGroupCard innerRef={ref} {...props} />),
+);

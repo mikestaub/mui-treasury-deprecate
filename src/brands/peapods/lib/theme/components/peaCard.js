@@ -263,6 +263,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         },
       },
       '&.PeaAccountProfile-root': {
+        display: 'block',
         position: 'relative',
         width: '100%',
         overflowY: 'auto',
@@ -437,8 +438,11 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         },
       },
       '&.PeaGroupProfile-root': {
+        display: 'block',
+        height: '100%',
         position: 'relative',
         textAlign: 'left',
+        overflowY: 'auto',
         '& .MuiCardMedia-root': {
           paddingTop: '56%',
           position: 'absolute',

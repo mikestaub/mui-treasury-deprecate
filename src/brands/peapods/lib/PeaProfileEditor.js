@@ -242,35 +242,38 @@ const PeaProfileEditor = ({
           />
         </div>
 
-        <PeaTextArea
-          label={'Bio'}
-          value={user.bio}
-          onChange={onUserChange('bio')}
-        />
+        <div>
+          <PeaTextArea
+            label={'Bio'}
+            value={user.bio}
+            onChange={onUserChange('bio')}
+          />
+        </div>
 
         {LocationInput && (
-          <LocationInput
-            removeSpacing
-            onChange={onLocationChange}
-            value={user.location && user.location.formattedAddress}
-          />
+          <div>
+            <FormControl margin={'normal'} component="fieldset" fullWidth>
+              <LocationInput
+                removeSpacing
+                onChange={onLocationChange}
+                value={user.location && user.location.formattedAddress}
+              />
+            </FormControl>
+          </div>
         )}
 
-        <br />
-
-        <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
-          About
-        </PeaText>
-        <Grid container>
-          <DatePicker
-            label={'Birthday'}
-            className={'PeaFormControl-root'}
-            InputLabelProps={{ className: 'PeaFormLabel-root' }}
-            format="MM/DD/YYYY"
-            value={user.birthday}
-            onChange={onBirthdayChange}
-          />
-        </Grid>
+        <div>
+          <FormControl margin={'normal'} component="fieldset" fullWidth>
+            <DatePicker
+              label={'Birthday'}
+              className={'PeaFormControl-root'}
+              InputLabelProps={{ className: 'PeaFormLabel-root' }}
+              format="MM/DD/YYYY"
+              value={user.birthday}
+              onChange={onBirthdayChange}
+            />
+          </FormControl>
+        </div>
 
         <div>
           <FormControl margin={'normal'} component="fieldset">
@@ -304,21 +307,23 @@ const PeaProfileEditor = ({
           </FormControl>
         </div>
 
-        <FormControl margin={'normal'} fullWidth>
-          <FormLabel>Tags</FormLabel>
-          <PeaAutocompleteList
-            value={user.tags}
-            canCreate
-            fullWidth
-            placeholder={'Enter some hashtags to follow ( feature is WIP )'}
-            onChange={onTagsChanged}
-            isMulti
-            hideSuggestions
-            removeSpacing
-          />
-        </FormControl>
+        <div>
+          <FormControl margin={'normal'} fullWidth>
+            <FormLabel>Tags</FormLabel>
+            <PeaAutocompleteList
+              value={user.tags}
+              canCreate
+              fullWidth
+              placeholder={'Enter some hashtags to follow ( feature is WIP )'}
+              onChange={onTagsChanged}
+              isMulti
+              hideSuggestions
+              removeSpacing
+            />
+          </FormControl>
+        </div>
 
-        <>
+        <div>
           <TextField
             id={'stauby'}
             label={'Email'}
@@ -329,7 +334,9 @@ const PeaProfileEditor = ({
             helperText={error.email && 'Invalid Email'}
             onChange={onUserChange('email')}
           />
+        </div>
 
+        <div>
           <TextField
             label={'Phone'}
             value={user.phoneNumber}
@@ -340,7 +347,9 @@ const PeaProfileEditor = ({
             helperText={error.phoneNumber && 'Invalid Phone Number'}
             onChange={onUserChange('phoneNumber')}
           />
+        </div>
 
+        <div>
           <FormControl margin={'normal'} fullWidth>
             <FormLabel>Private account</FormLabel>
             <PeaSwitch
@@ -348,9 +357,10 @@ const PeaProfileEditor = ({
               onChange={onUserChange('privateAccount')}
             />
           </FormControl>
+        </div>
 
-          {/* TODO: implement connections feature */}
-          {/* <FormControl margin={'normal'} fullWidth>
+        {/* TODO: implement connections feature */}
+        {/* <FormControl margin={'normal'} fullWidth>
             <FormLabel>Linked accounts</FormLabel>
             <Grid container>
               <Grid item>
@@ -440,7 +450,6 @@ const PeaProfileEditor = ({
               </Grid>
             </Grid>
           </FormControl> */}
-        </>
       </CardContent>
     </Card>
   );

@@ -14,6 +14,7 @@ const PeaSwipeableTabs = ({
   children,
   customStyle,
   hasPadding,
+  stickyOffset,
   ...props
 }) => {
   const [index, setIndex] = useState(tabIndex);
@@ -65,6 +66,11 @@ const PeaSwipeableTabs = ({
         item
         style={{
           width: '100%',
+          position: 'sticky',
+          background: 'white',
+          height: 50,
+          top: stickyOffset,
+          zIndex: 1,
         }}
       >
         <Tabs
@@ -85,6 +91,14 @@ const PeaSwipeableTabs = ({
           ))}
         </Tabs>
       </Grid>
+
+      <div
+        style={{
+          height: stickyOffset,
+          opacity: 0,
+          pointerEvents: 'none',
+        }}
+      />
 
       <Grid
         item
@@ -135,13 +149,18 @@ PeaSwipeableTabs.propTypes = {
   hasPadding: PropTypes.bool,
   tabIndex: PropTypes.number,
   tabs: PropTypes.arrayOf(
-    PropTypes.shape({ ref: PropTypes.func, label: PropTypes.node.isRequired }),
+    PropTypes.shape({
+      index: PropTypes.number,
+      ref: PropTypes.object,
+      label: PropTypes.node.isRequired,
+    }),
   ).isRequired,
   children: PropTypes.node.isRequired,
   customStyle: PropTypes.shape({}),
   // disable feedback to increase performance
   enableFeedback: PropTypes.bool,
   onTabChange: PropTypes.func,
+  stickOffset: PropTypes.number,
 };
 
 PeaSwipeableTabs.defaultProps = {
@@ -150,6 +169,7 @@ PeaSwipeableTabs.defaultProps = {
   enableFeedback: true,
   customStyle: {},
   onTabChange: () => {},
+  stickyOffset: 0,
 };
 
 PeaSwipeableTabs.metadata = {

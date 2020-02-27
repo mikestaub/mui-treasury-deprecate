@@ -396,7 +396,8 @@ const PeaAccountProfile = ({
           <Grid item>
             <PeaAvatar
               style={{
-                transform: `translateY(-80%) scale(${avatarScale})`,
+                transform: `translateY(-50%) scale(${avatarScale})`,
+                transformOrigin: 33,
               }}
               className={'MuiAvatar-root-profilePic'}
               src={image}
@@ -561,7 +562,6 @@ const PeaAccountProfile = ({
 
         <PeaText gutterBottom>{`@${userName}`}</PeaText>
         {isFollower && <PeaText gutterBottom>{'follows you'}</PeaText>}
-        <br />
 
         <Grid container wrap={'nowrap'} spacing={1}>
           <Grid item>

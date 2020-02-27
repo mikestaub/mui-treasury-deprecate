@@ -193,13 +193,13 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         position: 'relative',
         overflowY: 'auto',
         '& .MuiCardMedia-root': {
-          paddingTop: '44%',
+          paddingTop: '40%',
           position: 'absolute',
           width: '100%',
           top: 0,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
         },
         '& .MuiAvatar-root-profilePic': {
@@ -255,11 +255,8 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'relative',
           textAlign: 'left',
           background: palette.common.white,
-          marginTop: '36%',
+          marginTop: '37%',
           borderRadius: spacing(2),
-          [breakpoints.up('sm')]: {
-            marginTop: '24%',
-          },
         },
       },
       '&.PeaAccountProfile-root': {
@@ -274,7 +271,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           top: 0,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
         },
         '& .MuiAvatar-root-profilePic': {

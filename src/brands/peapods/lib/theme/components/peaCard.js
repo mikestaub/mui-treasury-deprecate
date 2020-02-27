@@ -457,10 +457,10 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'relative',
           textAlign: 'left',
           background: palette.common.white,
-          marginTop: '53%',
+          marginTop: '40%',
           borderRadius: spacing(2),
           [breakpoints.up('sm')]: {
-            marginTop: '53%',
+            marginTop: '40%',
           },
           '& .MuiTabs-root': {
             marginLeft: -16,

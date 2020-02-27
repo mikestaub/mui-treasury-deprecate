@@ -68,8 +68,9 @@ const PeaSwipeableTabs = ({
           width: '100%',
           position: 'sticky',
           background: 'white',
+          height: 50,
           top: stickyOffset,
-          zIndex: 100,
+          zIndex: 1,
         }}
       >
         <Tabs
@@ -90,6 +91,14 @@ const PeaSwipeableTabs = ({
           ))}
         </Tabs>
       </Grid>
+
+      <div
+        style={{
+          height: stickyOffset,
+          opacity: 0,
+          pointerEvents: 'none',
+        }}
+      />
 
       <Grid
         item
@@ -160,7 +169,7 @@ PeaSwipeableTabs.defaultProps = {
   enableFeedback: true,
   customStyle: {},
   onTabChange: () => {},
-  stickyOffset: 50,
+  stickyOffset: 0,
 };
 
 PeaSwipeableTabs.metadata = {

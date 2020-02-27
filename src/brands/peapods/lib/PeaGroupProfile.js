@@ -18,6 +18,7 @@ const PeaGroupProfile = ({
   isMobile,
   activeTabIndex,
   onChangeTab,
+  ...props
 }) => {
   const podsRef = useRef();
   const aboutRef = useRef();
@@ -47,6 +48,8 @@ const PeaGroupProfile = ({
       tabs={tabs}
       enableFeedback={isMobile}
       onTabChange={onTabChange}
+      stickyOffset={50}
+      {...props}
     >
       {renderPodList()}
 

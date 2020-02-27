@@ -151,7 +151,7 @@ const PeaGroupCard = ({
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container direction="column">
-          <Grid item container alignItems={'center'} xs>
+          <Grid item alignItems={'center'} xs>
             <PeaText variant={'h6'} weight={'bold'}>
               {name}
             </PeaText>

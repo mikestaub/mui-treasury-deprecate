@@ -24,6 +24,8 @@ import PeaTag from './PeaTag';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaShareContent from './PeaShareContent';
 
+const scrollHeaderHeight = 50;
+
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
 
@@ -31,7 +33,7 @@ const useStyles = makeStyles(() => ({
   scrollHeader: {
     display: 'flex',
     alignItems: 'center',
-    height: 50,
+    height: scrollHeaderHeight,
     boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
     padding: '0 10px',
     position: 'sticky',
@@ -328,7 +330,7 @@ const PeaEventDetails = ({
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container direction="column">
-          <Grid item container alignItems={'center'} xs>
+          <Grid item alignItems={'center'} xs>
             <PeaText variant={'h6'} weight={'bold'}>
               {title}
             </PeaText>
@@ -416,8 +418,10 @@ const PeaEventDetails = ({
         tabs={tabs}
         enableFeedback={isMobile}
         onTabChange={handleTabChanged}
+        stickyOffset={scrollHeaderHeight}
         customStyle={{
-          paddingTop: 50,
+          marginTop: -scrollHeaderHeight,
+          overflow: showTopBar ? 'auto' : 'hidden',
         }}
       >
         {renderPods()}

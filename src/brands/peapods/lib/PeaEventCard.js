@@ -134,8 +134,11 @@ const PeaEventCard = ({
           title: shareText,
           url: shareLink,
         })
-        .then(() => {
-          onShareEventClicked('native');
+        .then(() => onShareEventClicked('native'))
+        .catch(err => {
+          if (err.message !== 'Share canceled') {
+            throw err;
+          }
         });
     } else if (!openSharePopover) {
       setShareAnchorEl(event.currentTarget);

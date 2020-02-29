@@ -5,6 +5,7 @@ import peaAvatar from './components/peaAvatar';
 import peaBadge from './components/peaBadge';
 import peaButton from './components/peaButton';
 import peaCard from './components/peaCard';
+import peaCardMedia from './components/peaCardMedia';
 import peaChip from './components/peaChip';
 import peaDialog from './components/peaDialog';
 import peaForm from './components/peaForm';
@@ -49,6 +50,7 @@ const theme = {
     ...peaBadge(variables),
     ...peaButton(variables),
     ...peaCard(variables),
+    ...peaCardMedia(variables),
     ...peaChip(variables),
     ...peaDialog(variables),
     ...peaForm(variables),

@@ -70,7 +70,6 @@ const PeaSwipeableTabs = ({
           background: 'white',
           height: 50,
           top: stickyOffset,
-          zIndex: 1,
         }}
       >
         <Tabs
@@ -129,8 +128,7 @@ const PeaSwipeableTabs = ({
                   style={{
                     padding: hasPadding ? 16 : 0,
                     overflowY: 'auto',
-                    height: 'calc(100% - 32px)',
-                    minHeight: 'calc(100% - 32px)',
+                    height: '100%',
                   }}
                   ref={tabs[idx].ref}
                 >

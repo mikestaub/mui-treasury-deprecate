@@ -235,6 +235,11 @@ const PeaEventDetails = ({
         })
         .then(() => {
           onShareEventClicked('native');
+        })
+        .catch(err => {
+          if (err.message !== 'Share canceled') {
+            throw err;
+          }
         });
     } else if (!shareAnchorEl) {
       setShareAnchorEl(event.currentTarget);

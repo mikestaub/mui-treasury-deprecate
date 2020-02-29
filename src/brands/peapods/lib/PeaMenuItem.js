@@ -5,15 +5,29 @@ import { withStyles } from '@material-ui/core/styles';
 import Badge from '@material-ui/core/Badge';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
+
 import PeaIcon from './PeaIcon';
 
-const styles = () => ({
+const styles = ({ palette, breakpoints }) => ({
   root: {
-    cursor: 'pointer',
-  },
-  label: {
-    fontWeight: 'bold',
-    lineHeight: 1,
+    color: palette.secondary.main,
+    [breakpoints.down('md')]: {
+      color: palette.grey[600],
+    },
+    transition: 'transform 0.2s',
+    '&:hover': {
+      cursor: 'pointer',
+      color: palette.primary.main,
+      transform: 'scale(1.1)',
+      '& .PeaMenuItem-label': {
+        color: palette.primary.main,
+      },
+    },
+    '& .PeaMenuItem-label': {
+      color: palette.secondary.main,
+      fontWeight: 'bold',
+      lineHeight: 1,
+    },
   },
 });
 
@@ -32,7 +46,7 @@ const PeaMenuItem = ({
   ...props
 }) => {
   const renderIcon = () =>
-    icon && <PeaIcon color={'secondary'} icon={icon} {...IconProps} />;
+    icon && <PeaIcon className={classes.icon} icon={icon} {...IconProps} />;
 
   return (
     <Box
@@ -50,20 +64,12 @@ const PeaMenuItem = ({
       )}
 
       {isVertical ? (
-        <Typography
-          color={'secondary'}
-          className={clsx(classes.label, 'PeaMenuItem-label')}
-          {...labelProps}
-        >
+        <Typography className={'PeaMenuItem-label'} {...labelProps}>
           {label}
         </Typography>
       ) : (
         <Box px={1} display={'flex'} alignItems={'center'}>
-          <Typography
-            color={'secondary'}
-            className={clsx(classes.label, 'PeaMenuItem-label')}
-            {...labelProps}
-          >
+          <Typography className={'PeaMenuItem-label'} {...labelProps}>
             {label}
           </Typography>
         </Box>

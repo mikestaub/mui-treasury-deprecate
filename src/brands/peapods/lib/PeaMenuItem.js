@@ -8,8 +8,8 @@ import Box from '@material-ui/core/Box';
 
 import PeaIcon from './PeaIcon';
 
-const styles = ({ palette, breakpoints }) => ({
-  root: {
+const styles = ({ palette, breakpoints }) => {
+  const root = {
     color: palette.secondary.main,
     [breakpoints.down('md')]: {
       color: palette.grey[600],
@@ -17,8 +17,8 @@ const styles = ({ palette, breakpoints }) => ({
     transition: 'transform 0.2s',
     '&:hover': {
       cursor: 'pointer',
-      color: palette.primary.main,
       transform: 'scale(1.1)',
+      color: palette.primary.main,
       '& .PeaMenuItem-label': {
         color: palette.primary.main,
       },
@@ -28,8 +28,27 @@ const styles = ({ palette, breakpoints }) => ({
       fontWeight: 'bold',
       lineHeight: 1,
     },
-  },
-});
+  };
+
+  const selected = {
+    ...root,
+    color: palette.primary.main,
+    transform: 'scale(1.1)',
+    [breakpoints.down('md')]: {
+      color: palette.primary.main,
+    },
+    '& .PeaMenuItem-label': {
+      color: palette.primary.main,
+      fontWeight: 'bold',
+      lineHeight: 1,
+    },
+  };
+
+  return {
+    root,
+    selected,
+  };
+};
 
 const PeaMenuItem = ({
   className,
@@ -43,18 +62,17 @@ const PeaMenuItem = ({
   labelProps,
   onClick,
   isVertical,
+  isSelected,
   ...props
 }) => {
-  const renderIcon = () =>
-    icon && <PeaIcon className={classes.icon} icon={icon} {...IconProps} />;
+  const renderIcon = () => icon && <PeaIcon icon={icon} {...IconProps} />;
+
+  const localClass = isSelected
+    ? clsx(classes.selected, className)
+    : clsx(classes.root, className);
 
   return (
-    <Box
-      className={clsx(classes.root, className)}
-      display={'flex'}
-      onClick={onClick}
-      {...props}
-    >
+    <Box className={localClass} display={'flex'} onClick={onClick} {...props}>
       {badgeShowed ? (
         <Badge badgeContent={badgeContent} color="error" {...BadgeProps}>
           {renderIcon()}
@@ -93,6 +111,7 @@ PeaMenuItem.propTypes = {
   label: PropTypes.string,
   labelProps: PropTypes.shape({}),
   isVertical: PropTypes.bool,
+  isSelected: PropTypes.bool,
 };
 
 PeaMenuItem.defaultProps = {
@@ -105,6 +124,7 @@ PeaMenuItem.defaultProps = {
   label: '',
   className: '',
   isVertical: false,
+  isSelected: false,
   icon: undefined,
 };
 

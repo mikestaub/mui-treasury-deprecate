@@ -237,6 +237,10 @@ const PeaAutocompleteList = ({
         font: 'inherit',
       },
     }),
+    menuList: base => ({
+      ...base,
+      overflowX: 'hidden',
+    }),
   };
 
   const components = {

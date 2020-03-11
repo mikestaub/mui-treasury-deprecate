@@ -111,4 +111,4 @@ export { default as AutocompleteList } from './lib/PeaAutocompleteList';
 export { default as UserSettings } from './lib/PeaUserSettings';
 export { default as ShareContent } from './lib/PeaShareContent';
 export { default as GroupSelector } from './lib/PeaGroupSelector';
-export { default as InfoTooltip } from './lib/PeaInfoTootip';
+export { default as InfoTooltip } from './lib/PeaInfoTooltip';

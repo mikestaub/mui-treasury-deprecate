@@ -7,11 +7,13 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import PeaDialog from './PeaDialog';
 import PeaButton from './PeaButton';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
 import PeaIcon from './PeaIcon';
+import PeaInfoTooltip from './PeaInfoTooltip';
 
 // TODO: render group members
 
@@ -38,20 +40,34 @@ const PeaGroupDialog = ({
     titleVariant={'secondaryCentered'}
     content={
       <>
-        <TextField
-          required
-          fullWidth
-          margin={'normal'}
-          label={'Name'}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={name}
-          onChange={onChange('name')}
-        />
-
+        <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
+          <TextField
+            required
+            fullWidth
+            margin={'normal'}
+            label={'Name'}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={name}
+            onChange={onChange('name')}
+          />
+          <Box mt={2}>
+            <PeaInfoTooltip description={'The name of group'} />
+          </Box>
+        </Grid>
         <FormControl margin={'normal'} fullWidth>
-          <FormLabel component="legend">Cover Picture</FormLabel>
+          <Grid
+            container
+            alignItems={'center'}
+            justify={'space-between'}
+            wrap={'nowrap'}
+          >
+            <FormLabel component="legend">Cover Picture</FormLabel>
+            <Box mb={0.5}>
+              <PeaInfoTooltip description={'The cover picture of group'} />
+            </Box>
+          </Grid>
 
           <Box
             style={{
@@ -81,22 +97,42 @@ const PeaGroupDialog = ({
           </Box>
         </FormControl>
 
-        <TextField
-          fullWidth
-          margin={'normal'}
-          label={'Description'}
-          InputLabelProps={{
-            shrink: true,
-          }}
-          value={description || ''}
-          onChange={onChange('description')}
-        />
+        <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
+          <TextField
+            fullWidth
+            margin={'normal'}
+            label={'Description'}
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={description || ''}
+            onChange={onChange('description')}
+          />
+          <Box mt={2}>
+            <PeaInfoTooltip description={'The description of group'} />
+          </Box>
+        </Grid>
 
-        {inviteInput}
+        <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
+          {inviteInput}
+          <Box mt={2}>
+            <PeaInfoTooltip description={'The members of group'} />
+          </Box>
+        </Grid>
 
-        {tagsInput}
+        <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
+          {tagsInput}
+          <Box mt={2}>
+            <PeaInfoTooltip description={'The tags of group'} />
+          </Box>
+        </Grid>
 
-        {typeInput}
+        <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
+          {typeInput}
+          <Box mt={2}>
+            <PeaInfoTooltip description={'The type of group'} />
+          </Box>
+        </Grid>
       </>
     }
     actions={[

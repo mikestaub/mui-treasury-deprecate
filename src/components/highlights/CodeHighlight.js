@@ -29,9 +29,9 @@ const CodeHighlight = ({
     }}
     bgcolor={'rgb(40, 44, 52)'}
     overflow={'hidden'}
-    {...rounded && {
+    {...(rounded && {
       borderRadius: 8,
-    }}
+    })}
     position={'relative'}
     {...props}
   >

@@ -14,7 +14,7 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import cx from 'classnames';
-import normalizeWheel from 'normalize-wheel';
+import { debounce } from 'lodash';
 
 import PeaButton from './PeaButton';
 import PeaText from './PeaTypography';
@@ -24,6 +24,8 @@ import PeaTag from './PeaTag';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaShareContent from './PeaShareContent';
 
+const scrollHeaderHeight = 50;
+
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
 
@@ -31,7 +33,7 @@ const useStyles = makeStyles(() => ({
   scrollHeader: {
     display: 'flex',
     alignItems: 'center',
-    height: 50,
+    height: scrollHeaderHeight,
     boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
     padding: '0 10px',
     position: 'sticky',
@@ -39,7 +41,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 1000,
     background: '#fff',
     transform: 'translateY(-100px)',
-    transition: 'transform .5s',
+    transition: 'transform .2s',
   },
   backBox: {
     display: 'flex',
@@ -155,61 +157,34 @@ const PeaEventDetails = ({
   const [tabIndex, setTabIndex] = useState(0);
 
   const lastTouchRef = useRef();
-  const contentRef = useRef();
+  const scrollRef = useRef();
   const podsRef = useRef();
   const aboutRef = useRef();
   const connectionRef = useRef();
 
   const tabs = [
-    { ref: podsRef, label: 'Pods' },
-    { ref: aboutRef, label: 'About' },
-    { ref: connectionRef, label: 'Connections' },
+    { index: 0, ref: podsRef, label: 'Pods' },
+    { index: 1, ref: aboutRef, label: 'About' },
+    { index: 2, ref: connectionRef, label: 'Connections' },
   ];
 
-  const onTouchStart = e => {
-    [lastTouchRef.current] = e.touches;
-  };
+  const scrollToTop = () => (scrollRef.current.scrollTop = 0);
 
-  // we micromange the scrolling to provide a better UX
-  const onContentWheel = useCallback(
-    e => {
-      let deltaY = 0;
+  const onScroll = useCallback(
+    debounce(e => {
+      const shouldUpdateTab = scrollRef.current.scrollTop > 300;
 
-      if (e.changedTouches && lastTouchRef.current) {
-        const currentTouch = e.changedTouches[0];
-        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
-        lastTouchRef.current = currentTouch;
-      } else {
-        const normalized = normalizeWheel(e);
-        deltaY = normalized.pixelY;
-      }
-
-      const content = contentRef.current;
       const { ref } = tabs[tabIndex];
 
-      const offset = content.scrollHeight - content.clientHeight;
-
-      const extraPadding = showTopBar ? 50 : 0;
-      const shouldUpdateTab = content.scrollTop + extraPadding >= offset;
-      const tabScrollTop = ref.current.scrollTop;
-      const shouldUpdateContent =
-        content.scrollTop < offset ||
-        (content.scrollTop >= offset && tabScrollTop === 0);
-
-      if (shouldUpdateContent) {
-        content.scrollTop += deltaY;
-      }
-
-      setShowTopBar(shouldUpdateTab);
+      ref.current.style.overflow = shouldUpdateTab ? 'auto' : 'hidden';
 
       if (shouldUpdateTab) {
-        ref.current.style.overflow = 'auto';
-        ref.current.scrollTop += deltaY;
-      } else {
-        ref.current.style.overflow = 'hidden';
+        setShowTopBar(true);
+      } else if (showTopBar) {
+        setShowTopBar(false);
       }
-    },
-    [tabIndex, tabs, showTopBar],
+    }, 1),
+    [tabIndex, tabs],
   );
 
   const onTabChange = index => {
@@ -260,6 +235,11 @@ const PeaEventDetails = ({
         })
         .then(() => {
           onShareEventClicked('native');
+        })
+        .catch(err => {
+          if (err.message !== 'Share canceled') {
+            throw err;
+          }
         });
     } else if (!shareAnchorEl) {
       setShareAnchorEl(event.currentTarget);
@@ -325,38 +305,37 @@ const PeaEventDetails = ({
     </Menu>
   );
 
-  const scrollToTop = () => {
-    contentRef.current.scrollTo(0, 0);
-    setShowTopBar(false);
-  };
-
   return (
     <Card
       className={'PeaGroupProfile-root'}
-      style={{ display: 'block', overflow: 'hidden' }}
-      onWheel={onContentWheel}
-      onTouchStart={onTouchStart}
-      onTouchMove={onContentWheel}
-      ref={contentRef}
+      onScroll={onScroll}
+      ref={scrollRef}
     >
       <Grid
         className={classes.scrollHeader}
-        style={showTopBar ? { transform: 'translateY(0)' } : {}}
+        style={
+          showTopBar
+            ? {
+                transform: 'translateY(0)',
+              }
+            : {}
+        }
       >
         <Box className={classes.backBox} onClick={scrollToTop}>
           <PeaIcon color={'secondary'} size={'small'}>
-            arrow_back
+            arrow_upward
           </PeaIcon>
           <PeaText color={'secondary'} className={classes.backTitle}>
             {title}
           </PeaText>
         </Box>
       </Grid>
+
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container direction="column">
-          <Grid item container alignItems={'center'} xs>
+          <Grid item alignItems={'center'} xs>
             <PeaText variant={'h6'} weight={'bold'}>
               {title}
             </PeaText>
@@ -444,7 +423,11 @@ const PeaEventDetails = ({
         tabs={tabs}
         enableFeedback={isMobile}
         onTabChange={handleTabChanged}
-        customStyle={{ paddingTop: showTopBar ? 50 : 0 }}
+        stickyOffset={scrollHeaderHeight}
+        customStyle={{
+          marginTop: -scrollHeaderHeight,
+          overflow: showTopBar ? 'auto' : 'hidden',
+        }}
       >
         {renderPods()}
 
@@ -543,6 +526,7 @@ const PeaEventDetails = ({
         {renderConnections()}
       </PeaSwipeableTabs>
     </Card>
+    // </Grid>
   );
 };
 

@@ -31,7 +31,7 @@ const useStyles = makeStyles(({ spacing }) => ({
   },
 }));
 
-const PeaThreadTitle = ({ title, subtitle, avatars }) => {
+const PeaThreadTitle = ({ title, subtitle, avatars, isTitleShown }) => {
   const classes = useStyles();
 
   const maxAvatarCount = 5;
@@ -39,20 +39,22 @@ const PeaThreadTitle = ({ title, subtitle, avatars }) => {
   return (
     <Grid container classes={{ container: classes.root }}>
       <Grid item xs={12}>
-        <div className={classes.textContainer}>
-          <PeaText
-            variant="h6"
-            className={classes.title}
-            color="secondary"
-            weight="bold"
-          >
-            {title}
-          </PeaText>
+        {isTitleShown && (
+          <div className={classes.textContainer}>
+            <PeaText
+              variant="h6"
+              className={classes.title}
+              color="secondary"
+              weight="bold"
+            >
+              {title}
+            </PeaText>
 
-          <PeaText variant="caption" className={classes.status}>
-            {subtitle}
-          </PeaText>
-        </div>
+            <PeaText variant="caption" className={classes.status}>
+              {subtitle}
+            </PeaText>
+          </div>
+        )}
 
         <div className={classes.avatarGroupContainer}>
           <PeaAvatar.Group
@@ -74,12 +76,14 @@ PeaThreadTitle.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
   avatars: PropTypes.arrayOf(PropTypes.string),
+  isTitleShown: PropTypes.bool,
 };
 
 PeaThreadTitle.defaultProps = {
   title: 'Unknown',
   subtitle: 'unknown',
   avatars: [],
+  isTitleShown: true,
 };
 
 PeaThreadTitle.metadata = {

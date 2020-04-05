@@ -180,6 +180,7 @@ const PeaAutocompleteList = ({
   InputControl,
   OptionComponent,
   onChange,
+  onBlur: onBlurProp,
   isMulti,
   isLoading,
   fullWidth,
@@ -235,6 +236,10 @@ const PeaAutocompleteList = ({
       '& input': {
         font: 'inherit',
       },
+    }),
+    menuList: base => ({
+      ...base,
+      overflowX: 'hidden',
     }),
   };
 
@@ -294,7 +299,7 @@ const PeaAutocompleteList = ({
 
   const key = value && value.length ? JSON.stringify(value) : inputValue;
 
-  const onBlur = () => {
+  const onBlur = e => {
     if (inputValue) {
       const newVal = { label: inputValue, value: inputValue };
       if (isMulti) {
@@ -302,6 +307,9 @@ const PeaAutocompleteList = ({
       } else {
         handleSelectChange(newVal);
       }
+    }
+    if (onBlurProp) {
+      onBlurProp(e);
     }
   };
 
@@ -366,6 +374,7 @@ PeaAutocompleteList.defaultProps = {
   removeSpacing: false,
   menuPlacement: 'auto',
   autoFocus: false,
+  onBlur: undefined,
 };
 
 PeaAutocompleteList.propTypes = {
@@ -387,6 +396,7 @@ PeaAutocompleteList.propTypes = {
   InputControl: PropTypes.func,
   OptionComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func,
   hideSuggestions: PropTypes.bool,
   clearAfterEnter: PropTypes.bool,
   removeSpacing: PropTypes.bool,

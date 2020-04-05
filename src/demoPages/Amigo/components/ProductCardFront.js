@@ -35,12 +35,12 @@ const ProductCardFront = ({ name, price, image, bordered }) => {
     <ButtonBase className={classes.buttonBase}>
       <Box
         height={'100%'}
-        {...bordered && {
+        {...(bordered && {
           border: '1px solid #f0f0f0',
           borderTop: 'none',
           marginLeft: '-1px',
           marginTop: '-1px',
-        }}
+        })}
       >
         <Box p={2}>
           <div className={classes.productImage}>

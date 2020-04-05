@@ -14,7 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
-import normalizeWheel from 'normalize-wheel';
+import { useScroll } from 'react-use';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
@@ -56,6 +56,8 @@ const useStyles = makeStyles(() => ({
   },
   topAvatar: {
     margin: '0 5px',
+    marginLeft: 22,
+    marginRight: 22,
   },
 }));
 
@@ -71,7 +73,6 @@ const PeaAccountProfile = ({
   location,
   locationInput,
   birthday,
-  age,
   gender,
   pods,
   invitableGroups,
@@ -118,7 +119,6 @@ const PeaAccountProfile = ({
 }) => {
   const classes = useStyles();
 
-  const [showTopBar, setShowTopBar] = useState(false);
   const [anchorEl, setAnchor] = useState(null);
   const [followAnchorEl, setFollowAnchorEl] = useState(null);
   const [delModalOpen, setDelModalOpen] = useState(false);
@@ -127,13 +127,11 @@ const PeaAccountProfile = ({
   const [confirmText, setConfirmText] = useState('Follow');
   const [tabIndex, setTabIndex] = useState(0);
 
-  const lastTouchRef = useRef();
-  const contentRef = useRef();
+  const scrollRef = useRef();
   const hostingRef = useRef();
   const podsRef = useRef();
   const aboutRef = useRef();
   const groupsRef = useRef();
-  const avatarRef = useRef();
 
   const tabs = [
     { ref: hostingRef, label: 'Hosting' },
@@ -155,6 +153,18 @@ const PeaAccountProfile = ({
   const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
   const followBtnDisabled = followLoading;
 
+  const { y } = useScroll(scrollRef);
+
+  let avatarScale = 1;
+  let showTopBar = false;
+
+  avatarScale = 1 - y * AVATAR_SCROLL_FACTOR;
+
+  if (avatarScale < 0.31) {
+    avatarScale = 0.31;
+    showTopBar = true;
+  }
+
   const updateFollowButtonText = useCallback(() => {
     let value = isFollowing ? 'Following' : 'Follow';
 
@@ -166,6 +176,8 @@ const PeaAccountProfile = ({
   }, [setFollowButtonText, isFollowing, followRequested]);
 
   useEffect(updateFollowButtonText, [currentUserFollowing]);
+
+  const scrollToTop = () => (scrollRef.current.scrollTop = 0);
 
   const onMouseOver = () => {
     if (!currentUserFollowing) {
@@ -244,58 +256,16 @@ const PeaAccountProfile = ({
     window.open(`mailto:${supportEmail}`);
   };
 
-  const onTouchStart = e => {
-    [lastTouchRef.current] = e.touches;
-  };
-
-  // we micromange the scrolling to provide a better UX
-  const onContentWheel = useCallback(
+  const onScroll = useCallback(
     e => {
-      let deltaY = 0;
+      const content = scrollRef.current;
 
-      if (e.changedTouches && lastTouchRef.current) {
-        const currentTouch = e.changedTouches[0];
-        deltaY = lastTouchRef.current.pageY - currentTouch.pageY;
-        lastTouchRef.current = currentTouch;
-      } else {
-        const normalized = normalizeWheel(e);
-        deltaY = normalized.pixelY;
-      }
-
-      const content = contentRef.current;
-
-      let avatarScale = 1 - content.scrollTop * AVATAR_SCROLL_FACTOR;
-
-      if (avatarScale < 0.31) {
-        avatarScale = 0.31;
-        setShowTopBar(true);
-      } else {
-        setShowTopBar(false);
-      }
-      const avatarElement = avatarRef.current.firstChild;
-      avatarElement.style.transform = `translateY(-60%) scale(${avatarScale})`;
-      avatarElement.style.transition = 'transform .2s';
+      const offset = content.scrollHeight - content.clientHeight;
+      const shouldUpdateTab = content.scrollTop >= offset;
 
       const { ref } = tabs[tabIndex];
 
-      const offset = content.scrollHeight - content.clientHeight;
-
-      const shouldUpdateTab = content.scrollTop >= offset;
-      const tabScrollTop = ref.current.scrollTop;
-      const shouldUpdateContent =
-        content.scrollTop < offset ||
-        (content.scrollTop >= offset && tabScrollTop === 0);
-
-      if (shouldUpdateContent) {
-        content.scrollTop += deltaY;
-      }
-
-      if (shouldUpdateTab) {
-        ref.current.style.overflow = 'auto';
-        ref.current.scrollTop += deltaY;
-      } else {
-        ref.current.style.overflow = 'hidden';
-      }
+      ref.current.style.overflow = shouldUpdateTab ? 'auto' : 'hidden';
     },
     [tabIndex, tabs],
   );
@@ -400,21 +370,11 @@ const PeaAccountProfile = ({
     </Menu>
   );
 
-  const scrollToTop = () => {
-    const avatarElement = avatarRef.current.firstChild;
-    avatarElement.style.transform = 'translateY(-60%)';
-    contentRef.current.scrollTo(0, 0);
-    setShowTopBar(false);
-  };
-
   return (
     <Card
       className={'PeaAccountProfile-root'}
-      style={{ display: 'block', overflow: 'hidden' }}
-      onWheel={onContentWheel}
-      onTouchStart={onTouchStart}
-      onTouchMove={onContentWheel}
-      ref={contentRef}
+      onScroll={onScroll}
+      ref={scrollRef}
     >
       <Grid
         className={classes.scrollHeader}
@@ -422,18 +382,26 @@ const PeaAccountProfile = ({
       >
         <Box className={classes.backBox} onClick={scrollToTop}>
           <PeaIcon color={'secondary'} size={'small'}>
-            arrow_back
+            arrow_upward
           </PeaIcon>
           <PeaAvatar src={image} size={'small'} className={classes.topAvatar} />
           <PeaText color={'secondary'}>{name}</PeaText>
         </Box>
       </Grid>
+
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container justify={'space-between'} spacing={2}>
-          <Grid item style={{ height: 0 }} ref={avatarRef}>
-            <PeaAvatar className={'MuiAvatar-root-profilePic'} src={image} />
+          <Grid item>
+            <PeaAvatar
+              style={{
+                transform: `translateY(-50%) scale(${avatarScale})`,
+                transformOrigin: 33,
+              }}
+              className={'MuiAvatar-root-profilePic'}
+              src={image}
+            />
           </Grid>
           <Hidden only={'xs'}>
             <Grid item>
@@ -594,7 +562,6 @@ const PeaAccountProfile = ({
 
         <PeaText gutterBottom>{`@${userName}`}</PeaText>
         {isFollower && <PeaText gutterBottom>{'follows you'}</PeaText>}
-        <br />
 
         <Grid container wrap={'nowrap'} spacing={1}>
           <Grid item>
@@ -625,32 +592,19 @@ const PeaAccountProfile = ({
         tabs={tabs}
         enableFeedback={isMobile}
         onTabChange={handleTabChanged}
-        customStyle={{ paddingTop: showTopBar ? 50 : 0 }}
+        customStyle={{ paddingTop: 50 }}
       >
         <Box>{eventList}</Box>
 
         <Box>{podList}</Box>
 
         <Box p={2} textAlign={'left'}>
-          <PeaText gutterBottom variant={'subtitle1'} weight={'bold'}>
-            About
-          </PeaText>
           <PeaText gutterBottom>
             <PeaText link underline={'none'}>
-              <b>Age :</b>
+              <b>Bio :</b>
             </PeaText>{' '}
-            {age}
+            {bio}
           </PeaText>
-          <PeaText gutterBottom>
-            <PeaText link underline={'none'}>
-              <b>Gender :</b>
-            </PeaText>{' '}
-            {gender}
-          </PeaText>
-          <PeaText link underline={'none'} gutterBottom>
-            <b>Groups</b>
-          </PeaText>
-          <PeaText gutterBottom />
           <br />
           <PeaText link underline={'none'} gutterBottom>
             <b>Tags</b>
@@ -697,7 +651,6 @@ PeaAccountProfile.propTypes = {
   bio: PropTypes.string,
   location: PropTypes.object,
   locationInput: PropTypes.func,
-  age: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   birthday: PropTypes.string,
   gender: PropTypes.string,
   pods: PropTypes.arrayOf(
@@ -764,7 +717,6 @@ PeaAccountProfile.defaultProps = {
   location: undefined,
   locationInput: undefined,
   birthday: undefined,
-  age: undefined,
   gender: undefined,
   eventList: [],
   pods: [],

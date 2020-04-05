@@ -193,13 +193,13 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         position: 'relative',
         overflowY: 'auto',
         '& .MuiCardMedia-root': {
-          paddingTop: '44%',
+          paddingTop: '40%',
           position: 'absolute',
           width: '100%',
           top: 0,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
         },
         '& .MuiAvatar-root-profilePic': {
@@ -255,14 +255,12 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'relative',
           textAlign: 'left',
           background: palette.common.white,
-          marginTop: '36%',
+          marginTop: '37%',
           borderRadius: spacing(2),
-          [breakpoints.up('sm')]: {
-            marginTop: '24%',
-          },
         },
       },
       '&.PeaAccountProfile-root': {
+        display: 'block',
         position: 'relative',
         width: '100%',
         overflowY: 'auto',
@@ -273,7 +271,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           top: 0,
           backgroundColor: palette.grey[200],
           [breakpoints.up('sm')]: {
-            paddingTop: '32%',
+            paddingTop: '40%',
           },
         },
         '& .MuiAvatar-root-profilePic': {
@@ -437,8 +435,11 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         },
       },
       '&.PeaGroupProfile-root': {
+        display: 'block',
+        height: '100%',
         position: 'relative',
         textAlign: 'left',
+        overflowY: 'auto',
         '& .MuiCardMedia-root': {
           paddingTop: '56%',
           position: 'absolute',
@@ -453,10 +454,10 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           position: 'relative',
           textAlign: 'left',
           background: palette.common.white,
-          marginTop: '53%',
+          marginTop: '40%',
           borderRadius: spacing(2),
           [breakpoints.up('sm')]: {
-            marginTop: '53%',
+            marginTop: '40%',
           },
           '& .MuiTabs-root': {
             marginLeft: -16,

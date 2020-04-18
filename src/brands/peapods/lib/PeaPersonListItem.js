@@ -11,6 +11,7 @@ const PeaPersonListItem = ({
   name,
   tag,
   onClick,
+  onViewProfile,
   ListItemProps,
   AvatarProps,
   ListItemTextProps,
@@ -18,7 +19,7 @@ const PeaPersonListItem = ({
   isButtonShown,
 }) => (
   <ListItem {...ListItemProps} onClick={!isButtonShown ? onClick : null}>
-    <PeaAvatar src={src} {...AvatarProps} />
+    <PeaAvatar src={src} {...AvatarProps} onClick={onViewProfile} />
     <ListItemText
       primaryTypographyProps={{ noWrap: true }}
       secondaryTypographyProps={{ noWrap: true }}
@@ -44,6 +45,7 @@ PeaPersonListItem.propTypes = {
   name: PropTypes.string.isRequired,
   tag: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
+  onViewProfile: PropTypes.func,
   ListItemProps: PropTypes.shape({}),
   AvatarProps: PropTypes.shape({}),
   ListItemTextProps: PropTypes.shape({}),
@@ -56,6 +58,7 @@ PeaPersonListItem.defaultProps = {
   ListItemTextProps: {},
   ButtonProps: {},
   isButtonShown: true,
+  onViewProfile: () => {}
 };
 PeaPersonListItem.metadata = {
   name: 'Pea Person List Item',

@@ -1,4 +1,4 @@
-/* eslint-disable no-useless-escape,prettier/prettier */
+/* eslint-disable no-useless-escape */
 export const normalizeJSX = code =>
   code
     .replace(/WithStyles/g, '')

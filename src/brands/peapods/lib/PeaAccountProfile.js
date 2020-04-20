@@ -28,6 +28,7 @@ import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaGroupSelector from './PeaGroupSelector';
+import PeaConnections from './PeaConnections';
 
 const AVATAR_SCROLL_FACTOR = 0.0055;
 
@@ -116,6 +117,7 @@ const PeaAccountProfile = ({
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
+  connections,
 }) => {
   const classes = useStyles();
 
@@ -306,7 +308,7 @@ const PeaAccountProfile = ({
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
-        onLinkSocial={onLinkSocial}
+        // onLinkSocial={onLinkSocial} // TODO: KARAN: remove onLinkSocial from editor??
       />
     );
   }
@@ -621,6 +623,12 @@ const PeaAccountProfile = ({
               </Grid>
             ))}
           </Grid>
+          <PeaConnections
+            followers={connections.followers}
+            followings={connections.followings}
+            onLinkSocial={onLinkSocial}
+            loading={connections.loading}
+          />
         </Box>
 
         <Box>{groupList}</Box>

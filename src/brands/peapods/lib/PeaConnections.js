@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Popover from '@material-ui/core/Popover';
-import IconButton from '@material-ui/core/IconButton';
+import { Grid, Typography, Popover, IconButton } from '@material-ui/core';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
@@ -25,6 +22,19 @@ const styles = ({ palette }) => ({
     fontWeight: 'bold',
     fontSize: 14,
     textAlign: 'left',
+  },
+  gridList: {
+    flexWrap: 'nowrap',
+    transform: 'translateZ(0)',
+    overflow: 'hidden',
+    overflowX: 'scroll',
+    scrollbarWidth: 'none',
+    '&::-webkit-scrollbar-thumb': {
+      // TODO: KARAN: disable blue scroll bar??
+      width: '0px',
+      boxShadow: 'none',
+      background: 'transparent',
+    },
   },
   settingsHeading: {
     margin: '0px 0px 10px 0px',
@@ -86,7 +96,7 @@ const PeaConnections = ({
       icon: 'fab fa-instagram',
     },
     {
-      provider: 'meetup',
+      provider: 'snapchat',
       icon: 'fab fa-snapchat',
     },
   ];
@@ -106,7 +116,7 @@ const PeaConnections = ({
     setAnchorEl(null);
     onLinkSocial(provider, connect);
   };
-
+  // TODO: KARAN: how to make horizontal list??
   return (
     <Grid container>
       <Grid container alignItems="center" justify="space-between">
@@ -129,7 +139,7 @@ const PeaConnections = ({
         )}
       </Grid>
 
-      {!loading ? (
+      {loading ? null : (
         <>
           {rows.map(({ title, data }) =>
             data.length ? (
@@ -140,7 +150,7 @@ const PeaConnections = ({
                   </Typography>
                 </Grid>
 
-                <Grid container spacing={2}>
+                <Grid container className={classes.gridList} spacing={2}>
                   {data.map(item => (
                     <Grid key={item.name} item>
                       <a
@@ -157,7 +167,7 @@ const PeaConnections = ({
             ) : null,
           )}
         </>
-      ) : null}
+      )}
 
       <Popover
         id={settingsPopoverId}
@@ -190,6 +200,7 @@ const PeaConnections = ({
               onChange={({ target }) => setConnect(target.checked)}
             />
           </Grid>
+
           <Grid className={classes.socialButtons} container spacing={3}>
             {socialMedias.map(({ provider, icon }) => (
               <Grid item>

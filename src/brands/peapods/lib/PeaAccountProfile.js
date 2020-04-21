@@ -114,6 +114,7 @@ const PeaAccountProfile = ({
   activeTabIndex,
   onTabChange,
   onLinkSocial,
+  onLoadMoreConnections,
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
@@ -628,6 +629,7 @@ const PeaAccountProfile = ({
             followings={connections.followings}
             onLinkSocial={onLinkSocial}
             loading={connections.loading}
+            onLoadMoreConnections={onLoadMoreConnections}
           />
         </Box>
 
@@ -703,6 +705,7 @@ PeaAccountProfile.propTypes = {
   onInviteClicked: PropTypes.func.isRequired,
   onAcceptFollowRequest: PropTypes.func.isRequired,
   onLinkSocial: PropTypes.func.isRequired,
+  onLoadMoreConnections: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
   onLogout: PropTypes.func.isRequired,
   onChangeSettings: PropTypes.func,

@@ -43,6 +43,17 @@ const styles = ({ palette }) => ({
     fontSize: 16,
     textAlign: 'left',
   },
+  loadMoreButton: {
+    minHeight: '60px',
+    minWidth: '60px',
+  },
+  loadMoreLabel: {
+    margin: '16px 0px',
+    color: palette.grey[500],
+    fontWeight: 'bold',
+    fontSize: 10,
+    textAlign: 'left',
+  },
   socialButtons: {
     marginTop: '5px',
   },
@@ -56,6 +67,7 @@ const PeaConnections = ({
   groups,
   onLinkSocial,
   loading,
+  onLoadMoreConnections,
 }) => {
   const [connect, setConnect] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -162,6 +174,14 @@ const PeaConnections = ({
                       </a>
                     </Grid>
                   ))}
+                  <PeaButton
+                    className={classes.loadMoreButton}
+                    onClick={onLoadMoreConnections}
+                  >
+                    <Typography className={classes.loadMoreLabel}>
+                      Load more
+                    </Typography>
+                  </PeaButton>
                 </Grid>
               </Grid>
             ) : null,
@@ -259,6 +279,7 @@ PeaConnections.propTypes = {
     }).isRequired,
   ),
   onLinkSocial: PropTypes.func.isRequired,
+  onLoadMoreConnections: PropTypes.func.isRequired,
 };
 
 PeaConnections.defaultProps = {

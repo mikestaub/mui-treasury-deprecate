@@ -311,7 +311,6 @@ const PeaAccountProfile = ({
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
-        // onLinkSocial={onLinkSocial} // TODO: KARAN: remove onLinkSocial from editor??
       />
     );
   }

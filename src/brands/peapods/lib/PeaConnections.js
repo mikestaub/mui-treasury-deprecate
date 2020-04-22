@@ -8,7 +8,7 @@ import PeaIcon from './PeaIcon';
 import PeaSwitch from './PeaSwitch';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
 import PeaSocialAvatar from './PeaSocialAvatar';
-// TODO: KARAN: pass custom boolean props to styles??
+
 const styles = ({ palette }) => ({
   heading: {
     color: palette.secondary.main,
@@ -30,7 +30,6 @@ const styles = ({ palette }) => ({
     overflowX: 'scroll',
     scrollbarWidth: 'none',
     '&::-webkit-scrollbar-thumb': {
-      // TODO: KARAN: disable blue scroll bar??
       width: '0px',
       boxShadow: 'none',
       background: 'transparent',

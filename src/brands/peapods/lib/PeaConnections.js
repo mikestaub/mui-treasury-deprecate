@@ -62,31 +62,36 @@ const styles = ({ palette }) => ({
 const PeaConnections = ({
   classes,
   followers,
-  followings,
+  following,
   tags,
   groups,
   onLinkSocial,
   loading,
+  connectionsCount,
   onLoadMoreFollowers,
-  onLoadMoreFollowings,
+  onLoadMoreFollowing,
 }) => {
   const [connect, setConnect] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
   const rows = [
     {
       title: 'Followers',
+      rowType: 'followers',
       data: followers,
     },
     {
       title: 'Following',
-      data: followings,
+      rowType: 'following',
+      data: following,
     },
     {
-      title: 'Tags',
+      title: 'Interests',
+      rowType: 'interests',
       data: tags,
     },
     {
       title: 'Groups',
+      rowType: 'groups',
       data: groups,
     },
   ];
@@ -115,8 +120,8 @@ const PeaConnections = ({
   ];
 
   const pagination = {
-    Followers: () => onLoadMoreFollowers(),
-    Following: () => onLoadMoreFollowings(),
+    followers: () => onLoadMoreFollowers(),
+    following: () => onLoadMoreFollowing(),
   };
 
   const settingsOpen = Boolean(anchorEl);
@@ -159,7 +164,7 @@ const PeaConnections = ({
 
       {loading ? null : (
         <>
-          {rows.map(({ title, data }) =>
+          {rows.map(({ title, rowType, data }) =>
             data.length ? (
               <Grid container direction="column">
                 <Grid item>
@@ -180,14 +185,16 @@ const PeaConnections = ({
                       </a>
                     </Grid>
                   ))}
-                  <PeaButton
-                    className={classes.loadMoreButton}
-                    onClick={pagination[title]}
-                  >
-                    <Typography className={classes.loadMoreLabel}>
-                      Load more
-                    </Typography>
-                  </PeaButton>
+                  {connectionsCount[rowType] === data.length ? null : (
+                    <PeaButton
+                      className={classes.loadMoreButton}
+                      onClick={pagination[rowType]}
+                    >
+                      <Typography className={classes.loadMoreLabel}>
+                        Load more
+                      </Typography>
+                    </PeaButton>
+                  )}
                 </Grid>
               </Grid>
             ) : null,
@@ -260,7 +267,7 @@ PeaConnections.propTypes = {
       social: PropTypes.string,
     }).isRequired,
   ),
-  followings: PropTypes.arrayOf(
+  following: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       unique: PropTypes.string.isRequired,
@@ -285,13 +292,17 @@ PeaConnections.propTypes = {
     }).isRequired,
   ),
   onLinkSocial: PropTypes.func.isRequired,
+  connectionsCount: PropTypes.shape({
+    followers: PropTypes.number.isRequired,
+    following: PropTypes.number.isRequired,
+  }).isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
-  onLoadMoreFollowings: PropTypes.func.isRequired,
+  onLoadMoreFollowing: PropTypes.func.isRequired,
 };
 
 PeaConnections.defaultProps = {
   followers: [],
-  followings: [],
+  following: [],
   tags: [],
   groups: [],
 };

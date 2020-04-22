@@ -114,8 +114,9 @@ const PeaAccountProfile = ({
   activeTabIndex,
   onTabChange,
   onLinkSocial,
+  connectionsCount,
   onLoadMoreFollowers,
-  onLoadMoreFollowings,
+  onLoadMoreFollowing,
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
@@ -627,11 +628,12 @@ const PeaAccountProfile = ({
           </Grid>
           <PeaConnections
             followers={connections.followers}
-            followings={connections.followings}
+            following={connections.following}
             onLinkSocial={onLinkSocial}
             loading={connections.loading}
+            connectionsCount={connectionsCount}
             onLoadMoreFollowers={onLoadMoreFollowers}
-            onLoadMoreFollowings={onLoadMoreFollowings}
+            onLoadMoreFollowing={onLoadMoreFollowing}
           />
         </Box>
 
@@ -708,7 +710,7 @@ PeaAccountProfile.propTypes = {
   onAcceptFollowRequest: PropTypes.func.isRequired,
   onLinkSocial: PropTypes.func.isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
-  onLoadMoreFollowings: PropTypes.func.isRequired,
+  onLoadMoreFollowing: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
   onLogout: PropTypes.func.isRequired,
   onChangeSettings: PropTypes.func,

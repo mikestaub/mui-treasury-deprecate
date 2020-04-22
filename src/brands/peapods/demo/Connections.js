@@ -5,7 +5,7 @@ import { SOCIAL1, SOCIAL2, SOCIAL3 } from './_mock';
 const Connections = () => (
   <PeaConnections
     followers={SOCIAL1}
-    followings={SOCIAL1}
+    following={SOCIAL1}
     tags={SOCIAL2}
     groups={SOCIAL3}
     onClose={() => alert('close!')}
@@ -74,7 +74,7 @@ Connections.code = `
   const Preview = () => (
     <PeaConnections
       followers={SOCIAL1}
-      followings={SOCIAL1}
+      following={SOCIAL1}
       tags={SOCIAL2}
       groups={SOCIAL3}
       onClose={() => alert('close!')}

@@ -67,7 +67,8 @@ const PeaConnections = ({
   groups,
   onLinkSocial,
   loading,
-  onLoadMoreConnections,
+  onLoadMoreFollowers,
+  onLoadMoreFollowings,
 }) => {
   const [connect, setConnect] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -113,6 +114,11 @@ const PeaConnections = ({
     },
   ];
 
+  const pagination = {
+    Followers: () => onLoadMoreFollowers(),
+    Following: () => onLoadMoreFollowings(),
+  };
+
   const settingsOpen = Boolean(anchorEl);
   const settingsPopoverId = settingsOpen ? 'settings-popover' : undefined;
 
@@ -128,7 +134,7 @@ const PeaConnections = ({
     setAnchorEl(null);
     onLinkSocial(provider, connect);
   };
-  // TODO: KARAN: how to make horizontal list??
+
   return (
     <Grid container>
       <Grid container alignItems="center" justify="space-between">
@@ -176,7 +182,7 @@ const PeaConnections = ({
                   ))}
                   <PeaButton
                     className={classes.loadMoreButton}
-                    onClick={onLoadMoreConnections}
+                    onClick={pagination[title]}
                   >
                     <Typography className={classes.loadMoreLabel}>
                       Load more
@@ -279,7 +285,8 @@ PeaConnections.propTypes = {
     }).isRequired,
   ),
   onLinkSocial: PropTypes.func.isRequired,
-  onLoadMoreConnections: PropTypes.func.isRequired,
+  onLoadMoreFollowers: PropTypes.func.isRequired,
+  onLoadMoreFollowings: PropTypes.func.isRequired,
 };
 
 PeaConnections.defaultProps = {

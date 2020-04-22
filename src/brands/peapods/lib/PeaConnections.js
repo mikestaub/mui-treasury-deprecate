@@ -184,6 +184,7 @@ const PeaConnections = ({
                       </a>
                     </Grid>
                   ))}
+
                   {connectionsCount[rowType] === data.length ? null : (
                     <PeaButton
                       className={classes.loadMoreButton}

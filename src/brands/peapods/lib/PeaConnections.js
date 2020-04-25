@@ -60,6 +60,7 @@ const styles = ({ palette }) => ({
 
 const PeaConnections = ({
   classes,
+  isCurrentUser,
   followers,
   following,
   tags,
@@ -142,7 +143,9 @@ const PeaConnections = ({
   return (
     <Grid container>
       <Grid container alignItems="center" justify="space-between">
-        <Typography className={classes.heading}>Connections</Typography>
+        <Typography className={classes.heading}>
+          {isCurrentUser ? 'Connections' : 'Mutual Connections'}
+        </Typography>
         {loading ? (
           <PeaLoadingSpinner size={20} />
         ) : (
@@ -259,6 +262,7 @@ PeaConnections.propTypes = {
   classes: PropTypes.shape({
     categoryHeading: PropTypes.string,
   }).isRequired,
+  isCurrentUser: PropTypes.bool,
   followers: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,

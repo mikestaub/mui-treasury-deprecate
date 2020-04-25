@@ -626,6 +626,7 @@ const PeaAccountProfile = ({
             ))}
           </Grid>
           <PeaConnections
+            isCurrentUser={isCurrentUser}
             followers={connections.followers}
             following={connections.following}
             onLinkSocial={onLinkSocial}

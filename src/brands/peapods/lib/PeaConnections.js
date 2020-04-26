@@ -15,6 +15,7 @@ const styles = ({ palette }) => ({
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'left',
+    marginTop: 20,
   },
   categoryHeading: {
     margin: '16px 0px',
@@ -149,18 +150,22 @@ const PeaConnections = ({
         {loading ? (
           <PeaLoadingSpinner size={20} />
         ) : (
-          <IconButton
-            aria-describedby={settingsPopoverId}
-            onClick={onConnectionsSetting}
-          >
-            <PeaIcon
-              icon={'settings'}
-              color="secondary"
-              bgColor={'white'}
-              size={'small'}
-              shadow={false}
-            />
-          </IconButton>
+          <>
+            {isCurrentUser && (
+              <IconButton
+                aria-describedby={settingsPopoverId}
+                onClick={onConnectionsSetting}
+              >
+                <PeaIcon
+                  icon={'settings'}
+                  color="secondary"
+                  bgColor={'white'}
+                  size={'small'}
+                  shadow={false}
+                />
+              </IconButton>
+            )}
+          </>
         )}
       </Grid>
 

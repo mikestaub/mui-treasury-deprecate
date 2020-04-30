@@ -7,6 +7,7 @@ import {
   KeyboardDatePicker,
   DateTimePicker as InnerDateTimePicker,
 } from '@material-ui/pickers';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import images from './lib/assets';
 
@@ -111,3 +112,4 @@ export { default as AutocompleteList } from './lib/PeaAutocompleteList';
 export { default as UserSettings } from './lib/PeaUserSettings';
 export { default as ShareContent } from './lib/PeaShareContent';
 export { default as GroupSelector } from './lib/PeaGroupSelector';
+export { Skeleton };

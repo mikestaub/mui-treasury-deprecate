@@ -64,6 +64,7 @@ const PeaConnections = ({
   isCurrentUser,
   followers,
   following,
+  friends,
   tags,
   groups,
   onLinkSocial,
@@ -71,6 +72,7 @@ const PeaConnections = ({
   connectionsCount,
   onLoadMoreFollowers,
   onLoadMoreFollowing,
+  onLoadMoreFriends,
 }) => {
   const [connect, setConnect] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -84,6 +86,11 @@ const PeaConnections = ({
       title: 'Following',
       rowType: 'following',
       data: following,
+    },
+    {
+      title: 'Friends',
+      rowType: 'friends',
+      data: friends,
     },
     {
       title: 'Interests',
@@ -123,6 +130,7 @@ const PeaConnections = ({
   const pagination = {
     followers: () => onLoadMoreFollowers(),
     following: () => onLoadMoreFollowing(),
+    friends: () => onLoadMoreFriends(),
   };
 
   const settingsOpen = Boolean(anchorEl);
@@ -284,6 +292,14 @@ PeaConnections.propTypes = {
       social: PropTypes.string,
     }).isRequired,
   ),
+  friends: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      unique: PropTypes.string.isRequired,
+      src: PropTypes.string.isRequired,
+      social: PropTypes.string,
+    }).isRequired,
+  ),
   tags: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -307,6 +323,7 @@ PeaConnections.propTypes = {
   }).isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
   onLoadMoreFollowing: PropTypes.func.isRequired,
+  onLoadMoreFriends: PropTypes.func.isRequired,
 };
 
 PeaConnections.defaultProps = {

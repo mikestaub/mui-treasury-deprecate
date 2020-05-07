@@ -117,6 +117,7 @@ const PeaAccountProfile = ({
   connectionsCount,
   onLoadMoreFollowers,
   onLoadMoreFollowing,
+  onLoadMoreFriends,
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
@@ -629,11 +630,13 @@ const PeaAccountProfile = ({
             isCurrentUser={isCurrentUser}
             followers={connections.followers}
             following={connections.following}
+            friends={connections.friends}
             onLinkSocial={onLinkSocial}
             loading={connections.loading}
             connectionsCount={connectionsCount}
             onLoadMoreFollowers={onLoadMoreFollowers}
             onLoadMoreFollowing={onLoadMoreFollowing}
+            onLoadMoreFriends={onLoadMoreFriends}
           />
         </Box>
 
@@ -711,6 +714,7 @@ PeaAccountProfile.propTypes = {
   onLinkSocial: PropTypes.func.isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
   onLoadMoreFollowing: PropTypes.func.isRequired,
+  onLoadMoreFriends: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
   onLogout: PropTypes.func.isRequired,
   onChangeSettings: PropTypes.func,

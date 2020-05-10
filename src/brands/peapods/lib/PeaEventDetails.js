@@ -13,6 +13,7 @@ import Link from '@material-ui/core/Link';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Skeleton from '@material-ui/lab/Skeleton';
 import cx from 'classnames';
 import { debounce } from 'lodash';
 
@@ -54,6 +55,13 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     overflow: 'hidden',
+  },
+  skeletonTab: {
+    margin: 8,
+    marginTop: 100,
+  },
+  skeletonItem: {
+    margin: 8,
   },
 }));
 
@@ -150,6 +158,7 @@ const PeaEventDetails = ({
   onReport,
   onAddToCalendar,
   renderMap,
+  skeleton,
 }) => {
   const classes = useStyles();
 
@@ -304,6 +313,20 @@ const PeaEventDetails = ({
       )}
     </Menu>
   );
+
+  if (skeleton) {
+    return (
+      <Card className={'PeaGroupProfile-root'}>
+        <Skeleton variant="rect" width={500} height={280} />
+        <Skeleton variant="text" height={48} className={classes.skeletonItem} />
+        <Skeleton variant="text" height={24} className={classes.skeletonItem} />
+
+        <Skeleton variant="text" height={32} className={classes.skeletonTab} />
+        <Skeleton variant="text" height={32} className={classes.skeletonItem} />
+        <Skeleton variant="text" height={32} className={classes.skeletonItem} />
+      </Card>
+    );
+  }
 
   return (
     <Card
@@ -568,6 +591,7 @@ PeaEventDetails.propTypes = {
   shareText: PropTypes.string,
   facebookAppId: PropTypes.string,
   renderMap: PropTypes.func,
+  skeleton: PropTypes.bool,
 };
 
 PeaEventDetails.defaultProps = {
@@ -586,6 +610,7 @@ PeaEventDetails.defaultProps = {
   onReport: () => {},
   onAddToCalendar: () => {},
   renderMap: () => {},
+  skeleton: false,
 };
 
 PeaEventDetails.metadata = {

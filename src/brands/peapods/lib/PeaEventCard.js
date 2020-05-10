@@ -8,6 +8,8 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Popover from '@material-ui/core/Popover';
 import Paper from '@material-ui/core/Paper';
+import Skeleton from '@material-ui/lab/Skeleton';
+import { makeStyles } from '@material-ui/core/styles';
 
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
@@ -95,6 +97,16 @@ const CreatePod = ({ isLoading, text, ...props }) => (
   </PeaButton>
 );
 
+const useStyles = makeStyles(() => ({
+  headerSkeleton: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  titleSkeleton: {
+    marginLeft: 8,
+  },
+}));
+
 const PeaEventCard = ({
   id,
   images,
@@ -119,8 +131,44 @@ const PeaEventCard = ({
   createPodText,
   isLoading,
   facebookAppId,
+  skeleton,
   ...props
 }) => {
+  const classes = useStyles();
+
+  if (skeleton) {
+    return (
+      <Card className={'PeaEventCard-root'} {...props}>
+        <CardContent className={'MuiCardContent-root'}>
+          <Grid container justify="space-between" alignItems="center">
+            <Grid item className={classes.headerSkeleton}>
+              <Skeleton variant="circle" width={40} height={40} />
+              <Grid className={classes.titleSkeleton}>
+                <Skeleton variant="text" width={300} height={32} />
+                <Skeleton variant="text" width={130} height={16} />
+              </Grid>
+            </Grid>
+            <Skeleton variant="circle" width={40} height={40} />
+          </Grid>
+        </CardContent>
+        <Skeleton variant="rect" width={500} height={280} />
+        <CardContent className={'MuiCardContent-root'}>
+          <Grid container direction="row">
+            <Grid container direction="column">
+              <Skeleton variant="text" width="70%" />
+              <Skeleton variant="text" width="50%" />
+            </Grid>
+          </Grid>
+        </CardContent>
+
+        <Grid container justify="space-around">
+          <Skeleton variant="text" width={100} />
+          <Skeleton variant="text" width={100} />
+          <Skeleton variant="text" width={100} />
+        </Grid>
+      </Card>
+    );
+  }
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const openSharePopover = Boolean(shareAnchorEl);
   const shareAriaId = openSharePopover ? 'event-card-share' : undefined;
@@ -322,6 +370,7 @@ PeaEventCard.propTypes = {
   isLoading: PropTypes.bool,
   renderTitle: PropTypes.func,
   facebookAppId: PropTypes.string,
+  skeleton: PropTypes.bool,
 };
 
 PeaEventCard.defaultProps = {
@@ -337,6 +386,7 @@ PeaEventCard.defaultProps = {
   profile: undefined,
   renderTitle: undefined,
   facebookAppId: '',
+  skeleton: false,
 };
 
 PeaEventCard.metadata = {

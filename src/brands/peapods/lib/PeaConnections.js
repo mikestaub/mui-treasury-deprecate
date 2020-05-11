@@ -61,7 +61,7 @@ const styles = ({ palette }) => ({
 
 const PeaConnections = ({
   classes,
-  isCurrentUser,
+  allowToConnect,
   followers,
   following,
   friends,
@@ -104,6 +104,7 @@ const PeaConnections = ({
     },
   ];
 
+  // TODO: KARAN: Pass svg path
   const socialMedias = [
     {
       provider: 'twitter',
@@ -153,13 +154,13 @@ const PeaConnections = ({
     <Grid container>
       <Grid container alignItems="center" justify="space-between">
         <Typography className={classes.heading}>
-          {isCurrentUser ? 'Connections' : 'Mutual Connections'}
+          {allowToConnect ? 'Connections' : 'Mutual Connections'}
         </Typography>
         {loading ? (
           <PeaLoadingSpinner size={20} />
         ) : (
           <>
-            {isCurrentUser && (
+            {allowToConnect && (
               <IconButton
                 aria-describedby={settingsPopoverId}
                 onClick={onConnectionsSetting}
@@ -275,7 +276,7 @@ PeaConnections.propTypes = {
   classes: PropTypes.shape({
     categoryHeading: PropTypes.string,
   }).isRequired,
-  isCurrentUser: PropTypes.bool,
+  allowToConnect: PropTypes.bool,
   followers: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -316,10 +317,11 @@ PeaConnections.propTypes = {
       social: PropTypes.string,
     }).isRequired,
   ),
-  onLinkSocial: PropTypes.func.isRequired,
+  onLinkSocial: PropTypes.func,
   connectionsCount: PropTypes.shape({
     followers: PropTypes.number.isRequired,
     following: PropTypes.number.isRequired,
+    friends: PropTypes.number.isRequired,
   }).isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
   onLoadMoreFollowing: PropTypes.func.isRequired,

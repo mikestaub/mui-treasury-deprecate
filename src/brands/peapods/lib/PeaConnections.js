@@ -104,7 +104,6 @@ const PeaConnections = ({
     },
   ];
 
-  // TODO: KARAN: Pass svg path
   const socialMedias = [
     {
       provider: 'twitter',

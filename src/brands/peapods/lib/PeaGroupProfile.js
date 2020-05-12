@@ -22,6 +22,7 @@ const PeaGroupProfile = ({
   connectionsCount,
   onLoadMoreFollowers,
   onLoadMoreFollowing,
+  onLoadMoreFriends,
   ...props
 }) => {
   const podsRef = useRef();
@@ -108,12 +109,12 @@ const PeaGroupProfile = ({
           allowToConnect={false}
           followers={connections.followers}
           following={connections.following}
-          friends={[]}
+          friends={connections.friends}
           loading={connections.loading}
           connectionsCount={connectionsCount}
           onLoadMoreFollowers={onLoadMoreFollowers}
           onLoadMoreFollowing={onLoadMoreFollowing}
-          onLoadMoreFriends={() => null}
+          onLoadMoreFriends={onLoadMoreFriends}
         />
       </>
 
@@ -137,6 +138,7 @@ PeaGroupProfile.propTypes = {
   connectionsCount: PropTypes.object.isRequired,
   onLoadMoreFollowers: PropTypes.func.isRequired,
   onLoadMoreFollowing: PropTypes.func.isRequired,
+  onLoadMoreFriends: PropTypes.func.isRequired,
 };
 
 PeaGroupProfile.defaultProps = {

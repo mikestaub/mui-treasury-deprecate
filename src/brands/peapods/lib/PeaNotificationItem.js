@@ -6,6 +6,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Popover from '@material-ui/core/Popover';
+import { makeStyles } from '@material-ui/core/styles';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import PeaButton from './PeaButton';
 import PeaAvatar from './PeaAvatar';
@@ -13,6 +15,25 @@ import PeaIcon from './PeaIcon';
 import Logo from './assets/peapods-logo-circle.svg';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
 import PeaGroupSelector from './PeaGroupSelector';
+
+const useStyles = makeStyles(() => ({
+  skeletonRoot: {
+    padding: 16,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  skeletonTxt: {
+    width: '100%',
+    marginLeft: 8,
+  },
+  skeletonPrimary: {
+    marginBottom: 4,
+    marginTop: 0,
+  },
+  skeletonSecondary: {
+    margin: 0,
+  },
+}));
 
 const PeaNotificationItem = ({
   id,
@@ -30,7 +51,31 @@ const PeaNotificationItem = ({
   needGroups,
   isFollowing,
   requestApproved,
+  skeleton,
 }) => {
+  const classes = useStyles();
+
+  if (skeleton) {
+    return (
+      <Grid className={classes.skeletonRoot}>
+        <Skeleton variant="circle" width={40} height={40} />
+        <Grid className={classes.skeletonTxt}>
+          <Skeleton
+            variant="text"
+            width={`${50 + Math.random() * 50}%`}
+            height={24}
+            className={classes.skeletonPrimary}
+          />
+          <Skeleton
+            variant="text"
+            width={100}
+            height={16}
+            className={classes.skeletonSecondary}
+          />
+        </Grid>
+      </Grid>
+    );
+  }
   const count = Array.isArray(src) ? src.length : 0;
   const avatarSrc = Array.isArray(src) ? src[0] : src;
 
@@ -234,6 +279,7 @@ PeaNotificationItem.propTypes = {
   needGroups: PropTypes.bool,
   requestApproved: PropTypes.bool,
   isFollowing: PropTypes.bool,
+  skeleton: PropTypes.bool,
 };
 
 PeaNotificationItem.defaultProps = {
@@ -246,6 +292,7 @@ PeaNotificationItem.defaultProps = {
   needGroups: false,
   requestApproved: false,
   isFollowing: false,
+  skeleton: false,
 };
 
 PeaNotificationItem.metadata = {

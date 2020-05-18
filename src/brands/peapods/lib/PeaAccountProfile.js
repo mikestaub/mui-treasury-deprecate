@@ -115,13 +115,11 @@ const PeaAccountProfile = ({
   onTabChange,
   onLinkSocial,
   connectionsCount,
-  onLoadMoreFollowers,
-  onLoadMoreFollowing,
-  onLoadMoreFriends,
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
   connections,
+  onLoadMoreConnections,
 }) => {
   const classes = useStyles();
 
@@ -631,12 +629,11 @@ const PeaAccountProfile = ({
             followers={connections.followers}
             following={connections.following}
             friends={connections.friends}
+            groups={connections.groups}
             onLinkSocial={onLinkSocial}
             loading={connections.loading}
             connectionsCount={connectionsCount}
-            onLoadMoreFollowers={onLoadMoreFollowers}
-            onLoadMoreFollowing={onLoadMoreFollowing}
-            onLoadMoreFriends={onLoadMoreFriends}
+            onLoadMoreConnections={onLoadMoreConnections}
           />
         </Box>
 
@@ -712,9 +709,7 @@ PeaAccountProfile.propTypes = {
   onInviteClicked: PropTypes.func.isRequired,
   onAcceptFollowRequest: PropTypes.func.isRequired,
   onLinkSocial: PropTypes.func.isRequired,
-  onLoadMoreFollowers: PropTypes.func.isRequired,
-  onLoadMoreFollowing: PropTypes.func.isRequired,
-  onLoadMoreFriends: PropTypes.func.isRequired,
+  onLoadMoreConnections: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
   onLogout: PropTypes.func.isRequired,
   onChangeSettings: PropTypes.func,

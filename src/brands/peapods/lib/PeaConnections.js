@@ -70,9 +70,7 @@ const PeaConnections = ({
   onLinkSocial,
   loading,
   connectionsCount,
-  onLoadMoreFollowers,
-  onLoadMoreFollowing,
-  onLoadMoreFriends,
+  onLoadMoreConnections,
 }) => {
   const [connect, setConnect] = useState(true);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -114,24 +112,18 @@ const PeaConnections = ({
       icon: 'fab fa-facebook-f',
     },
     {
-      provider: 'linkedIn',
-      icon: 'fab fa-linkedin',
+      provider: 'meetup',
+      icon: 'fab fa-meetup',
     },
     {
-      provider: 'instagram',
-      icon: 'fab fa-instagram',
+      provider: 'linkedIn',
+      icon: 'fab fa-linkedin',
     },
     {
       provider: 'snapchat',
       icon: 'fab fa-snapchat',
     },
   ];
-
-  const pagination = {
-    followers: () => onLoadMoreFollowers(),
-    following: () => onLoadMoreFollowing(),
-    friends: () => onLoadMoreFriends(),
-  };
 
   const settingsOpen = Boolean(anchorEl);
   const settingsPopoverId = settingsOpen ? 'settings-popover' : undefined;
@@ -204,7 +196,7 @@ const PeaConnections = ({
                   {connectionsCount[rowType] === data.length ? null : (
                     <PeaButton
                       className={classes.loadMoreButton}
-                      onClick={pagination[rowType]}
+                      onClick={() => onLoadMoreConnections(rowType)}
                     >
                       <Typography className={classes.loadMoreLabel}>
                         Load more
@@ -259,7 +251,7 @@ const PeaConnections = ({
                   color={connect ? 'secondary' : 'danger'}
                   icon={icon}
                   variant="contained"
-                  shape={'circular'}
+                  shape="circular"
                   shadowless
                 />
               </Grid>
@@ -321,10 +313,9 @@ PeaConnections.propTypes = {
     followers: PropTypes.number.isRequired,
     following: PropTypes.number.isRequired,
     friends: PropTypes.number.isRequired,
+    groups: PropTypes.number.isRequired,
   }).isRequired,
-  onLoadMoreFollowers: PropTypes.func.isRequired,
-  onLoadMoreFollowing: PropTypes.func.isRequired,
-  onLoadMoreFriends: PropTypes.func.isRequired,
+  onLoadMoreConnections: PropTypes.func.isRequired,
 };
 
 PeaConnections.defaultProps = {

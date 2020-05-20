@@ -65,7 +65,7 @@ const PeaConnections = ({
   followers,
   following,
   friends,
-  tags,
+  interests,
   groups,
   onLinkSocial,
   loading,
@@ -93,7 +93,7 @@ const PeaConnections = ({
     {
       title: 'Interests',
       rowType: 'interests',
-      data: tags,
+      data: interests,
     },
     {
       title: 'Groups',
@@ -292,7 +292,7 @@ PeaConnections.propTypes = {
       social: PropTypes.string,
     }).isRequired,
   ),
-  tags: PropTypes.arrayOf(
+  groups: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       unique: PropTypes.string.isRequired,
@@ -300,7 +300,7 @@ PeaConnections.propTypes = {
       social: PropTypes.string,
     }).isRequired,
   ),
-  groups: PropTypes.arrayOf(
+  interests: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
       unique: PropTypes.string.isRequired,
@@ -314,6 +314,7 @@ PeaConnections.propTypes = {
     following: PropTypes.number.isRequired,
     friends: PropTypes.number.isRequired,
     groups: PropTypes.number.isRequired,
+    interests: PropTypes.number,
   }).isRequired,
   onLoadMoreConnections: PropTypes.func.isRequired,
 };
@@ -321,8 +322,8 @@ PeaConnections.propTypes = {
 PeaConnections.defaultProps = {
   followers: [],
   following: [],
-  tags: [],
   groups: [],
+  interests: [],
 };
 
 PeaConnections.metadata = {

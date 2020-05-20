@@ -630,6 +630,7 @@ const PeaAccountProfile = ({
             following={connections.following}
             friends={connections.friends}
             groups={connections.groups}
+            interests={connections.interests}
             onLinkSocial={onLinkSocial}
             loading={connections.loading}
             connectionsCount={connectionsCount}

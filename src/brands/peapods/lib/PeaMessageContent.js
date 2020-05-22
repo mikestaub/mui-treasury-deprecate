@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { Grid, Typography } from '@material-ui/core';
+import Skeleton from '@material-ui/lab/Skeleton';
 
 import PeaAvatar from './PeaAvatar';
 
@@ -56,6 +57,11 @@ const useStyles = makeStyles(({ palette, spacing }) => {
     rightLast: {
       borderBottomRightRadius: radius,
     },
+    skeleton: {
+      borderRadius: 16,
+      margin: '8px 0',
+      backgroundColor: palette.grey[100],
+    },
   };
 });
 
@@ -67,6 +73,7 @@ const PeaMessageContent = ({
   showAvatar,
   isFirst,
   isLast,
+  skeleton,
 }) => {
   const classes = useStyles({ isCurrentUser });
 
@@ -84,6 +91,19 @@ const PeaMessageContent = ({
 
     return classString;
   };
+
+  if (skeleton) {
+    return (
+      <Grid container className={classes.root}>
+        <Skeleton
+          variant="rect"
+          width={100 + Math.random() * 100}
+          height={50 + Math.random() * 50}
+          className={`${classes.skeleton} ${classes[side]} ${attachClass()}`}
+        />
+      </Grid>
+    );
+  }
 
   return (
     <Grid container className={classes.root}>

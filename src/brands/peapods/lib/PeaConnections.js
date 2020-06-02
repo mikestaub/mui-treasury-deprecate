@@ -120,8 +120,8 @@ const PeaConnections = ({
       icon: 'fab fa-linkedin',
     },
     {
-      provider: 'snapchat',
-      icon: 'fab fa-snapchat',
+      provider: 'instagram',
+      icon: 'fab fa-instagram',
     },
   ];
 

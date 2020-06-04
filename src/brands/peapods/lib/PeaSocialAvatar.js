@@ -44,6 +44,7 @@ const ICON = {
   twitter: 'fab fa-twitter',
   meetup: 'fab fa-meetup',
   linkedin: 'fab fa-linkedin-in',
+  instagram: 'fab fa-instagram',
 };
 
 const PeaSocialAvatar = ({ classes, src, name, social }) => (

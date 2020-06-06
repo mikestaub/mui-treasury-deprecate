@@ -14,7 +14,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Divider from '@material-ui/core/Divider';
 import ListItemText from '@material-ui/core/ListItemText';
 import Popover from '@material-ui/core/Popover';
+import Skeleton from '@material-ui/lab/Skeleton';
 import { useScroll } from 'react-use';
+import { times } from 'lodash';
 
 import PeaButton from './PeaButton';
 import PeaIcon from './PeaIcon';
@@ -58,6 +60,19 @@ const useStyles = makeStyles(() => ({
     margin: '0 5px',
     marginLeft: 22,
     marginRight: 22,
+  },
+  skeletonCover: {
+    margin: 0,
+  },
+  skeletonMain: {
+    marginTop: 'calc(24% + 50px) !important',
+  },
+  skeletonAvatar: {
+    borderRadius: '50%',
+    marginTop: 0,
+  },
+  skeletonLine: {
+    margin: '4px 0',
   },
 }));
 
@@ -116,6 +131,7 @@ const PeaAccountProfile = ({
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
+  skeleton,
 }) => {
   const classes = useStyles();
 
@@ -283,6 +299,45 @@ const PeaAccountProfile = ({
       setTabIndex(activeTabIndex);
     }
   }, [activeTabIndex]);
+
+  if (skeleton) {
+    return (
+      <Card className={'PeaAccountProfile-root'}>
+        <Skeleton className={`MuiCardMedia-root ${classes.skeletonCover}`} />
+
+        <CardContent className={`MuiCardContent-root ${classes.skeletonMain}`}>
+          <Grid container justify={'space-between'} spacing={2}>
+            <Grid item>
+              <Skeleton
+                className={`MuiAvatar-root-profilePic ${classes.skeletonAvatar}`}
+              />
+            </Grid>
+            <Skeleton variant="rect" width={200} height={50} />
+          </Grid>
+
+          {times(5, () => (
+            <Skeleton
+              variant="rect"
+              width={`${Math.random() * 100}%`}
+              className={classes.skeletonLine}
+            />
+          ))}
+        </CardContent>
+
+        <PeaSwipeableTabs
+          activeIndex={tabIndex}
+          tabs={tabs}
+          enableFeedback={isMobile}
+        >
+          {times(4, () => (
+            <Box>
+              <Skeleton variant="rect" height={200} />
+            </Box>
+          ))}
+        </PeaSwipeableTabs>
+      </Card>
+    );
+  }
 
   if (editing) {
     return (

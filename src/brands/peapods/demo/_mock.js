@@ -115,37 +115,7 @@ export const peapodCardProps = {
     more: 4,
   },
 };
-export const IMAGE_GRID = [
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-  {
-    img: 'https://picsum.photos/200',
-    alt: 'alt',
-  },
-];
+export const IMAGE_GRID = new Array(10).fill({
+  img: 'https://picsum.photos/200',
+  alt: 'alt',
+});

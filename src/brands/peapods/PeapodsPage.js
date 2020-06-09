@@ -84,6 +84,7 @@ import AutocompleteHashtags from './demo/AutocompleteHashtags';
 import UserSettings from './demo/UserSettings';
 // import ShareContent from './demo/ShareContent';
 import AudienceSelector from './demo/AudienceSelector';
+import ImageGrid from './demo/ImageGrid';
 
 const components = [
   { component: AudienceSelector, previewProps: { white: true } },
@@ -206,10 +207,11 @@ const components = [
     },
   },
   { component: SocialAvatar },
-  { component: Connections },
+  { component: Connections, previewProps: { white: true } },
   { component: PeaTypography },
   { component: UserCard },
   { component: UserSettings },
+  { component: ImageGrid, previewProps: { white: true } },
 
   // {
   //   component: GroupProfile,

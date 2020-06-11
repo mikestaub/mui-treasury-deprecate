@@ -23,7 +23,15 @@ const useStyles = makeStyles(({ palette, white }) => ({
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'left',
-    margin: '20px 0px',
+    marginTop: 20,
+    marginBottom: 10,
+  },
+  subHeading: {
+    color: palette.grey[500],
+    width: '100%',
+    fontSize: 12,
+    fontStyle: 'italic',
+    textAlign: 'left',
   },
   gridList: {
     width: '100%',
@@ -53,17 +61,25 @@ function PeaImageGrid({ title, loading, feed }) {
           <PeaLoadingSpinner size={20} />
         </div>
       ) : (
-        <GridList cols={3} cellHeight={150} className={classes.gridList}>
-          {feed.map(post => (
-            <GridListTile key={post}>
-              <img
-                className={classes.gridItem}
-                src={post}
-                alt="instagram post"
-              />
-            </GridListTile>
-          ))}
-        </GridList>
+        <>
+          {!!feed.length ? (
+            <GridList cols={3} cellHeight={150} className={classes.gridList}>
+              {feed.map(post => (
+                <GridListTile key={post}>
+                  <img
+                    className={classes.gridItem}
+                    src={post}
+                    alt="instagram post"
+                  />
+                </GridListTile>
+              ))}
+            </GridList>
+          ) : (
+            <Typography className={classes.subHeading}>
+              user has not connected their instagram yet
+            </Typography>
+          )}
+        </>
       )}
     </div>
   );

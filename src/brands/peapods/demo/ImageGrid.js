@@ -1,9 +1,13 @@
 import React from 'react';
 import PeaImageGrid from '../lib/PeaImageGrid';
-import { IMAGE_GRID } from './_mock';
+import { INSTAGRAM_FEED_GRID } from './_mock';
 
 const ImageGrid = () => (
-  <PeaImageGrid title="Instagram Activity" images={IMAGE_GRID} />
+  <PeaImageGrid
+    title="Instagram Activity"
+    loading={false}
+    feed={INSTAGRAM_FEED_GRID}
+  />
 );
 
 ImageGrid.metadata = {
@@ -13,10 +17,13 @@ ImageGrid.metadata = {
 ImageGrid.code = `
   import PeaImageGrid from '../lib/PeaImageGrid';
   
+  const INSTAGRAM_FEED_GRID = new Array(10).fill('https://picsum.photos/200');
+
   const Preview = () => (
     <PeaConnections
       title='Instagram Activity'
-      images={[]}
+      loading={false}
+      feed={INSTAGRAM_FEED_GRID}
     />
   )
 `;

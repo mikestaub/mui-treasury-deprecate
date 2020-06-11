@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
   GridList,
@@ -6,6 +7,7 @@ import {
   ListSubheader,
   Typography,
 } from '@material-ui/core';
+import PeaLoadingSpinner from './PeaLoadingSpinner';
 
 const useStyles = makeStyles(({ palette, white }) => ({
   root: {
@@ -21,32 +23,62 @@ const useStyles = makeStyles(({ palette, white }) => ({
     fontWeight: 'bold',
     fontSize: 16,
     textAlign: 'left',
-    marginBottom: '20px',
+    margin: '20px 0px',
   },
   gridList: {
-    width: 500,
+    width: '100%',
     height: 450,
+    paddingBottom: '30px',
   },
   gridItem: {
+    width: 150,
+    height: 150,
     borderRadius: 5,
+  },
+  loader: {
+    height: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 }));
 
-function PeaImageGrid({ title, images }) {
+function PeaImageGrid({ title, loading, feed }) {
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Typography className={classes.heading}>{title}</Typography>
-      <GridList cellHeight={180} className={classes.gridList}>
-        {images.map(tile => (
-          <GridListTile key={tile.img}>
-            <img className={classes.gridItem} src={tile.img} alt={tile.alt} />
-          </GridListTile>
-        ))}
-      </GridList>
+      {loading ? (
+        <div className={classes.loader}>
+          <PeaLoadingSpinner size={20} />
+        </div>
+      ) : (
+        <GridList cols={3} cellHeight={150} className={classes.gridList}>
+          {feed.map(post => (
+            <GridListTile key={post}>
+              <img
+                className={classes.gridItem}
+                src={post}
+                alt="instagram post"
+              />
+            </GridListTile>
+          ))}
+        </GridList>
+      )}
     </div>
   );
 }
+
+PeaImageGrid.propTypes = {
+  title: PropTypes.string.isRequired,
+  loading: PropTypes.bool.isRequired,
+  feed: PropTypes.arrayOf(PropTypes.string),
+};
+
+PeaImageGrid.defaultProps = {
+  title: 'Instagram Activity',
+  loading: true,
+  feed: [],
+};
 
 export default PeaImageGrid;

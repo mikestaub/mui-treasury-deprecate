@@ -55,7 +55,7 @@ const useStyles = makeStyles(({ breakpoints }) => ({
   },
 }));
 
-const PeaImageCarousel = ({ data }) => {
+const PeaImageCarousel = ({ data, initialIndex }) => {
   const classes = useStyles();
 
   // eslint-disable-next-line react/prop-types
@@ -96,7 +96,10 @@ const PeaImageCarousel = ({ data }) => {
 
   return (
     <div className={classes.root}>
-      <ParallaxSlide renderElements={renderElements}>
+      <ParallaxSlide
+        initialIndex={initialIndex}
+        renderElements={renderElements}
+      >
         {renderChildren}
       </ParallaxSlide>
     </div>
@@ -104,6 +107,7 @@ const PeaImageCarousel = ({ data }) => {
 };
 
 PeaImageCarousel.propTypes = {
+  initialIndex: PropTypes.string,
   data: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
@@ -113,6 +117,7 @@ PeaImageCarousel.propTypes = {
 };
 
 PeaImageCarousel.defaultProps = {
+  initialIndex: 0,
   data: [],
 };
 

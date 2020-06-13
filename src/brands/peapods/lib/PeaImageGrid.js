@@ -45,6 +45,9 @@ const useStyles = makeStyles(({ palette, white, breakpoints }) => ({
     [breakpoints.up('xs')]: {
       height: 130,
     },
+    '&:hover': {
+      cursor: 'pointer',
+    },
     borderRadius: 5,
   },
   loader: {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import {
@@ -6,10 +6,12 @@ import {
   GridListTile,
   ListSubheader,
   Typography,
+  Dialog,
 } from '@material-ui/core';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
+import PeaImageCarousel from './PeaImageCarousel';
 
-const useStyles = makeStyles(({ palette, white }) => ({
+const useStyles = makeStyles(({ palette, white, breakpoints }) => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
@@ -39,8 +41,10 @@ const useStyles = makeStyles(({ palette, white }) => ({
     paddingBottom: '30px',
   },
   gridItem: {
-    width: 150,
     height: 150,
+    [breakpoints.up('xs')]: {
+      height: 130,
+    },
     borderRadius: 5,
   },
   loader: {
@@ -52,6 +56,19 @@ const useStyles = makeStyles(({ palette, white }) => ({
 
 function PeaImageGrid({ title, loading, feed }) {
   const classes = useStyles();
+  const [open, setOpen] = useState(false);
+  const [openIndex, setOpenIndex] = useState(0);
+
+  const handleClickOpen = () => setOpen(true);
+
+  const handleClose = () => setOpen(false);
+
+  const onGridItemOpen = itemIndex => {
+    setOpenIndex(itemIndex);
+    setOpen(true);
+  };
+
+  const carouselData = feed.map((post, index) => ({ id: index, image: post }));
 
   return (
     <div className={classes.root}>
@@ -63,9 +80,9 @@ function PeaImageGrid({ title, loading, feed }) {
       ) : (
         <>
           {!!feed.length ? (
-            <GridList cols={3} cellHeight={150} className={classes.gridList}>
-              {feed.map(post => (
-                <GridListTile key={post}>
+            <GridList cols={3} cellHeight={130} className={classes.gridList}>
+              {feed.map((post, index) => (
+                <GridListTile onClick={() => onGridItemOpen(index)} key={post}>
                   <img
                     className={classes.gridItem}
                     src={post}
@@ -81,6 +98,17 @@ function PeaImageGrid({ title, loading, feed }) {
           )}
         </>
       )}
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        fullWidth={true}
+        maxWidth={'md'}
+        aria-labelledby="instagram feed carousel"
+        aria-describedby="instagram feed carousel"
+      >
+        <PeaImageCarousel data={carouselData} initialIndex={openIndex} />
+      </Dialog>
     </div>
   );
 }

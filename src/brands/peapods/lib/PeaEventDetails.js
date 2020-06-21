@@ -69,6 +69,21 @@ const renderAboutDetails = ({
 }) => [
   {
     key: '0',
+    icon: 'fas fa-users',
+    renderText: () => (
+      <>
+        {!!limit && (
+          <span>
+            limit <b>{limit} - </b>
+          </span>
+        )}
+        <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
+        <b>{interestedCount}</b> interested
+      </>
+    ),
+  },
+  {
+    key: '1',
     icon: (
       <img
         alt="event-host"
@@ -86,12 +101,12 @@ const renderAboutDetails = ({
     ),
   },
   {
-    key: '1',
+    key: '2',
     icon: 'fas fa-calendar-alt',
     text: timeString,
   },
   {
-    key: '2',
+    key: '3',
     icon: 'location_on',
     renderText: () => {
       // eslint-disable-next-line max-len
@@ -102,21 +117,6 @@ const renderAboutDetails = ({
         </Link>
       );
     },
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    renderText: () => (
-      <>
-        {!!limit && (
-          <span>
-            limit <b>{limit} - </b>
-          </span>
-        )}
-        <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
-        <b>{interestedCount}</b> interested
-      </>
-    ),
   },
 ];
 
@@ -432,7 +432,6 @@ const PeaEventDetails = ({
         {renderPods()}
 
         <>
-          {isMobile && renderMap()}
           <PeaText color={'secondary'} gutterBottom>
             <b>Details</b>
           </PeaText>
@@ -482,6 +481,8 @@ const PeaEventDetails = ({
               ))}
             </Grid>
           </Grid>
+
+          {isMobile && renderMap()}
 
           <PeaText color={'secondary'} gutterBottom>
             <b>Description</b>

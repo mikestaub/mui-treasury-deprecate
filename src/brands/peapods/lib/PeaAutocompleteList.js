@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
 import Select, {
   AsyncCreatable,
   Creatable,
@@ -180,7 +180,9 @@ const PeaAutocompleteList = ({
   InputControl,
   OptionComponent,
   onChange,
+  onBlur: onBlurProp,
   isMulti,
+  isLoading,
   fullWidth,
   hideSuggestions,
   clearAfterEnter,
@@ -190,14 +192,31 @@ const PeaAutocompleteList = ({
   autoFocus,
 }) => {
   const classes = useStyles({ removeSpacing, isUpsideDown: true });
+
   const theme = useTheme();
+
+  const selectRef = useRef(null);
+
+  const [preserveFocus, setPreserveFocus] = useState(false);
   const [value, setValue] = useState(propValue);
   const [inputValue, setInputValue] = useState('');
   const isAsync = !!getSuggestions;
 
+  const focusInput = useCallback(() => {
+    // TODO: this seems hacky
+    if (preserveFocus && selectRef.current) {
+      selectRef.current.select.focus();
+    }
+  }, [preserveFocus]);
+
   useEffect(() => {
     setValue(propValue);
-  }, [propValue]);
+    focusInput();
+  }, [propValue, focusInput]);
+
+  useEffect(() => {
+    focusInput();
+  }, [inputValue, focusInput]);
 
   function handleSelectChange(val) {
     let newValue = val;
@@ -218,6 +237,10 @@ const PeaAutocompleteList = ({
         font: 'inherit',
       },
     }),
+    menuList: base => ({
+      ...base,
+      overflowX: 'hidden',
+    }),
   };
 
   const components = {
@@ -230,23 +253,28 @@ const PeaAutocompleteList = ({
   };
 
   const handleKeyDown = event => {
-    if (!canCreate || !inputValue) {
+    if (!canCreate) {
       return;
     }
     const newVal = { label: inputValue, value: inputValue };
 
-    switch (event.key) {
-      default:
-        return;
-      case 'Enter':
-      case 'Tab':
-        event.preventDefault();
-        setInputValue('');
-        if (isMulti) {
-          handleSelectChange([...value, newVal]);
-        } else {
-          handleSelectChange(newVal);
-        }
+    const codes = [
+      13, // enter
+      9, // tab
+      32, // space
+    ];
+
+    const isNewValue =
+      inputValue && !value.map(i => i.value).includes(inputValue.trim());
+
+    if (isNewValue && codes.includes(event.keyCode)) {
+      event.preventDefault();
+      setInputValue('');
+      if (isMulti) {
+        handleSelectChange([...value, newVal]);
+      } else {
+        handleSelectChange(newVal);
+      }
     }
   };
 
@@ -271,7 +299,7 @@ const PeaAutocompleteList = ({
 
   const key = value && value.length ? JSON.stringify(value) : inputValue;
 
-  const onBlur = () => {
+  const onBlur = e => {
     if (inputValue) {
       const newVal = { label: inputValue, value: inputValue };
       if (isMulti) {
@@ -280,18 +308,31 @@ const PeaAutocompleteList = ({
         handleSelectChange(newVal);
       }
     }
+    if (onBlurProp) {
+      onBlurProp(e);
+    }
+  };
+
+  const onFocus = () => {
+    setPreserveFocus(true);
   };
 
   return (
     <div className={cx(classes.root, fullWidth && 'fullWidth')}>
       <SelectComponent
         key={key}
+        ref={ref => {
+          selectRef.current = ref;
+        }}
         classes={classes}
         styles={selectStyles}
         inputId="react-select-single"
         placeholder={placeholder}
         autoFocus={autoFocus}
         value={value}
+        // TODO: verify this prop is working when we upgrade packages
+        // https://github.com/JedWatson/react-select/pull/3690
+        isLoading={isLoading}
         inputValue={inputValue.length ? inputValue : undefined}
         isClearable
         openMenuOnClick={!isAsync}
@@ -301,6 +342,7 @@ const PeaAutocompleteList = ({
         components={components}
         onChange={handleSelectChange}
         onBlur={onBlur}
+        onFocus={onFocus}
         isMulti={isMulti}
         menuShouldScrollIntoView
         menuPlacement={menuPlacement}
@@ -332,6 +374,7 @@ PeaAutocompleteList.defaultProps = {
   removeSpacing: false,
   menuPlacement: 'auto',
   autoFocus: false,
+  onBlur: undefined,
 };
 
 PeaAutocompleteList.propTypes = {
@@ -353,6 +396,7 @@ PeaAutocompleteList.propTypes = {
   InputControl: PropTypes.func,
   OptionComponent: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
   onChange: PropTypes.func.isRequired,
+  onBlur: PropTypes.func,
   hideSuggestions: PropTypes.bool,
   clearAfterEnter: PropTypes.bool,
   removeSpacing: PropTypes.bool,
@@ -365,4 +409,4 @@ PeaAutocompleteList.metadata = {
 };
 PeaAutocompleteList.codeSandbox = 'https://codesandbox.io/s/zljn06jmq4';
 
-export default PeaAutocompleteList;
+export default memo(PeaAutocompleteList);

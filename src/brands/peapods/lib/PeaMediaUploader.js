@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Script from 'react-load-script';
 import PropTypes from 'prop-types';
+import Dialog from '@material-ui/core/Dialog';
 
 import theme from './theme';
 
@@ -19,6 +20,7 @@ import theme from './theme';
 const { primary, secondary, common, grey, error } = theme.palette;
 
 const defaultConfig = {
+  multiple: false,
   styles: {
     palette: {
       tabIcon: secondary.dark,
@@ -44,12 +46,24 @@ const defaultConfig = {
       },
     },
   },
+  inlineContainer: '.cloudinary-peapods-uploader',
 };
 
 class MediaUploader extends Component {
+  static getDerivedStateFromProps(props, state) {
+    if (props.isVisible && !state.isInitialized) {
+      return {
+        ...state,
+        isInitialized: true,
+      };
+    }
+    return state;
+  }
+
   constructor(props) {
     super(props);
     this.state = {
+      isInitialized: false,
       isScriptLoaded: false,
       scriptLoadFailed: false,
     };
@@ -63,14 +77,14 @@ class MediaUploader extends Component {
   }
 
   onScriptLoadSuccess = () => {
-    this.setState({
-      isScriptLoaded: true,
-    });
-
     this.cloudinaryWidget = window.cloudinary.createUploadWidget(
       this.getConfig(),
       this.onWidgetEvent,
     );
+
+    this.setState({
+      isScriptLoaded: true,
+    });
   };
 
   onScriptLoadFailed = () => {
@@ -102,12 +116,13 @@ class MediaUploader extends Component {
     }
 
     if (onWidgetEvent) {
-      onWidgetEvent(err, data);
+      const uploadError = err ? new Error(`Upload error: ${err.status}`) : null;
+      onWidgetEvent(uploadError, data);
     }
   };
 
   render() {
-    const { isScriptLoaded, scriptLoadFailed } = this.state;
+    const { isScriptLoaded, scriptLoadFailed, isInitialized } = this.state;
     const { isVisible, onScriptLoadFailed } = this.props;
 
     const config = this.getConfig();
@@ -118,7 +133,7 @@ class MediaUploader extends Component {
       this.cloudinaryWidget &&
       !this.wasClosed
     ) {
-      if (isVisible) {
+      if (isInitialized && isVisible) {
         this.cloudinaryWidget.update(config);
         this.cloudinaryWidget.open();
       } else {
@@ -130,13 +145,13 @@ class MediaUploader extends Component {
       this.wasClosed = false;
     }
 
-    return (
+    return isInitialized ? (
       <Script
         url={this.cloudinaryUrl}
         onError={onScriptLoadFailed}
         onLoad={this.onScriptLoadSuccess}
       />
-    );
+    ) : null;
   }
 }
 
@@ -169,4 +184,46 @@ MediaUploader.metadata = {
   name: 'Pea Media Uploader',
 };
 
-export default MediaUploader;
+const MediaUploaderWrapper = ({
+  isVisible,
+  onClose,
+  getConfig,
+  onWidgetEvent,
+  onScriptLoadFailed,
+}) => (
+  <Dialog
+    open={isVisible}
+    maxWidth="xl"
+    onBackdropClick={onClose}
+    onClose={onClose}
+  >
+    <div
+      className="cloudinary-peapods-uploader"
+      style={{
+        width: '80vw',
+        height: 600,
+      }}
+    />
+    <MediaUploader
+      isVisible={isVisible}
+      onClose={onClose}
+      getConfig={getConfig}
+      onWidgetEvent={onWidgetEvent}
+      onScriptLoadFailed={onScriptLoadFailed}
+    />
+  </Dialog>
+);
+
+MediaUploaderWrapper.propTypes = {
+  getConfig: PropTypes.func.isRequired,
+  onWidgetEvent: PropTypes.func.isRequired,
+  onScriptLoadFailed: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+  isVisible: PropTypes.bool,
+};
+
+MediaUploaderWrapper.defaultProps = {
+  isVisible: false,
+};
+
+export default MediaUploaderWrapper;

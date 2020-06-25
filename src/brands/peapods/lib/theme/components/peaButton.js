@@ -4,8 +4,8 @@ export default ({ palette, spacing, breakpoints, shadows }) => {
   const labelSizes = {
     small: 14,
     normal: 14,
-    big: 18,
-    large: 22,
+    big: 14,
+    large: 14,
   };
   const btnHeights = {
     small: 38,
@@ -55,7 +55,7 @@ export default ({ palette, spacing, breakpoints, shadows }) => {
     if (icon % 2 === 0) {
       return icon;
     }
-    return icon + 1;
+    return icon + 6;
   };
   const getBgIconSize = btnSize => {
     const mapping = {
@@ -208,21 +208,27 @@ export default ({ palette, spacing, breakpoints, shadows }) => {
         // COMBINATION
         '&.-shape-circular.-size-small, &.-shape-square.-size-small': {
           padding: spacing(1.25),
-          // [`& ${iconSelector}`]: {
-          //   fontSize: 16,
-          // },
+          maxWidth: btnHeights.small,
+          maxHeight: btnHeights.small,
+          '& .MuiButton-label': {
+            width: 18,
+            height: 18,
+          },
+        },
+        '&.-shape-circular.-size-normal, &.-shape-square.-size-normal': {
+          padding: spacing(1.25),
+          maxWidth: btnHeights.normal,
+          maxHeight: btnHeights.normal,
         },
         '&.-shape-circular.-size-big, &.-shape-square.-size-big': {
           padding: spacing(1.5),
-          // [`& ${iconSelector}`]: {
-          //   fontSize: 28,
-          // },
+          maxWidth: btnHeights.big,
+          maxHeight: btnHeights.big,
         },
         '&.-shape-circular.-size-large, &.-shape-square.-size-large': {
           padding: spacing(1.75),
-          // [`& ${iconSelector}`]: {
-          //   fontSize: 36,
-          // },
+          maxWidth: btnHeights.large,
+          maxHeight: btnHeights.large,
         },
         '&.-size-big.-compact': {
           minHeight: btnHeights.big - 8,

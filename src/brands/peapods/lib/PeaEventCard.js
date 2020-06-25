@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
+import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
 import CardContent from '@material-ui/core/CardContent';
@@ -104,6 +105,7 @@ const PeaEventCard = ({
   shareText,
   title,
   subTitle,
+  renderTitle,
   timeString,
   location,
   podCount,
@@ -113,48 +115,63 @@ const PeaEventCard = ({
   onShowDetailsClicked,
   onShareEventClicked,
   onCreatePodClicked,
+  onUserClick,
   createPodText,
   isLoading,
+  facebookAppId,
   ...props
 }) => {
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const openSharePopover = Boolean(shareAnchorEl);
-  const shareAriaId = openSharePopover ? 'share-popover' : undefined;
+  const shareAriaId = openSharePopover ? 'event-card-share' : undefined;
 
   const handleShareClick = event => {
     event.stopPropagation();
 
     if (window.navigator.share) {
-      onShareEventClicked('native');
-      window.navigator.share({
-        title: shareText,
-        url: shareLink,
-      });
-    } else {
+      window.navigator
+        .share({
+          title: shareText,
+          url: shareLink,
+        })
+        .then(() => onShareEventClicked('native'))
+        .catch(err => {
+          if (err.message !== 'Share canceled') {
+            throw err;
+          }
+        });
+    } else if (!openSharePopover) {
       setShareAnchorEl(event.currentTarget);
     }
   };
 
-  const handleShareClose = event => {
-    event.stopPropagation();
+  const handleShareClose = () => {
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => event => {
+  const handleShareItemClick = item => () => {
     onShareEventClicked(item);
-    handleShareClose(event);
+    handleShareClose();
   };
 
   return (
     <Card className={'PeaEventCard-root'} {...props}>
       <CardHeader
-        avatar={<PeaAvatar src={profile.image} />}
-        title={<b>{title}</b>}
+        avatar={<PeaAvatar src={profile && profile.image} />}
+        title={renderTitle ? renderTitle() : title}
         subheader={subTitle}
         action={
           social ? <PeaAvatar src={social} externalLink={socialLink} /> : null
         }
       />
+
+      {renderTitle && (
+        <Box p={2} pt={0}>
+          <Typography variant={'body1'}>
+            <b>{title}</b>
+          </Typography>
+        </Box>
+      )}
 
       <PeaImageCarousel
         data={images.map((image, idx) => ({ image, id: idx }))}
@@ -253,6 +270,7 @@ const PeaEventCard = ({
                   title={title}
                   shareLink={shareLink}
                   shareText={shareText}
+                  facebookAppId={facebookAppId}
                   onShare={handleShareItemClick}
                 />
               </Paper>
@@ -276,9 +294,10 @@ PeaEventCard.propTypes = {
   images: PropTypes.arrayOf(PropTypes.string).isRequired,
   profile: PropTypes.shape({
     name: PropTypes.string,
+    username: PropTypes.string,
     image: PropTypes.string,
     link: PropTypes.string,
-  }).isRequired,
+  }),
   social: PropTypes.string,
   socialLink: PropTypes.string,
   shareText: PropTypes.string.isRequired,
@@ -292,7 +311,8 @@ PeaEventCard.propTypes = {
   interestedPeas: PropTypes.arrayOf(PropTypes.string),
   onShowDetailsClicked: PropTypes.func.isRequired,
   onCreatePodClicked: PropTypes.func.isRequired,
-  onShareEventClicked: PropTypes.func,
+  onUserClick: PropTypes.func.isRequired,
+  onShareEventClicked: PropTypes.func.isRequired,
   stats: PropTypes.shape({
     interested: PropTypes.number,
     attending: PropTypes.number,
@@ -300,6 +320,8 @@ PeaEventCard.propTypes = {
   }),
   createPodText: PropTypes.string,
   isLoading: PropTypes.bool,
+  renderTitle: PropTypes.func,
+  facebookAppId: PropTypes.string,
 };
 
 PeaEventCard.defaultProps = {
@@ -309,10 +331,12 @@ PeaEventCard.defaultProps = {
   interestedPeas: [],
   social: undefined,
   socialLink: undefined,
-  onShareEventClicked: () => {},
   createPodText: 'Create Pod',
   isLoading: false,
   stats: undefined,
+  profile: undefined,
+  renderTitle: undefined,
+  facebookAppId: '',
 };
 
 PeaEventCard.metadata = {

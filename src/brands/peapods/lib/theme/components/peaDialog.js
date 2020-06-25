@@ -2,9 +2,48 @@
 export default ({ spacing, breakpoints, white, palette }) => ({
   MuiDialog: {
     root: {
+      position: 'relative',
       '&.PeaPodDialog': {
         '& .PeaCounter-root': {
           marginTop: spacing(1),
+        },
+      },
+      '&.PeaGroupDialog': {
+        [breakpoints.only('xs')]: {
+          background: palette.common.white,
+        },
+        '& .PeaGroupForm-photoBtn': {
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '100%',
+          borderRadius: 6,
+          background: 'rgba(0,0,0,0.4)',
+          '& .material-icons': {
+            fontSize: 48,
+          },
+        },
+      },
+      '&.PeaEventDialog': {
+        [breakpoints.only('xs')]: {
+          background: palette.common.white,
+        },
+        '& .PeaEventForm-photoBtn': {
+          position: 'absolute',
+          display: 'flex',
+          flexDirection: 'column',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          width: '100%',
+          borderRadius: 6,
+          background: 'rgba(0,0,0,0.4)',
+          '& .material-icons': {
+            fontSize: 48,
+          },
         },
       },
       '&.PeaDialog': {
@@ -33,8 +72,15 @@ export default ({ spacing, breakpoints, white, palette }) => ({
           },
         },
         '& .DialogContent--root': {
+          overflowY: 'auto',
           maxWidth: 400,
           minWidth: 400,
+          [breakpoints.only('xs')]: {
+            maxWidth: 'unset',
+            minWidth: 'unset',
+            maxHeight: 450,
+            minHeight: 450,
+          },
         },
         '& .DialogActions-root': {
           marginBottom: spacing(2),
@@ -42,24 +88,15 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         },
         '& .MuiCardMedia-root': {
           position: 'relative',
-          paddingTop: '44%',
           width: '100%',
           zIndex: 1,
           backgroundColor: palette.grey[200],
           border: `2px dashed ${palette.secondary.main}`,
           borderRadius: 8,
-          [breakpoints.up('sm')]: {
-            paddingTop: '32%',
-          },
           '&:hover': {
             cursor: 'pointer',
             backgroundColor: palette.grey[300],
           },
-        },
-        '& .PeaGroup-coverImgBtn': {
-          position: 'absolute',
-          top: 'calc(50% - 50px)',
-          left: 'calc(50% - 50px)',
         },
       },
       '&.PeaInvitationDialog': {
@@ -85,6 +122,10 @@ export default ({ spacing, breakpoints, white, palette }) => ({
         '& .DialogContent--root': {
           maxWidth: 600,
           minWidth: 400,
+          [breakpoints.only('xs')]: {
+            maxWidth: 'unset',
+            minWidth: 'unset',
+          },
         },
       },
     },

@@ -7,20 +7,20 @@ export default ({ breakpoints, primary, secondary }) => ({
       borderBottom: 'none',
     },
     indicator: {
-      backgroundColor: primary.main,
+      height: 4,
+      transform: 'translateY(-3px)',
+      backgroundColor: secondary.main,
     },
   },
   MuiTab: {
     root: {
+      backgroundColor: 'none',
       minHeight: 53,
       minWidth: 0,
-      [breakpoints.up('md')]: {
+      [breakpoints.up('sm')]: {
         minWidth: 0,
       },
       '&:hover': {
-        backgroundColor: Color(primary.main)
-          .fade(0.9)
-          .string(),
         '& .MuiTab-label': {
           color: secondary.main,
         },

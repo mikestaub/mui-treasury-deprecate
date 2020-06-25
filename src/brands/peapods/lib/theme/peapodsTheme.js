@@ -5,6 +5,7 @@ import peaAvatar from './components/peaAvatar';
 import peaBadge from './components/peaBadge';
 import peaButton from './components/peaButton';
 import peaCard from './components/peaCard';
+import peaCardMedia from './components/peaCardMedia';
 import peaChip from './components/peaChip';
 import peaDialog from './components/peaDialog';
 import peaForm from './components/peaForm';
@@ -22,6 +23,9 @@ import peaTabs from './components/peaTabs';
 import peaTextField from './components/peaTextField';
 import peaTypography from './components/peaTypography';
 import peaTooltip from './components/peaTooltip';
+import peaFab from './components/peaFab';
+import peaBackdrop from './components/peaBackdrop';
+import peaGrid from './components/peaGrid';
 
 const theme = {
   typography: {
@@ -46,6 +50,7 @@ const theme = {
     ...peaBadge(variables),
     ...peaButton(variables),
     ...peaCard(variables),
+    ...peaCardMedia(variables),
     ...peaChip(variables),
     ...peaDialog(variables),
     ...peaForm(variables),
@@ -63,6 +68,9 @@ const theme = {
     ...peaTextField(variables),
     ...peaTypography(variables),
     ...peaTooltip(variables),
+    ...peaFab(variables),
+    ...peaBackdrop(variables),
+    ...peaGrid(variables),
   },
 };
 

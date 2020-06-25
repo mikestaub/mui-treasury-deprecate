@@ -30,7 +30,12 @@ const FullProfile = () => {
   };
 
   return (
-    <Box flex={1} {...Box.alignCenter} justifyContent={'space-evenly'} flexDirection={'column'}>
+    <Box
+      flex={1}
+      {...Box.alignCenter}
+      justifyContent={'space-evenly'}
+      flexDirection={'column'}
+    >
       <PeaButton
         variant={'contained'}
         color={'primary'}

@@ -109,7 +109,7 @@ const TwitterIconTabs = ({
             key={i}
             className={'MuiTab--iconOnly'}
             icon={icon}
-            {...badgeProps && {
+            {...(badgeProps && {
               icon: (
                 <Badge
                   className={
@@ -129,7 +129,7 @@ const TwitterIconTabs = ({
                   {icon}
                 </Badge>
               ),
-            }}
+            })}
             disableRipple
             {...globalTabProps}
             {...tabProps}

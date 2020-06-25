@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { memo } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
+
 import PeaAvatar from './PeaAvatar';
 import PeaText from './PeaTypography';
 
@@ -9,16 +10,9 @@ const useStyles = makeStyles(({ spacing }) => ({
   root: {
     position: 'relative',
     textAlign: 'center',
-    boxShadow: '3px 4px 15px rgba(0, 0, 0, 0.1)',
-    borderRadius: '15px 15px 0 0',
-    backgroundColor: 'white',
   },
   avatar: {
-    width: 62,
-    height: 62,
-    position: 'absolute',
-    right: 20,
-    top: 20,
+    justifyContent: 'center',
   },
   status: {
     color: '#A4A4A4',
@@ -30,28 +24,50 @@ const useStyles = makeStyles(({ spacing }) => ({
   title: {
     lineHeight: 1,
   },
+  avatarGroupContainer: {
+    display: 'flex',
+    justifyContent: 'center',
+    paddingBottom: spacing(2),
+  },
 }));
 
-const PeaThreadTitle = ({ title, subtitle, avatar }) => {
+const PeaThreadTitle = ({ title, subtitle, avatars, isTitleShown }) => {
   const classes = useStyles();
+
+  const maxAvatarCount = 5;
+
   return (
-    <Grid container spacing={2} classes={{ container: classes.root }}>
+    <Grid container classes={{ container: classes.root }}>
       <Grid item xs={12}>
-        <div className={classes.textContainer}>
-          <PeaText
-            variant="h6"
-            className={classes.title}
-            color="secondary"
-            weight="bold"
-          >
-            {title}
-          </PeaText>
-          <PeaText variant="caption" className={classes.status}>
-            {subtitle}
-          </PeaText>
+        {isTitleShown && (
+          <div className={classes.textContainer}>
+            <PeaText
+              variant="h6"
+              className={classes.title}
+              color="secondary"
+              weight="bold"
+            >
+              {title}
+            </PeaText>
+
+            <PeaText variant="caption" className={classes.status}>
+              {subtitle}
+            </PeaText>
+          </div>
+        )}
+
+        <div className={classes.avatarGroupContainer}>
+          <PeaAvatar.Group
+            images={avatars.slice(0, maxAvatarCount)}
+            className={classes.avatar}
+            more={
+              avatars.length > maxAvatarCount
+                ? avatars.length - maxAvatarCount
+                : undefined
+            }
+          />
         </div>
       </Grid>
-      <PeaAvatar className={classes.avatar} src={avatar} />
     </Grid>
   );
 };
@@ -59,24 +75,20 @@ const PeaThreadTitle = ({ title, subtitle, avatar }) => {
 PeaThreadTitle.propTypes = {
   title: PropTypes.string,
   subtitle: PropTypes.string,
-  avatar: PropTypes.string,
+  avatars: PropTypes.arrayOf(PropTypes.string),
+  isTitleShown: PropTypes.bool,
 };
+
 PeaThreadTitle.defaultProps = {
   title: 'Unknown',
   subtitle: 'unknown',
-  avatar: '',
+  avatars: [],
+  isTitleShown: true,
 };
+
 PeaThreadTitle.metadata = {
   name: 'Thread title',
-  description: '', // optional
+  description: '',
 };
 
-PeaThreadTitle.getTheme = () => ({
-  'Mui{Component}': {
-    // this object will be injected to 'overrides' section
-    root: {},
-    // ...
-  },
-});
-
-export default PeaThreadTitle;
+export default memo(PeaThreadTitle);

@@ -5,10 +5,12 @@ import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import TextField from '@material-ui/core/TextField/TextField';
 import Grid from '@material-ui/core/Grid';
+
 import PeaDialog from './PeaDialog';
 import PeaButton from './PeaButton';
 import PeaSwitch from './PeaSwitch';
 import PeaCategoryToggle from './PeaCategoryToggle';
+
 import peaActivism from './assets/pea_activism.png';
 import peaArtAndCulture from './assets/pea_art-and-culture.png';
 import peaCommunity from './assets/pea_community.png';
@@ -23,6 +25,8 @@ import peaOutdoor from './assets/pea_outdoor.png';
 import peaSpirituality from './assets/pea_spirituality.png';
 import peaSport from './assets/pea_sport.png';
 import peaVolunteering from './assets/pea_volunteering.png';
+// TODO: add new category
+// import peaHangout from './assets/pea_hangout.png';
 
 const categories = [
   { image: peaActivism, label: 'Activism' },
@@ -56,6 +60,7 @@ const PeaEventDialog = ({ onClose, ...props }) => (
             shrink: true,
           }}
         />
+
         <FormControl fullWidth margin={'normal'}>
           <FormLabel style={{ marginBottom: 16 }}>Category</FormLabel>
           <Grid container spacing={2}>
@@ -70,6 +75,7 @@ const PeaEventDialog = ({ onClose, ...props }) => (
             ))}
           </Grid>
         </FormControl>
+
         <TextField
           multiline
           rows={3}
@@ -95,6 +101,7 @@ const PeaEventDialog = ({ onClose, ...props }) => (
           label={'Description'}
           placeholder={'Type few words about your event'}
         />
+
         <TextField
           multiline
           rows={3}
@@ -120,18 +127,22 @@ const PeaEventDialog = ({ onClose, ...props }) => (
           label={'Hashtags'}
           placeholder={'#search_hashtags'}
         />
+
         <FormControl margin={'normal'} fullWidth>
           <FormLabel>Date</FormLabel>
           <DatePicker />
         </FormControl>
+
         <FormControl margin={'normal'} fullWidth>
           <FormLabel>Time</FormLabel>
           <TimePicker />
         </FormControl>
+
         <FormControl margin={'normal'}>
           <FormLabel>Private event</FormLabel>
           <PeaSwitch checked />
         </FormControl>
+
         <TextField
           multiline
           rows={3}
@@ -158,6 +169,7 @@ const PeaEventDialog = ({ onClose, ...props }) => (
           placeholder={'Start typing name'}
           {...props}
         />
+
         <TextField
           fullWidth
           margin={'normal'}
@@ -196,6 +208,7 @@ PeaEventDialog.metadata = {
     },
   ],
 };
+
 PeaEventDialog.propTypes = {
   onClose: PropTypes.func.isRequired,
 };

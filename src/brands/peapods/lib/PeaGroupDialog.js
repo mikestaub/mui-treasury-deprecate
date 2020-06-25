@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField/TextField';
 import CardMedia from '@material-ui/core/CardMedia';
 import ButtonBase from '@material-ui/core/ButtonBase';
+import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Box from '@material-ui/core/Box';
 import Grid from '@material-ui/core/Grid';
@@ -24,9 +25,14 @@ const PeaGroupDialog = ({
   type,
   inviteInput,
   typeInput,
+  tagsInput,
   profilePhoto,
+<<<<<<< HEAD
   members,
   submitting,
+=======
+  loading,
+>>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
   onChangeCoverPhotoClicked,
   onChange,
   onClose,
@@ -39,6 +45,7 @@ const PeaGroupDialog = ({
     titleVariant={'secondaryCentered'}
     content={
       <>
+<<<<<<< HEAD
         <FormLabel component="legend">Cover Picture</FormLabel>
 
         <Box
@@ -82,7 +89,10 @@ const PeaGroupDialog = ({
           </Grid>
         )}
 
+=======
+>>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
         <TextField
+          required
           fullWidth
           margin={'normal'}
           label={'Name'}
@@ -92,6 +102,37 @@ const PeaGroupDialog = ({
           value={name}
           onChange={onChange('name')}
         />
+
+        <FormControl margin={'normal'} fullWidth>
+          <FormLabel component="legend">Cover Picture</FormLabel>
+
+          <Box
+            style={{
+              marginTop: 16,
+              marginBottom: 16,
+            }}
+          >
+            <CardMedia
+              className={'MuiCardMedia-root'}
+              image={profilePhoto}
+              style={{
+                position: 'relative',
+                minHeight: 200,
+                border: profilePhoto && 'none',
+              }}
+              onClick={onChangeCoverPhotoClicked}
+            >
+              <ButtonBase className={'PeaGroupForm-photoBtn'}>
+                <PeaIcon
+                  inverted
+                  icon={'add'}
+                  shape={'square'}
+                  style={{ fontSize: 100 }}
+                />
+              </ButtonBase>
+            </CardMedia>
+          </Box>
+        </FormControl>
 
         <TextField
           fullWidth
@@ -104,6 +145,10 @@ const PeaGroupDialog = ({
           onChange={onChange('description')}
         />
 
+        {inviteInput}
+
+        {tagsInput}
+
         {typeInput}
       </>
     }
@@ -112,10 +157,10 @@ const PeaGroupDialog = ({
       <PeaButton
         color={'primary'}
         variant={'contained'}
-        disabled={submitting}
+        disabled={loading}
         onClick={onSave}
       >
-        {submitting ? (
+        {loading ? (
           <PeaLoadingSpinner size={20} style={{ margin: 0 }} />
         ) : (
           actionText
@@ -137,11 +182,16 @@ PeaGroupDialog.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   type: PropTypes.string.isRequired,
-  inviteInput: PropTypes.object.isRequired,
-  typeInput: PropTypes.object.isRequired,
+  inviteInput: PropTypes.node.isRequired,
+  tagsInput: PropTypes.node.isRequired,
+  typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
+<<<<<<< HEAD
   members: PropTypes.arrayOf(PropTypes.object),
   submitting: PropTypes.bool,
+=======
+  loading: PropTypes.bool,
+>>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -151,7 +201,7 @@ PeaGroupDialog.propTypes = {
 PeaGroupDialog.defaultProps = {
   dialogTitle: 'Create Group',
   actionText: 'Create',
-  submitting: false,
+  loading: false,
   description: '',
   profilePhoto: undefined,
   members: undefined,

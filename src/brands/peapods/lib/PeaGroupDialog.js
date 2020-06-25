@@ -27,12 +27,9 @@ const PeaGroupDialog = ({
   typeInput,
   tagsInput,
   profilePhoto,
-<<<<<<< HEAD
   members,
   submitting,
-=======
   loading,
->>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
   onChangeCoverPhotoClicked,
   onChange,
   onClose,
@@ -45,7 +42,6 @@ const PeaGroupDialog = ({
     titleVariant={'secondaryCentered'}
     content={
       <>
-<<<<<<< HEAD
         <FormLabel component="legend">Cover Picture</FormLabel>
 
         <Box
@@ -89,8 +85,6 @@ const PeaGroupDialog = ({
           </Grid>
         )}
 
-=======
->>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
         <TextField
           required
           fullWidth
@@ -186,12 +180,9 @@ PeaGroupDialog.propTypes = {
   tagsInput: PropTypes.node.isRequired,
   typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
-<<<<<<< HEAD
   members: PropTypes.arrayOf(PropTypes.object),
   submitting: PropTypes.bool,
-=======
   loading: PropTypes.bool,
->>>>>>> e70b8667c8adc8aba6ac357390e5f8fadb4b23e9
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

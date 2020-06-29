@@ -28,20 +28,27 @@ const useStyles = makeStyles(({ palette, white, breakpoints }) => ({
     marginTop: 20,
     marginBottom: 10,
   },
+  gridListTile: {
+    transition: '200ms linear',
+    '&:hover': {
+      cursor: 'pointer',
+      transform: 'scale(1.05)',
+    },
+    height: 150,
+    [breakpoints.up('xs')]: {
+      height: 130,
+    },
+    overflow: 'hidden',
+    borderRadius: 10,
+  },
   gridList: {
     width: '100%',
     height: 450,
     paddingBottom: '30px',
   },
   gridItem: {
-    height: 150,
-    [breakpoints.up('xs')]: {
-      height: 130,
-    },
-    '&:hover': {
-      cursor: 'pointer',
-    },
-    borderRadius: 5,
+    height: '100%',
+    resize: 'cover',
   },
   loader: {
     height: 100,
@@ -82,6 +89,7 @@ function PeaImageGrid({ title, loading, feed }) {
                   <GridListTile
                     onClick={() => onGridItemOpen(index)}
                     key={post}
+                    className={classes.gridListTile}
                   >
                     <img
                       className={classes.gridItem}

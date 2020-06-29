@@ -141,29 +141,37 @@ const PeaConnections = ({
     onLinkSocial(provider, connect);
   };
 
+  const hasConnections = !!rows.filter(({ data }) => data.length !== 0).length;
+
   return (
     <Grid container>
       <Grid container alignItems="center" justify="space-between">
-        <Typography className={classes.heading}>
-          {allowToConnect ? 'Connections' : 'Mutual Connections'}
-        </Typography>
+        {hasConnections && (
+          <Typography className={classes.heading}>
+            {allowToConnect ? 'Connections' : 'Mutual Connections'}
+          </Typography>
+        )}
         {loading ? (
           <PeaLoadingSpinner size={20} />
         ) : (
           <>
-            {allowToConnect && (
-              <IconButton
-                aria-describedby={settingsPopoverId}
-                onClick={onConnectionsSetting}
-              >
-                <PeaIcon
-                  icon={'settings'}
-                  color="secondary"
-                  bgColor={'white'}
-                  size={'small'}
-                  shadow={false}
-                />
-              </IconButton>
+            {hasConnections && (
+              <>
+                {allowToConnect && (
+                  <IconButton
+                    aria-describedby={settingsPopoverId}
+                    onClick={onConnectionsSetting}
+                  >
+                    <PeaIcon
+                      icon={'settings'}
+                      color="secondary"
+                      bgColor={'white'}
+                      size={'small'}
+                      shadow={false}
+                    />
+                  </IconButton>
+                )}
+              </>
             )}
           </>
         )}

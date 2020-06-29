@@ -28,13 +28,6 @@ const useStyles = makeStyles(({ palette, white, breakpoints }) => ({
     marginTop: 20,
     marginBottom: 10,
   },
-  subHeading: {
-    color: palette.grey[500],
-    width: '100%',
-    fontSize: 12,
-    fontStyle: 'italic',
-    textAlign: 'left',
-  },
   gridList: {
     width: '100%',
     height: 450,
@@ -75,7 +68,6 @@ function PeaImageGrid({ title, loading, feed }) {
 
   return (
     <div className={classes.root}>
-      <Typography className={classes.heading}>{title}</Typography>
       {loading ? (
         <div className={classes.loader}>
           <PeaLoadingSpinner size={20} />
@@ -83,35 +75,39 @@ function PeaImageGrid({ title, loading, feed }) {
       ) : (
         <>
           {!!feed.length ? (
-            <GridList cols={3} cellHeight={130} className={classes.gridList}>
-              {feed.map((post, index) => (
-                <GridListTile onClick={() => onGridItemOpen(index)} key={post}>
-                  <img
-                    className={classes.gridItem}
-                    src={post}
-                    alt="instagram post"
-                  />
-                </GridListTile>
-              ))}
-            </GridList>
-          ) : (
-            <Typography className={classes.subHeading}>
-              user has not connected their instagram yet
-            </Typography>
-          )}
+            <>
+              <Typography className={classes.heading}>{title}</Typography>
+              <GridList cols={3} cellHeight={130} className={classes.gridList}>
+                {feed.map((post, index) => (
+                  <GridListTile
+                    onClick={() => onGridItemOpen(index)}
+                    key={post}
+                  >
+                    <img
+                      className={classes.gridItem}
+                      src={post}
+                      alt="instagram post"
+                    />
+                  </GridListTile>
+                ))}
+              </GridList>
+              <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth={true}
+                maxWidth={'md'}
+                aria-labelledby="instagram feed carousel"
+                aria-describedby="instagram feed carousel"
+              >
+                <PeaImageCarousel
+                  data={carouselData}
+                  initialIndex={openIndex}
+                />
+              </Dialog>
+            </>
+          ) : null}
         </>
       )}
-
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        fullWidth={true}
-        maxWidth={'md'}
-        aria-labelledby="instagram feed carousel"
-        aria-describedby="instagram feed carousel"
-      >
-        <PeaImageCarousel data={carouselData} initialIndex={openIndex} />
-      </Dialog>
     </div>
   );
 }

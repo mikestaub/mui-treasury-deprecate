@@ -240,7 +240,7 @@ const PeaTimeRangeSelector = ({
 
   const onEditTimeRanges = () => {
     if (isEditMode && !isEqualWith(selection, localTimeRanges, isEqual)) {
-      onChange([...localTimeRanges]);
+      onChange([...localTimeRanges, ...selection]);
       setLocalTimeRanges([]);
       setIsEditMode(false);
     } else {

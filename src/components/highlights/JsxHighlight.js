@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier,no-useless-escape */
+/* eslint-disable no-useless-escape */
 import React from 'react';
 import PropTypes from 'prop-types';
 import reactElementToJSXString from 'react-element-to-jsx-string';

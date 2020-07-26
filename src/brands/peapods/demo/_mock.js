@@ -25,16 +25,22 @@ export const SOCIAL1 = [
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example.svg',
     name: 'Yeoman',
+    username: 'Yeoman',
+    unique: 'Yeoman',
     social: 'twitter',
   },
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example2.svg',
     name: 'GGWP',
+    username: 'GGWP',
+    unique: 'GGWP',
     social: 'meetup',
   },
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example3.svg',
     name: 'Sawasdee',
+    username: 'Sawasdee',
+    unique: 'Sawasdee',
     social: 'facebook',
   },
 ];
@@ -42,34 +48,39 @@ export const SOCIAL2 = [
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example4.svg',
     name: 'Yeoman',
-    social: 'tag',
+    username: 'Yeoman',
+    unique: 'Yeoman',
+    social: 'twitter',
   },
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example5.svg',
     name: 'GGWP',
-    social: 'tag',
+    username: 'GGWP',
+    unique: 'GGWP',
+    social: 'meetup',
   },
 ];
 export const SOCIAL3 = [
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example7.svg',
     name: 'Yeoman',
-    social: 'group',
+    username: 'Yeoman',
+    unique: 'Yeoman',
+    social: 'twitter',
   },
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example8.svg',
     name: 'GGWP',
-    social: 'group',
+    username: 'GGWP',
+    unique: 'GGWP',
+    social: 'meetup',
   },
   {
     src: 'https://avatars.dicebear.com/v2/avataaars/example9.svg',
     name: 'Sawasdee',
-    social: 'group',
-  },
-  {
-    src: 'https://avatars.dicebear.com/v2/avataaars/example10.svg',
-    name: 'Test',
-    social: 'group',
+    username: 'Sawasdee',
+    unique: 'Sawasdee',
+    social: 'facebook',
   },
 ];
 export const peapodCardProps = {
@@ -104,3 +115,6 @@ export const peapodCardProps = {
     more: 4,
   },
 };
+export const INSTAGRAM_FEED_GRID = new Array(10).fill(
+  'https://picsum.photos/200',
+);

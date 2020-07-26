@@ -8,8 +8,14 @@ const calculateMargin = (selfIndex, slideIndex, speed = 50) => {
   return `${diff * speed}%`;
 };
 
-const ParallaxSlide = ({ transition, children, renderElements, ...props }) => {
-  const [index, setIndex] = useState(0);
+const ParallaxSlide = ({
+  initialIndex,
+  transition,
+  children,
+  renderElements,
+  ...props
+}) => {
+  const [index, setIndex] = useState(initialIndex || 0);
   const [fineIndex, setFineIndex] = useState(index);
   const onChangeIndex = i => {
     setIndex(i);
@@ -52,6 +58,7 @@ const ParallaxSlide = ({ transition, children, renderElements, ...props }) => {
 };
 
 ParallaxSlide.propTypes = {
+  initialIndex: PropTypes.number,
   transition: PropTypes.string,
   children: PropTypes.func.isRequired,
   renderElements: PropTypes.func,

@@ -7,17 +7,20 @@ import cx from 'classnames';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaTag from './PeaTag';
 import PeaText from './PeaTypography';
+import PeaConnections from './PeaConnections';
 
 const PeaGroupProfile = ({
   description,
   tags,
   renderPodList,
-  renderConnections,
   renderMemberList,
   renderMessages,
   isMobile,
   activeTabIndex,
   onChangeTab,
+  connections,
+  connectionsCount,
+  onLoadMoreConnections,
   ...props
 }) => {
   const podsRef = useRef();
@@ -100,7 +103,15 @@ const PeaGroupProfile = ({
           </>
         )}
 
-        {renderConnections()}
+        <PeaConnections
+          allowToConnect={false}
+          followers={connections.followers}
+          following={connections.following}
+          friends={connections.friends}
+          loading={connections.loading}
+          connectionsCount={connectionsCount}
+          onLoadMoreConnections={onLoadMoreConnections}
+        />
       </>
 
       {renderMemberList()}
@@ -113,13 +124,15 @@ const PeaGroupProfile = ({
 PeaGroupProfile.propTypes = {
   activeTabIndex: PropTypes.number,
   renderPodList: PropTypes.func.isRequired,
-  renderConnections: PropTypes.func.isRequired,
   renderMemberList: PropTypes.func.isRequired,
   renderMessages: PropTypes.func.isRequired,
   description: PropTypes.string,
   tags: PropTypes.arrayOf(PropTypes.shape({})),
   isMobile: PropTypes.bool,
   onChangeTab: PropTypes.func,
+  connections: PropTypes.object.isRequired,
+  connectionsCount: PropTypes.object.isRequired,
+  onLoadMoreConnections: PropTypes.func.isRequired,
 };
 
 PeaGroupProfile.defaultProps = {

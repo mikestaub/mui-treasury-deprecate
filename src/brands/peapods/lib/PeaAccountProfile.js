@@ -28,6 +28,8 @@ import PeaConfirmation from './PeaConfirmation';
 import PeaInvitationDialog from './PeaInvitationDialog';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaGroupSelector from './PeaGroupSelector';
+import PeaConnections from './PeaConnections';
+import PeaImageGrid from './PeaImageGrid';
 
 const AVATAR_SCROLL_FACTOR = 0.0055;
 
@@ -113,9 +115,13 @@ const PeaAccountProfile = ({
   activeTabIndex,
   onTabChange,
   onLinkSocial,
+  connectionsCount,
   onChangeAccountStatus,
   onChangeSettings,
   onLogout,
+  connections,
+  onLoadMoreConnections,
+  instagramFeed,
 }) => {
   const classes = useStyles();
 
@@ -306,7 +312,6 @@ const PeaAccountProfile = ({
         onCancel={() => setEditing(false)}
         onChangeCoverPhotoClicked={onChangeCoverPhotoClicked}
         onChangeProfilePhotosClicked={onChangeProfilePhotosClicked}
-        onLinkSocial={onLinkSocial}
       />
     );
   }
@@ -621,6 +626,23 @@ const PeaAccountProfile = ({
               </Grid>
             ))}
           </Grid>
+          <PeaConnections
+            allowToConnect={isCurrentUser}
+            followers={connections.followers}
+            following={connections.following}
+            friends={connections.friends}
+            groups={connections.groups}
+            interests={connections.interests}
+            onLinkSocial={onLinkSocial}
+            loading={connections.loading}
+            connectionsCount={connectionsCount}
+            onLoadMoreConnections={onLoadMoreConnections}
+          />
+          <PeaImageGrid
+            title={instagramFeed.title}
+            loading={instagramFeed.loading}
+            feed={instagramFeed.feed}
+          />
         </Box>
 
         <Box>{groupList}</Box>
@@ -695,6 +717,11 @@ PeaAccountProfile.propTypes = {
   onInviteClicked: PropTypes.func.isRequired,
   onAcceptFollowRequest: PropTypes.func.isRequired,
   onLinkSocial: PropTypes.func.isRequired,
+  instagramFeed: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    feed: PropTypes.arrayOf(PropTypes.string),
+  }),
+  onLoadMoreConnections: PropTypes.func.isRequired,
   onChangeAccountStatus: PropTypes.func,
   onLogout: PropTypes.func.isRequired,
   onChangeSettings: PropTypes.func,
@@ -750,6 +777,10 @@ PeaAccountProfile.defaultProps = {
   acceptFollowLoading: false,
   onChangeAccountStatus: undefined,
   onChangeSettings: undefined,
+  instagramFeed: {
+    title: 'Instagram Activity',
+    feed: [],
+  },
 };
 
 PeaAccountProfile.metadata = {

@@ -42,6 +42,7 @@ ImageCarousel.code = `
 
     return (
       <PeaImageCarousel
+        initialIndex={0}
         data={data}
       />
     );

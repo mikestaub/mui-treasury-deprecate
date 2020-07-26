@@ -5,6 +5,7 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
+import Logo from './assets/peapods-logo-circle.svg';
 
 const styles = () => ({
   root: {
@@ -30,6 +31,10 @@ const styles = () => ({
     marginTop: 4,
     fontSize: 11,
   },
+  peapodsIcon: {
+    height: '100%',
+    width: 'auto',
+  },
 });
 
 const ICON = {
@@ -38,6 +43,8 @@ const ICON = {
   facebook: 'fab fa-facebook-f',
   twitter: 'fab fa-twitter',
   meetup: 'fab fa-meetup',
+  linkedin: 'fab fa-linkedin-in',
+  instagram: 'fab fa-instagram',
 };
 
 const PeaSocialAvatar = ({ classes, src, name, social }) => (
@@ -50,7 +57,11 @@ const PeaSocialAvatar = ({ classes, src, name, social }) => (
         icon={ICON[social]}
         color={'secondary'}
         bgColor={'white'}
-      />
+      >
+        {social === 'peapods' && (
+          <img className={classes.peapodsIcon} src={Logo} alt="peapods-logo" />
+        )}
+      </PeaIcon>
     )}
     <Typography
       className={classes.name}

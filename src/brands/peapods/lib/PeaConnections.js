@@ -29,12 +29,6 @@ const styles = ({ palette }) => ({
     transform: 'translateZ(0)',
     overflow: 'hidden',
     overflowX: 'scroll',
-    scrollbarWidth: 'none',
-    '&::-webkit-scrollbar-thumb': {
-      width: '0px',
-      boxShadow: 'none',
-      background: 'transparent',
-    },
   },
   settingsHeading: {
     margin: '0px 0px 10px 0px',
@@ -194,14 +188,16 @@ const PeaConnections = ({
                   ))}
 
                   {connectionsCount[rowType] === data.length ? null : (
-                    <PeaButton
-                      className={classes.loadMoreButton}
-                      onClick={() => onLoadMoreConnections(rowType)}
-                    >
-                      <Typography className={classes.loadMoreLabel}>
-                        Load more
-                      </Typography>
-                    </PeaButton>
+                    <Grid item>
+                      <PeaButton
+                        className={classes.loadMoreButton}
+                        onClick={() => onLoadMoreConnections(rowType)}
+                      >
+                        <Typography className={classes.loadMoreLabel}>
+                          Load more
+                        </Typography>
+                      </PeaButton>
+                    </Grid>
                   )}
                 </Grid>
               </Grid>

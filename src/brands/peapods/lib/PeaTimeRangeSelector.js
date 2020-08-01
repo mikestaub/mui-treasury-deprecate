@@ -239,18 +239,18 @@ const PeaTimeRangeSelector = ({
     setDayMap(newMap);
   };
 
+  const onCancelEditTimeRanges = () => {
+    onEditModeChange(!isEditMode);
+    setLocalTimeRanges([]);
+    setIsEditMode(!isEditMode);
+  };
+
   const onEditTimeRanges = () => {
     if (isEditMode && !isEqualWith(selection, localTimeRanges, isEqual)) {
       onChange([...localTimeRanges, ...selection]);
       setLocalTimeRanges([]);
     }
     onCancelEditTimeRanges();
-  };
-
-  const onCancelEditTimeRanges = () => {
-    onEditModeChange(!isEditMode);
-    setLocalTimeRanges([]);
-    setIsEditMode(!isEditMode);
   };
 
   const onSelectingSlot = ({ start }) => new Date(start) > new Date();

@@ -403,29 +403,35 @@ const PeaTimeRangeSelector = ({
   const viewMode = isEditMode ? Views.WEEK : Views.AGENDA;
 
   return (
-    <Calendar
-      length={7}
-      date={viewingDate}
-      selectable
-      onSelectSlot={onSelectSlot}
-      onSelecting={onSelectingSlot}
-      events={sortBy(optionSet, ({ start }) => start.toString())}
-      localizer={localizer}
-      // TODO: custom styles
-      view={viewMode}
-      defaultView={viewMode}
-      // dayPropGetter={customDayPropGetter}
-      // slotPropGetter={customSlotPropGetter}
-      components={{
-        // event: Event,
-        toolbar: renderToolbar,
-        agenda: {
-          event: EventAgenda,
-          time: TimeAgenda,
-          date: DateAgenda,
-        },
+    <div
+      style={{
+        maxHeight: 400,
       }}
-    />
+    >
+      <Calendar
+        length={7}
+        date={viewingDate}
+        selectable
+        onSelectSlot={onSelectSlot}
+        onSelecting={onSelectingSlot}
+        events={sortBy(optionSet, ({ start }) => start.toString())}
+        localizer={localizer}
+        // TODO: custom styles
+        view={viewMode}
+        defaultView={viewMode}
+        // dayPropGetter={customDayPropGetter}
+        // slotPropGetter={customSlotPropGetter}
+        components={{
+          // event: Event,
+          toolbar: renderToolbar,
+          agenda: {
+            event: EventAgenda,
+            time: TimeAgenda,
+            date: DateAgenda,
+          },
+        }}
+      />
+    </div>
   );
 };
 

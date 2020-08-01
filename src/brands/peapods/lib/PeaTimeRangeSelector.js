@@ -1,11 +1,28 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { every, some, uniqBy, isEqualWith, isEqual, sortBy } from 'lodash';
+import {
+  every,
+  some,
+  uniqBy,
+  isEqualWith,
+  isEqual,
+  sortBy,
+  keyBy,
+} from 'lodash';
 import moment from 'moment';
-import { Checkbox, Grid, FormControlLabel } from '@material-ui/core';
+import {
+  Box,
+  Checkbox,
+  Grid,
+  FormControlLabel,
+  Tooltip,
+  Badge,
+} from '@material-ui/core';
 import { Calendar, Views, momentLocalizer, Navigate } from 'react-big-calendar';
 
 import PeaButton from './PeaButton';
+import PeaAvatar from './PeaAvatar';
+import PeaIcon from './PeaIcon';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -40,9 +57,12 @@ const PeaTimeRangeSelector = ({
   onChange,
   onEditModeChange,
   userId,
+  users,
 }) => {
   const startOfWeek = new Date();
   startOfWeek.setHours(0, 0, 0, 0);
+
+  const usersById = keyBy(users, 'id');
 
   const [isEditMode, setIsEditMode] = useState(false);
   const [localTimeRanges, setLocalTimeRanges] = useState(selection);
@@ -345,10 +365,56 @@ const PeaTimeRangeSelector = ({
 
   // eslint-disable-next-line
   function EventAgenda({ event }) {
+    // eslint-disable-next-line
+    const { start, end } = event.timeRange;
+    const key = `${start}_${end}`;
+
+    // eslint-disable-next-line
+    const userIds = timeRangeOptions.filter(({ timeRange, userId, state }) => {
+      // eslint-disable-next-line
+      return key === `${timeRange.start}_${timeRange.end}` && usersById[userId];
+    });
+
+    const peas = usersById
+      ? // eslint-disable-next-line
+        userIds.map(({ userId, state }) => ({
+          id: usersById[userId].id,
+          name: usersById[userId].name,
+          src: usersById[userId].profilePhoto,
+          state,
+        }))
+      : [];
+
     return (
-      <span>
-        <em style={{ color: 'purple' }}>TODO: user-avatars here </em>
-      </span>
+      <Grid container spacing={1}>
+        {peas.map(pea => (
+          <Grid item key={pea.id}>
+            <Tooltip title={pea.name} arrow>
+              <Badge
+                overlap="circle"
+                anchorOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'right',
+                }}
+                badgeContent={
+                  pea.state === 'MAYBE' ? (
+                    <Box
+                    // TODO: add border
+                    // style={{
+                    //   border: '2px solid white',
+                    // }}
+                    >
+                      <PeaIcon icon="help" shape="circular" color="secondary" />
+                    </Box>
+                  ) : null
+                }
+              >
+                <PeaAvatar alt={pea.name} src={pea.src} size="big" />
+              </Badge>
+            </Tooltip>
+          </Grid>
+        ))}
+      </Grid>
     );
   }
 
@@ -397,10 +463,13 @@ const PeaTimeRangeSelector = ({
     );
   };
 
-  // TODO: render custom column names ( use localizer mergeWithDefaults )
   // TODO: create custom Agenda view ( sorting, column names, multi-day times )
 
   const viewMode = isEditMode ? Views.WEEK : Views.AGENDA;
+  const messages = {
+    time: 'Time Range',
+    event: 'Peas',
+  };
 
   return (
     <div
@@ -410,6 +479,7 @@ const PeaTimeRangeSelector = ({
     >
       <Calendar
         length={7}
+        messages={messages}
         date={viewingDate}
         selectable
         onSelectSlot={onSelectSlot}
@@ -449,11 +519,19 @@ PeaTimeRangeSelector.propTypes = {
   onChange: PropTypes.func.isRequired,
   onEditModeChange: PropTypes.func,
   userId: PropTypes.string.isRequired,
+  users: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      profilePhoto: PropTypes.string,
+    }),
+  ),
 };
 
 PeaTimeRangeSelector.defaultProps = {
   timeRangeOptions: [],
   selection: [],
+  users: [],
   onEditModeChange: () => {},
 };
 

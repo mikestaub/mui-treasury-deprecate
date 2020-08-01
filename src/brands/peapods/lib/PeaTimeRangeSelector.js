@@ -422,42 +422,59 @@ const PeaTimeRangeSelector = ({
   const renderToolbar = ({ label }) => {
     return (
       <Grid container justify="space-between">
-        <Grid item>
-          <div className="rbc-toolbar">
-            <span className="rbc-btn-group">
-              <button type="button" onClick={onNavigate(Navigate.TODAY)}>
-                today
-              </button>
-              <button type="button" onClick={onNavigate(Navigate.PREVIOUS)}>
-                previous week
-              </button>
-              <button type="button" onClick={onNavigate(Navigate.NEXT)}>
-                next week
-              </button>
-            </span>
-          </div>
+        {isEditMode && (
+          <Grid item>
+            <Box textAlign="center" mb={1}>
+              {label}
+            </Box>
 
-          <div>{label}</div>
-        </Grid>
+            <div className="rbc-toolbar">
+              <span className="rbc-btn-group">
+                <button type="button" onClick={onNavigate(Navigate.TODAY)}>
+                  today
+                </button>
+                <button type="button" onClick={onNavigate(Navigate.PREVIOUS)}>
+                  previous week
+                </button>
+                <button type="button" onClick={onNavigate(Navigate.NEXT)}>
+                  next week
+                </button>
+              </span>
+            </div>
+          </Grid>
+        )}
 
-        <Grid item>
-          {isEditMode && (
-            <PeaButton
-              color="error"
-              variant="contained"
-              onClick={onCancelEditTimeRanges}
-            >
-              cancel
-            </PeaButton>
-          )}
-
-          <PeaButton
-            color="primary"
-            variant="contained"
-            onClick={onEditTimeRanges}
+        <Grid item style={{ flex: 1 }}>
+          <Grid
+            container
+            spacing={isEditMode ? 1 : 0}
+            justify="flex-end"
+            style={{
+              marginBottom: 8,
+            }}
           >
-            {isEditMode ? 'save' : 'edit'}
-          </PeaButton>
+            {isEditMode && (
+              <Grid item>
+                <PeaButton
+                  color="error"
+                  variant="contained"
+                  onClick={onCancelEditTimeRanges}
+                >
+                  cancel
+                </PeaButton>
+              </Grid>
+            )}
+
+            <Grid item>
+              <PeaButton
+                color="primary"
+                variant="contained"
+                onClick={onEditTimeRanges}
+              >
+                {isEditMode ? 'save' : 'edit options'}
+              </PeaButton>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     );

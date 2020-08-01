@@ -38,6 +38,7 @@ const PeaTimeRangeSelector = ({
   timeRangeOptions,
   selection,
   onChange,
+  onEditModeChange,
   userId,
 }) => {
   const startOfWeek = new Date();
@@ -242,15 +243,14 @@ const PeaTimeRangeSelector = ({
     if (isEditMode && !isEqualWith(selection, localTimeRanges, isEqual)) {
       onChange([...localTimeRanges, ...selection]);
       setLocalTimeRanges([]);
-      setIsEditMode(false);
-    } else {
-      setIsEditMode(true);
     }
+    onCancelEditTimeRanges();
   };
 
   const onCancelEditTimeRanges = () => {
+    onEditModeChange(!isEditMode);
     setLocalTimeRanges([]);
-    setIsEditMode(false);
+    setIsEditMode(!isEditMode);
   };
 
   const onSelectingSlot = ({ start }) => new Date(start) > new Date();
@@ -441,12 +441,14 @@ PeaTimeRangeSelector.propTypes = {
   ),
   selection: PropTypes.arrayOf(PropTypes.Object),
   onChange: PropTypes.func.isRequired,
+  onEditModeChange: PropTypes.func,
   userId: PropTypes.string.isRequired,
 };
 
 PeaTimeRangeSelector.defaultProps = {
   timeRangeOptions: [],
   selection: [],
+  onEditModeChange: () => {},
 };
 
 PeaTimeRangeSelector.metadata = {

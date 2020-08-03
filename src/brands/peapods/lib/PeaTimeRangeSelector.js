@@ -3,7 +3,9 @@ import PropTypes from 'prop-types';
 import {
   every,
   some,
+  uniq,
   uniqBy,
+  groupBy,
   isEqualWith,
   isEqual,
   sortBy,
@@ -70,24 +72,37 @@ const PeaTimeRangeSelector = ({
   const [timeRangeMap, setTimeRangeMap] = useState({});
   const [dayMap, setDayMap] = useState({});
 
-  const optionSet = uniqBy(
-    [...timeRangeOptions, ...localTimeRanges, ...selection],
-    option => {
-      const { start, end } = option.timeRange;
-      const key = `${start}_${end}`;
-      return key;
-    },
-  )
-    .map(option => ({
-      ...option,
-      ...option.timeRange,
-      title: 'Test Event',
-      // TODO: handle all day events?
-    }))
-    .filter(option => {
-      const now = new Date();
-      return option.timeRange.start > now;
-    });
+  const allOptions = [
+    ...timeRangeOptions,
+    ...localTimeRanges,
+    ...selection,
+  ].filter(option => {
+    const now = new Date();
+    return option.timeRange.start > now;
+  });
+
+  const optionSet = uniqBy(allOptions, option => {
+    const { start, end } = option.timeRange;
+    const key = `${start}_${end}`;
+    return key;
+  }).map(option => ({
+    ...option,
+    ...option.timeRange,
+    title: 'Test Event',
+    // TODO: handle all day events?
+  }));
+
+  const optionKeyMap = groupBy(allOptions, option => {
+    const { start, end } = option.timeRange;
+    const key = `${start}_${end}`;
+    return key;
+  });
+
+  const optionUsersMap = Object.keys(optionKeyMap).reduce((prev, next) => {
+    // eslint-disable-next-line
+    prev[next] = uniq(optionKeyMap[next].map(o => o.userId));
+    return prev;
+  }, {});
 
   const selectedOptions = selection.reduce((prev, option) => {
     const { start, end } = option.timeRange;
@@ -96,6 +111,19 @@ const PeaTimeRangeSelector = ({
     prev[key] = option.state;
     return prev;
   }, {});
+
+  const checkBestOption = timeRange => {
+    const { start, end } = timeRange;
+    const key = `${start}_${end}`;
+
+    const numUsers = optionUsersMap[key].length;
+
+    const largerOptions = Object.values(optionUsersMap).filter(
+      arr => arr.length > numUsers,
+    );
+
+    return largerOptions.length === 0;
+  };
 
   const isDayChecked = day => {
     const map = dayMap[day];
@@ -351,9 +379,23 @@ const PeaTimeRangeSelector = ({
       ).format('H:mm a ddd')}`;
     }
 
+    const isBestOption = checkBestOption(timeRange);
+
     return (
       <>
         <div>{timeString}</div>
+        {isBestOption ? (
+          <Tooltip title="best option">
+            <Box display="inline">
+              <PeaIcon icon="star" shape="circular" color="primary" />
+            </Box>
+          </Tooltip>
+        ) : (
+          <Box display="inline" style={{ opacity: 0 }}>
+            <PeaIcon icon="star" shape="circular" color="white" />
+          </Box>
+        )}
+
         {renderCheckbox({
           isChecked: hasTimeRange(timeRange),
           value: timeRange,
@@ -375,15 +417,18 @@ const PeaTimeRangeSelector = ({
       return key === `${timeRange.start}_${timeRange.end}` && usersById[userId];
     });
 
-    const peas = usersById
-      ? // eslint-disable-next-line
-        userIds.map(({ userId, state }) => ({
-          id: usersById[userId].id,
-          name: usersById[userId].name,
-          src: usersById[userId].profilePhoto,
-          state,
-        }))
-      : [];
+    const peas = sortBy(
+      usersById
+        ? // eslint-disable-next-line
+          userIds.map(({ userId, state }) => ({
+            id: usersById[userId].id,
+            name: usersById[userId].name,
+            src: usersById[userId].profilePhoto,
+            state,
+          }))
+        : [],
+      'name',
+    );
 
     return (
       <Grid container spacing={1}>

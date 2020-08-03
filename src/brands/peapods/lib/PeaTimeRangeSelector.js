@@ -88,7 +88,6 @@ const PeaTimeRangeSelector = ({
   }).map(option => ({
     ...option,
     ...option.timeRange,
-    title: 'Test Event',
     // TODO: handle all day events?
   }));
 
@@ -288,6 +287,11 @@ const PeaTimeRangeSelector = ({
   };
 
   const onCancelEditTimeRanges = () => {
+    if (isEditMode) {
+      const firstOptionTime = allOptions[0].start;
+      setViewingDate(firstOptionTime);
+    }
+
     onEditModeChange(!isEditMode);
     setLocalTimeRanges([]);
     setIsEditMode(!isEditMode);
@@ -527,6 +531,7 @@ const PeaTimeRangeSelector = ({
 
   // TODO: create custom Agenda view ( sorting, column names, multi-day times )
 
+  const length = isEditMode ? 7 : 365;
   const viewMode = isEditMode ? Views.WEEK : Views.AGENDA;
   const messages = {
     time: 'Time Range',
@@ -540,7 +545,7 @@ const PeaTimeRangeSelector = ({
       }}
     >
       <Calendar
-        length={7}
+        length={length}
         messages={messages}
         date={viewingDate}
         selectable

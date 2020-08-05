@@ -1,0 +1,9 @@
+.rbc-time-content::-webkit-scrollbar,
+.rbc-agenda-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.rbc-agenda-content {
+  max-height: 400px;
+  overflow-y: scroll;
+}

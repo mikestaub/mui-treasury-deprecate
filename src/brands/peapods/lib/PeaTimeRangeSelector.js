@@ -20,6 +20,7 @@ import {
   Tooltip,
   Badge,
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { Calendar, Views, momentLocalizer, Navigate } from 'react-big-calendar';
 
 import PeaButton from './PeaButton';
@@ -28,11 +29,16 @@ import PeaIcon from './PeaIcon';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+import './PeaTimeRangeSelector.css';
+
 // TODO: remove momemnt dep
 const localizer = momentLocalizer(moment);
 
 // TODO: use array for selection not object
 // TODO: don't delete our timeRanges when unchecked
+
+// TODO: fix ux issue
+// https://github.com/jquense/react-big-calendar/issues/1684
 
 // eslint-disable-next-line
 function renderCheckbox({ isChecked, isIndeterminate, onChange, value }) {
@@ -51,7 +57,18 @@ function renderCheckbox({ isChecked, isIndeterminate, onChange, value }) {
   );
 }
 
-// TODO: handle MAYBE states for timeRanges
+// TODO: handle MAYBE states for timeRangess
+
+const useStyles = makeStyles(() => {
+  return {
+    container: {
+      minWidth: 500,
+      maxHeight: 400,
+      overflowY: 'scroll',
+      scrollbarWidth: 'auto',
+    },
+  };
+});
 
 const PeaTimeRangeSelector = ({
   timeRangeOptions,
@@ -61,6 +78,8 @@ const PeaTimeRangeSelector = ({
   userId,
   users,
 }) => {
+  const classes = useStyles();
+
   const startOfWeek = new Date();
   startOfWeek.setHours(0, 0, 0, 0);
 
@@ -290,6 +309,8 @@ const PeaTimeRangeSelector = ({
     if (isEditMode) {
       const firstOptionTime = allOptions[0].start;
       setViewingDate(firstOptionTime);
+    } else {
+      setViewingDate(new Date());
     }
 
     onEditModeChange(!isEditMode);
@@ -539,11 +560,7 @@ const PeaTimeRangeSelector = ({
   };
 
   return (
-    <div
-      style={{
-        maxHeight: 400,
-      }}
-    >
+    <div className={classes.container}>
       <Calendar
         length={length}
         messages={messages}

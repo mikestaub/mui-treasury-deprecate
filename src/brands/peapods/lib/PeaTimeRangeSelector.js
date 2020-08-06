@@ -329,12 +329,19 @@ const PeaTimeRangeSelector = ({
   const onSelectingSlot = ({ start }) => new Date(start) > new Date();
 
   const onSelectSlot = ({ start, end }) => {
+    let endTime = end;
+    if (start === end) {
+      endTime = new Date(start);
+      endTime.setHours(endTime.getHours() + 23);
+      endTime.setMinutes(59);
+    }
+
     setLocalTimeRanges([
       ...localTimeRanges,
       {
         timeRange: {
           start,
-          end,
+          end: endTime,
         },
         userId,
         state: 'AVAILABLE',

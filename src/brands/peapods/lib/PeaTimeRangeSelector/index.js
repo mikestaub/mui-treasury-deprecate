@@ -12,16 +12,7 @@ import {
   keyBy,
 } from 'lodash';
 import moment from 'moment';
-import {
-  Box,
-  Checkbox,
-  Grid,
-  FormControlLabel,
-  Tooltip,
-  Badge,
-} from '@material-ui/core';
-import HelpIcon from '@material-ui/icons/Help';
-import CancelIcon from '@material-ui/icons/Cancel';
+import { Box, Grid, Tooltip, Badge } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import { Calendar, Views, momentLocalizer, Navigate } from 'react-big-calendar';
 
@@ -29,11 +20,12 @@ import PeaButton from '../PeaButton';
 import PeaAvatar from '../PeaAvatar';
 import PeaIcon from '../PeaIcon';
 
+import TimeRangeCheckbox from './TimeRangeCheckbox';
+
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 import './PeaTimeRangeSelector.css';
 
-// TODO: remove momemnt dep
 const localizer = momentLocalizer(moment);
 
 // TODO: use array for selection not object
@@ -44,7 +36,7 @@ const localizer = momentLocalizer(moment);
 // TODO: fix ux issue
 // https://github.com/jquense/react-big-calendar/issues/1684
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles(() => {
   return {
     container: {
       minWidth: 500,
@@ -52,60 +44,8 @@ const useStyles = makeStyles(theme => {
       overflowY: 'scroll',
       scrollbarWidth: 'auto',
     },
-    warning: {
-      color: theme.palette.secondary.main,
-    },
-    error: {
-      color: theme.palette.error.main,
-    },
   };
 });
-
-// eslint-disable-next-line
-function renderCheckbox({
-  isChecked, // eslint-disable-line
-  isIndeterminate, // eslint-disable-line
-  isMaybe, // eslint-disable-line
-  isUnavailable, // eslint-disable-line
-  onChange, // eslint-disable-line
-  value, // eslint-disable-line
-}) {
-  // eslint-disable-next-line
-  const classes = useStyles();
-
-  let icon;
-  let colorClass;
-  let label = 'available';
-
-  if (isMaybe) {
-    icon = <HelpIcon />;
-    colorClass = classes.warning;
-    label = 'maybe';
-  } else if (isUnavailable) {
-    icon = <CancelIcon />;
-    colorClass = classes.error;
-    label = 'unavailable';
-  }
-
-  return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          classes={{
-            colorPrimary: colorClass,
-          }}
-          color="primary"
-          icon={icon}
-          checked={isChecked}
-          onChange={onChange}
-          name={value}
-          indeterminate={isIndeterminate}
-        />
-      }
-      label={label}
-    />
-  );
-}
 
 const PeaTimeRangeSelector = ({
   timeRangeOptions,
@@ -461,12 +401,12 @@ const PeaTimeRangeSelector = ({
     return (
       <>
         <div>{label}</div>
-        {renderCheckbox({
-          isChecked: isDayChecked(day),
-          isIndeterminate: isDayIndeterminate(day),
-          value: day,
-          onChange: () => toggleDay(day),
-        })}
+        <TimeRangeCheckbox
+          isChecked={isDayChecked(day)}
+          isIndeterminate={isDayIndeterminate(day)}
+          value={day}
+          onChange={() => toggleDay(day)}
+        />
       </>
     );
   }
@@ -514,13 +454,13 @@ const PeaTimeRangeSelector = ({
           </Box>
         )}
 
-        {renderCheckbox({
-          isMaybe,
-          isUnavailable,
-          isChecked: hasTimeRange(timeRange),
-          value: timeRange,
-          onChange: () => toggleTimeRange(timeRange),
-        })}
+        <TimeRangeCheckbox
+          isMaybe={isMaybe}
+          isUnavailable={isUnavailable}
+          isChecked={hasTimeRange(timeRange)}
+          value={timeRange}
+          onChange={() => toggleTimeRange(timeRange)}
+        />
       </>
     );
   }

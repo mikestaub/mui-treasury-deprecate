@@ -20,6 +20,8 @@ import {
   Tooltip,
   Badge,
 } from '@material-ui/core';
+import HelpIcon from '@material-ui/icons/Help';
+import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles } from '@material-ui/styles';
 import { Calendar, Views, momentLocalizer, Navigate } from 'react-big-calendar';
 
@@ -37,29 +39,12 @@ const localizer = momentLocalizer(moment);
 // TODO: use array for selection not object
 // TODO: don't delete our timeRanges when unchecked
 
+// TODO: add minDate and maxDate props ( event.startTime, event.endTime )
+
 // TODO: fix ux issue
 // https://github.com/jquense/react-big-calendar/issues/1684
 
-// eslint-disable-next-line
-function renderCheckbox({ isChecked, isIndeterminate, onChange, value }) {
-  return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          checked={isChecked}
-          onChange={onChange}
-          name={value}
-          indeterminate={isIndeterminate}
-        />
-      }
-      label="Available"
-    />
-  );
-}
-
-// TODO: handle MAYBE states for timeRangess
-
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles(theme => {
   return {
     container: {
       minWidth: 500,
@@ -67,8 +52,60 @@ const useStyles = makeStyles(() => {
       overflowY: 'scroll',
       scrollbarWidth: 'auto',
     },
+    warning: {
+      color: theme.palette.secondary.main,
+    },
+    error: {
+      color: theme.palette.error.main,
+    },
   };
 });
+
+// eslint-disable-next-line
+function renderCheckbox({
+  isChecked, // eslint-disable-line
+  isIndeterminate, // eslint-disable-line
+  isMaybe, // eslint-disable-line
+  isUnavailable, // eslint-disable-line
+  onChange, // eslint-disable-line
+  value, // eslint-disable-line
+}) {
+  // eslint-disable-next-line
+  const classes = useStyles();
+
+  let icon;
+  let colorClass;
+  let label = 'available';
+
+  if (isMaybe) {
+    icon = <HelpIcon />;
+    colorClass = classes.warning;
+    label = 'maybe';
+  } else if (isUnavailable) {
+    icon = <CancelIcon />;
+    colorClass = classes.error;
+    label = 'unavailable';
+  }
+
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          classes={{
+            colorPrimary: colorClass,
+          }}
+          color="primary"
+          icon={icon}
+          checked={isChecked}
+          onChange={onChange}
+          name={value}
+          indeterminate={isIndeterminate}
+        />
+      }
+      label={label}
+    />
+  );
+}
 
 const PeaTimeRangeSelector = ({
   timeRangeOptions,
@@ -107,7 +144,6 @@ const PeaTimeRangeSelector = ({
   }).map(option => ({
     ...option,
     ...option.timeRange,
-    // TODO: handle all day events?
   }));
 
   const optionKeyMap = groupBy(allOptions, option => {
@@ -118,7 +154,23 @@ const PeaTimeRangeSelector = ({
 
   const optionUsersMap = Object.keys(optionKeyMap).reduce((prev, next) => {
     // eslint-disable-next-line
-    prev[next] = uniq(optionKeyMap[next].map(o => o.userId));
+    prev[next] = uniq(
+      optionKeyMap[next]
+        .filter(
+          o => o.state !== 'MAYBE_AVAILABLE' && o.state !== 'NOT_AVAILABLE',
+        )
+        .map(o => o.userId),
+    );
+    return prev;
+  }, {});
+
+  const maybeOptionUsersMap = Object.keys(optionKeyMap).reduce((prev, next) => {
+    // eslint-disable-next-line
+    prev[next] = uniq(
+      optionKeyMap[next]
+        .filter(o => o.state === 'MAYBE_AVAILABLE')
+        .map(o => o.userId),
+    );
     return prev;
   }, {});
 
@@ -135,12 +187,31 @@ const PeaTimeRangeSelector = ({
     const key = `${start}_${end}`;
 
     const numUsers = optionUsersMap[key].length;
+    const numMaybeUsers = maybeOptionUsersMap[key].length;
+    const totalUsers = numUsers + numMaybeUsers;
+    const ratio = numUsers / numMaybeUsers;
 
-    const largerOptions = Object.values(optionUsersMap).filter(
-      arr => arr.length > numUsers,
-    );
+    const largerOptions = Object.keys(optionUsersMap).filter(k => {
+      const numUsers2 = optionUsersMap[k].length;
+      const numMaybeUsers2 = maybeOptionUsersMap[k].length;
+      const totalUsers2 = numUsers2 + numMaybeUsers2;
+      const ratio2 = numUsers2 / numMaybeUsers2;
+      return (
+        totalUsers2 > totalUsers ||
+        (totalUsers2 === totalUsers && ratio2 > ratio)
+      );
+    });
 
     return largerOptions.length === 0;
+  };
+
+  const hasMaybes = day => {
+    const maybes = selection.filter(option => {
+      return (
+        option.state === 'MAYBE_AVAILABLE' && option.timeRange.start >= day
+      );
+    });
+    return !!maybes.length;
   };
 
   const isDayChecked = day => {
@@ -158,7 +229,7 @@ const PeaTimeRangeSelector = ({
       return false;
     }
 
-    return !isDayChecked(day) && some(Object.values(map));
+    return !isDayChecked(day) && (some(Object.values(map)) || hasMaybes(day));
   };
 
   function toggleTimeRange(timeRange) {
@@ -175,20 +246,27 @@ const PeaTimeRangeSelector = ({
 
     let newSelection;
     if (foundTimeRange) {
-      newSelection = selection.filter(option => {
-        // eslint-disable-next-line
-        const { start, end } = option.timeRange;
-        const timeRangeKey = `${start}_${end}`;
+      if (foundTimeRange.state === 'AVAILABLE') {
+        foundTimeRange.state = 'MAYBE_AVAILABLE';
+        newSelection = [...selection];
+      } else if (foundTimeRange.state === 'MAYBE_AVAILABLE') {
+        foundTimeRange.state = 'NOT_AVAILABLE';
+        newSelection = [...selection];
+      } else {
+        newSelection = selection.filter(option => {
+          // eslint-disable-next-line
+          const { start, end } = option.timeRange;
+          const timeRangeKey = `${start}_${end}`;
 
-        return key !== timeRangeKey;
-      });
+          return key !== timeRangeKey;
+        });
+      }
     } else {
       newSelection = [
         ...selection,
         {
           timeRange,
           userId,
-          // TODO: handle MAYBE state
           state: 'AVAILABLE',
         },
       ];
@@ -216,27 +294,24 @@ const PeaTimeRangeSelector = ({
     let newSelection;
 
     if (!isCheck) {
-      newSelection = uniqBy(
-        [
-          ...selection,
-          ...Object.keys(map).map(key => {
-            const [start, end] = key.split('_');
-            return {
-              timeRange: {
-                start,
-                end,
-              },
-              userId,
-              state: 'AVAILABLE',
-            };
-          }),
-        ],
-        option => {
-          const { start, end } = option.timeRange;
+      newSelection = [
+        ...selection.filter(o => {
+          const { start, end } = o.timeRange;
           const key = `${start}_${end}`;
-          return key;
-        },
-      );
+          return !Object.keys(map).includes(key);
+        }),
+        ...Object.keys(map).map(key => {
+          const [start, end] = key.split('_');
+          return {
+            timeRange: {
+              start,
+              end,
+            },
+            userId,
+            state: 'AVAILABLE',
+          };
+        }),
+      ];
     } else {
       newSelection = selection.filter(option => {
         const { start, end } = option.timeRange;
@@ -402,6 +477,17 @@ const PeaTimeRangeSelector = ({
     const { timeRange } = event;
     // eslint-disable-next-line
     const { start, end } = timeRange;
+    const key = `${start}_${end}`;
+
+    const [foundTimeRange] = selection.filter(option => {
+      // eslint-disable-next-line
+      const { start, end } = option.timeRange;
+      const timeRangeKey = `${start}_${end}`;
+
+      return key === timeRangeKey;
+    });
+    const isMaybe = foundTimeRange?.state === 'MAYBE_AVAILABLE';
+    const isUnavailable = foundTimeRange?.state === 'NOT_AVAILABLE';
 
     let timeString = label;
     // eslint-disable-next-line
@@ -429,6 +515,8 @@ const PeaTimeRangeSelector = ({
         )}
 
         {renderCheckbox({
+          isMaybe,
+          isUnavailable,
           isChecked: hasTimeRange(timeRange),
           value: timeRange,
           onChange: () => toggleTimeRange(timeRange),
@@ -464,33 +552,39 @@ const PeaTimeRangeSelector = ({
 
     return (
       <Grid container spacing={1}>
-        {peas.map(pea => (
-          <Grid item key={pea.id}>
-            <Tooltip title={pea.name} arrow>
-              <Badge
-                overlap="circle"
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'right',
-                }}
-                badgeContent={
-                  pea.state === 'MAYBE' ? (
-                    <Box
-                    // TODO: add border
-                    // style={{
-                    //   border: '2px solid white',
-                    // }}
-                    >
-                      <PeaIcon icon="help" shape="circular" color="secondary" />
-                    </Box>
-                  ) : null
-                }
-              >
-                <PeaAvatar alt={pea.name} src={pea.src} size="big" />
-              </Badge>
-            </Tooltip>
-          </Grid>
-        ))}
+        {peas.map(pea => {
+          let badge;
+          let color = 'secondary';
+          if (pea.state === 'MAYBE_AVAILABLE') {
+            badge = 'help';
+          } else if (pea.state === 'NOT_AVAILABLE') {
+            badge = 'cancel';
+            color = 'error';
+          }
+
+          return (
+            <Grid item key={pea.id}>
+              <Tooltip title={pea.name} arrow>
+                <Badge
+                  overlap="circle"
+                  anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                  }}
+                  badgeContent={
+                    badge ? (
+                      <Box>
+                        <PeaIcon icon={badge} shape="circular" color={color} />
+                      </Box>
+                    ) : null
+                  }
+                >
+                  <PeaAvatar alt={pea.name} src={pea.src} size="big" />
+                </Badge>
+              </Tooltip>
+            </Grid>
+          );
+        })}
       </Grid>
     );
   }

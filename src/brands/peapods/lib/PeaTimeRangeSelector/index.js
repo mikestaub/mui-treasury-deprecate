@@ -25,9 +25,9 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { makeStyles } from '@material-ui/styles';
 import { Calendar, Views, momentLocalizer, Navigate } from 'react-big-calendar';
 
-import PeaButton from './PeaButton';
-import PeaAvatar from './PeaAvatar';
-import PeaIcon from './PeaIcon';
+import PeaButton from '../PeaButton';
+import PeaAvatar from '../PeaAvatar';
+import PeaIcon from '../PeaIcon';
 
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 

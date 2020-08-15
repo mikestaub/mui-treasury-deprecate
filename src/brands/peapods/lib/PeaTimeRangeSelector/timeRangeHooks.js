@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import {
   every,
   some,
@@ -28,15 +28,61 @@ const useTimeRangeHooks = ({
   const [isEditMode, setIsEditMode] = useState(false);
   const [localTimeRanges, setLocalTimeRanges] = useState(selection);
   const [viewingDate, setViewingDate] = useState(new Date());
-  const [timeRangeMap, setTimeRangeMap] = useState({});
-  const [dayMap, setDayMap] = useState({});
+
+  const selectedOptions = selection.reduce((prev, option) => {
+    const { start, end } = option.timeRange;
+    const key = `${start}_${end}`;
+    // eslint-disable-next-line
+    prev[key] = option.state;
+    return prev;
+  }, {});
+
+  const now = new Date();
+
+  const hasTimeRange = useCallback(
+    ({ start, end }) => {
+      const key = `${start}_${end}`;
+      return selectedOptions[key] === 'AVAILABLE';
+    },
+    [selectedOptions],
+  );
+
+  const timeRangeMap = timeRangeOptions.reduce((prev, next) => {
+    const { start, end } = next.timeRange;
+    const key = `${start}_${end}`;
+    if (start > now) {
+      // eslint-disable-next-line
+      prev[key] = true;
+    }
+    return prev;
+  }, {});
+
+  const dayMap = Object.keys(timeRangeMap).reduce((prev, next) => {
+    const timeRange = {
+      start: new Date(next.split('_')[0]),
+      end: new Date(next.split('_')[1]),
+    };
+
+    const day = timeRange.start;
+    const normalizedDay = new Date(day);
+    normalizedDay.setHours(0, 0, 0, 0);
+
+    const dayKey = normalizedDay;
+
+    // eslint-disable-next-line
+    prev[dayKey] = {
+      ...prev[dayKey],
+      [next]: hasTimeRange(timeRange),
+    };
+
+    return prev;
+  }, {});
 
   const allOptions = [
     ...timeRangeOptions,
     ...localTimeRanges,
     ...selection,
   ].filter(option => {
-    const now = new Date();
     return option.timeRange.start > now;
   });
 
@@ -77,14 +123,6 @@ const useTimeRangeHooks = ({
         .filter(o => o.state === 'MAYBE_AVAILABLE')
         .map(o => o.userId),
     );
-    return prev;
-  }, {});
-
-  const selectedOptions = selection.reduce((prev, option) => {
-    const { start, end } = option.timeRange;
-    const key = `${start}_${end}`;
-    // eslint-disable-next-line
-    prev[key] = option.state;
     return prev;
   }, {});
 
@@ -180,20 +218,14 @@ const useTimeRangeHooks = ({
   }
 
   function toggleDay(day) {
-    const map = dayMap[day];
+    const normalizedDay = new Date(day);
+    normalizedDay.setHours(0, 0, 0, 0);
+
+    const map = dayMap[normalizedDay];
     if (!map) {
       return false;
     }
-    const isCheck = isDayChecked(day);
-    const isIndeterminate = isDayIndeterminate(day);
-
-    const subValues = !isCheck || isIndeterminate;
-
-    const newTimeRangeMap = Object.keys(map).reduce((prev, next) => {
-      // eslint-disable-next-line
-      prev[next] = subValues;
-      return prev;
-    }, {});
+    const isCheck = isDayChecked(normalizedDay);
 
     let newSelection;
 
@@ -225,64 +257,10 @@ const useTimeRangeHooks = ({
     }
 
     setLocalTimeRanges([]);
-    setTimeRangeMap(newTimeRangeMap);
     onChange(newSelection);
 
     return true;
   }
-
-  const hasTimeRange = useCallback(
-    ({ start, end }) => {
-      const key = `${start}_${end}`;
-      return selectedOptions[key] === 'AVAILABLE';
-    },
-    [selectedOptions],
-  );
-
-  const onTimeRangeOptionsChanged = () => {
-    if (!timeRangeOptions?.length) {
-      return;
-    }
-
-    const now = new Date();
-
-    const newMap = timeRangeOptions.reduce((prev, next) => {
-      const { start, end } = next.timeRange;
-      const key = `${start}_${end}`;
-      if (start > now) {
-        // eslint-disable-next-line
-        prev[key] = true;
-      }
-      return prev;
-    }, {});
-
-    setTimeRangeMap(newMap);
-  };
-
-  const onTimeRangeMapChanges = () => {
-    const newMap = Object.keys(timeRangeMap).reduce((prev, next) => {
-      const timeRange = {
-        start: new Date(next.split('_')[0]),
-        end: new Date(next.split('_')[1]),
-      };
-
-      const day = timeRange.start;
-      const normalizedDay = new Date(day);
-      normalizedDay.setHours(0, 0, 0, 0);
-
-      const dayKey = normalizedDay;
-
-      // eslint-disable-next-line
-      prev[dayKey] = {
-        ...prev[dayKey],
-        [next]: hasTimeRange(timeRange),
-      };
-
-      return prev;
-    }, {});
-
-    setDayMap(newMap);
-  };
 
   const onCancelEditTimeRanges = () => {
     if (isEditMode) {
@@ -348,9 +326,6 @@ const useTimeRangeHooks = ({
     },
     [viewingDate],
   );
-
-  useEffect(onTimeRangeMapChanges, [timeRangeMap]);
-  useEffect(onTimeRangeOptionsChanged, [timeRangeOptions]);
 
   return {
     events,

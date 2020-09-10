@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/forbid-prop-types, react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField/TextField';
@@ -39,6 +39,7 @@ const PeaGroupDialog = ({
     content={
       <>
         <TextField
+          id="group-dialog-name"
           required
           fullWidth
           margin={'normal'}
@@ -82,6 +83,7 @@ const PeaGroupDialog = ({
         </FormControl>
 
         <TextField
+          id="group-dialog-description"
           fullWidth
           margin={'normal'}
           label={'Description'}
@@ -102,6 +104,7 @@ const PeaGroupDialog = ({
     actions={[
       <PeaButton onClick={onClose}>Cancel</PeaButton>,
       <PeaButton
+        id="group-dialog-create"
         color={'primary'}
         variant={'contained'}
         disabled={loading}

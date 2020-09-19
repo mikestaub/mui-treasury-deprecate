@@ -7,11 +7,13 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Box from '@material-ui/core/Box';
+import Grid from '@material-ui/core/Grid';
 
 import PeaDialog from './PeaDialog';
 import PeaButton from './PeaButton';
 import PeaLoadingSpinner from './PeaLoadingSpinner';
 import PeaIcon from './PeaIcon';
+import PeaSocialAvatar from './PeaSocialAvatar';
 
 // TODO: render group members
 
@@ -25,6 +27,8 @@ const PeaGroupDialog = ({
   typeInput,
   tagsInput,
   profilePhoto,
+  members,
+  submitting,
   loading,
   onChangeCoverPhotoClicked,
   onChange,
@@ -38,6 +42,49 @@ const PeaGroupDialog = ({
     titleVariant={'secondaryCentered'}
     content={
       <>
+        <FormLabel component="legend">Cover Picture</FormLabel>
+
+        <Box
+          style={{
+            marginTop: 16,
+            marginBottom: 16,
+          }}
+        >
+          <CardMedia
+            className={'MuiCardMedia-root'}
+            image={profilePhoto}
+            style={profilePhoto && { border: 'none' }}
+            onClick={onChangeCoverPhotoClicked}
+          >
+            <ButtonBase className={'PeaGroup-coverImgBtn'}>
+              <PeaIcon
+                inverted
+                icon={'add'}
+                shape={'square'}
+                style={{ fontSize: 100 }}
+              />
+            </ButtonBase>
+          </CardMedia>
+        </Box>
+
+        {inviteInput}
+
+        {members && members.length > 0 && (
+          <Grid item>
+            <FormLabel component="legend">Members</FormLabel>
+            <Grid container>
+              {members.map(member => (
+                <Grid item key={member.id}>
+                  <PeaSocialAvatar
+                    name={member.name}
+                    src={member.profilePhoto}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Grid>
+        )}
+
         <TextField
           required
           fullWidth
@@ -133,6 +180,8 @@ PeaGroupDialog.propTypes = {
   tagsInput: PropTypes.node.isRequired,
   typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
+  members: PropTypes.arrayOf(PropTypes.object),
+  submitting: PropTypes.bool,
   loading: PropTypes.bool,
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
@@ -146,6 +195,7 @@ PeaGroupDialog.defaultProps = {
   loading: false,
   description: '',
   profilePhoto: undefined,
+  members: undefined,
   onChangeCoverPhotoClicked: () => {},
 };
 

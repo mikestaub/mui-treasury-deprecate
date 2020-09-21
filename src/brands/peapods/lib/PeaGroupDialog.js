@@ -26,6 +26,7 @@ const PeaGroupDialog = ({
   tagsInput,
   profilePhoto,
   loading,
+  isValid,
   onChangeCoverPhotoClicked,
   onChange,
   onClose,
@@ -104,7 +105,7 @@ const PeaGroupDialog = ({
       <PeaButton
         color={'primary'}
         variant={'contained'}
-        disabled={loading}
+        disabled={loading || !isValid}
         onClick={onSave}
       >
         {loading ? (
@@ -134,6 +135,7 @@ PeaGroupDialog.propTypes = {
   typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
   loading: PropTypes.bool,
+  isValid: PropTypes.bool,
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -144,6 +146,7 @@ PeaGroupDialog.defaultProps = {
   dialogTitle: 'Create Group',
   actionText: 'Create',
   loading: false,
+  isValid: false,
   description: '',
   profilePhoto: undefined,
   onChangeCoverPhotoClicked: () => {},

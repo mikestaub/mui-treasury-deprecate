@@ -30,6 +30,7 @@ const PeaNotificationItem = ({
   needGroups,
   isFollowing,
   requestApproved,
+  requestDenied,
 }) => {
   const count = Array.isArray(src) ? src.length : 0;
   const avatarSrc = Array.isArray(src) ? src[0] : src;
@@ -48,8 +49,6 @@ const PeaNotificationItem = ({
   }, [followAnchorEl, needGroups, setOpenFollowPopover, openFollowPopover]);
 
   const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
-
-  const requestDenied = !unread && !requestApproved;
 
   const acceptText = requestApproved ? 'Approved' : 'Accept';
   const denyText = requestDenied ? 'Denied' : 'Deny';
@@ -233,6 +232,7 @@ PeaNotificationItem.propTypes = {
   onCreateGroupClicked: PropTypes.func,
   needGroups: PropTypes.bool,
   requestApproved: PropTypes.bool,
+  requestDenied: PropTypes.bool,
   isFollowing: PropTypes.bool,
 };
 
@@ -245,6 +245,7 @@ PeaNotificationItem.defaultProps = {
   followableGroups: [],
   needGroups: false,
   requestApproved: false,
+  requestDenied: false,
   isFollowing: false,
 };
 

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'clsx';
@@ -144,6 +145,7 @@ const PeaCategoryToggle = withStyles(styles, { name: 'PeaCategoryToggle' })(
         <FormControlLabel
           control={
             <Checkbox
+              id={`event-category-${label.toLowerCase()}-toggle`}
               color={'primary'}
               {...CheckboxProps}
               checked={checked}

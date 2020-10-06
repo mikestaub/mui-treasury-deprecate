@@ -116,7 +116,7 @@ const PeaGroupCard = ({
       <Divider variant={'middle'} />
 
       {onDelete && (
-        <MenuItem onClick={onDeleteClicked}>
+        <MenuItem id="group-delete-option" onClick={onDeleteClicked}>
           <ListItemText disableTypography>
             <PeaText color={'error'} variant={'body1'} weight={'bold'}>
               Delete
@@ -182,6 +182,7 @@ const PeaGroupCard = ({
                 </PeaButton>
 
                 <PeaButton
+                  id={`${name.replace(/\s/g, '')}-more-options`}
                   shape={'circular'}
                   icon={'more_vert'}
                   size={'small'}

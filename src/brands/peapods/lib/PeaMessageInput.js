@@ -134,6 +134,7 @@ const PeaMessageInput = ({
 
       <Grid item classes={{ item: classes.flex }} container>
         <Input
+          id="message-input"
           fullWidth
           disableUnderline
           classes={{ root: classes.inputRoot }}

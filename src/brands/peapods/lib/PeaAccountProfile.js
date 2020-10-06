@@ -134,10 +134,10 @@ const PeaAccountProfile = ({
   const groupsRef = useRef();
 
   const tabs = [
-    { ref: hostingRef, label: 'Hosting' },
-    { ref: podsRef, label: 'Pods' },
-    { ref: aboutRef, label: 'About' },
-    { ref: groupsRef, label: 'Groups' },
+    { id: 'profile-tab-hosting', ref: hostingRef, label: 'Hosting' },
+    { id: 'profile-tab-pods', ref: podsRef, label: 'Pods' },
+    { id: 'profile-tab-about', ref: aboutRef, label: 'About' },
+    { id: 'profile-tab-groups', ref: groupsRef, label: 'Groups' },
   ];
 
   const isFollower = followerState === 'FOLLOWING';

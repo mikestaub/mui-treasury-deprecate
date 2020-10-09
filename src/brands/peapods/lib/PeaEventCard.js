@@ -282,7 +282,7 @@ const PeaEventCard = ({
               text={createPodText}
               onClick={onCreatePodClicked}
             />
-            <Details onClick={onShowDetailsClicked} />
+            <Details id='event-card-details' onClick={onShowDetailsClicked} />
           </>
         }
       />

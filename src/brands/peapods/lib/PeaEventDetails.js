@@ -294,7 +294,7 @@ const PeaEventDetails = ({
       </MenuItem>
 
       {onEditEventClicked && (
-        <MenuItem onClick={() => editEvent()}>
+        <MenuItem id='event-details-edit' onClick={() => editEvent()}>
           <ListItemText disableTypography>
             <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
               Edit Event
@@ -394,6 +394,7 @@ const PeaEventDetails = ({
                 </PeaButton>
 
                 <PeaButton
+                  id='event-details-more'
                   shape={'circular'}
                   icon={'more_vert'}
                   size={'small'}

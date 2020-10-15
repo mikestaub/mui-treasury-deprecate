@@ -277,11 +277,12 @@ const PeaEventCard = ({
             </Popover>
 
             <CreatePod
+              id='event-card-create-pod'
               isLoading={isLoading}
               text={createPodText}
               onClick={onCreatePodClicked}
             />
-            <Details onClick={onShowDetailsClicked} />
+            <Details id='event-card-details' onClick={onShowDetailsClicked} />
           </>
         }
       />

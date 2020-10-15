@@ -24,6 +24,7 @@ const PeaConfirmation = ({
     onClose={onClose}
     actions={[
       <PeaButton
+        id="dialog-confirm"
         elongated
         color={'danger'}
         size={'big'}

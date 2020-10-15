@@ -88,6 +88,7 @@ const PeaPodCard = ({
                 <Grid container spacing={1}>
                   <Grid item>
                     <PeaButton
+                      id="leave-pod-button"
                       variant={'contained'}
                       color={'primary'}
                       size="small"

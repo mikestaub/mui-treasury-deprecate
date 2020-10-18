@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     position: 'sticky',
     top: 0,
     width: '100%',
-    zIndex: 1000,
+    zIndex: 10,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .5s',

@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 10px',
     position: 'sticky',
     top: 0,
-    zIndex: 1000,
+    zIndex: 10,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .2s',
@@ -294,7 +294,7 @@ const PeaEventDetails = ({
       </MenuItem>
 
       {onEditEventClicked && (
-        <MenuItem id='event-details-edit' onClick={() => editEvent()}>
+        <MenuItem id="event-details-edit" onClick={() => editEvent()}>
           <ListItemText disableTypography>
             <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
               Edit Event
@@ -394,7 +394,7 @@ const PeaEventDetails = ({
                 </PeaButton>
 
                 <PeaButton
-                  id='event-details-more'
+                  id="event-details-more"
                   shape={'circular'}
                   icon={'more_vert'}
                   size={'small'}

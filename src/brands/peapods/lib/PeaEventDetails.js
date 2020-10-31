@@ -66,59 +66,66 @@ const renderAboutDetails = ({
   attendingCount,
   interestedCount,
   limit,
-}) => [
-  {
-    key: '0',
-    icon: (
-      <img
-        alt="event-host"
-        src={profile.image}
-        style={{ width: '100%', height: '100%' }}
-      />
-    ),
-    renderText: () => (
-      <span>
-        Hosted by{' '}
-        <Link target="_blank" href={profile.link}>
-          {profile.name}
-        </Link>
-      </span>
-    ),
-  },
-  {
-    key: '1',
-    icon: 'fas fa-calendar-alt',
-    text: timeString,
-  },
-  {
-    key: '2',
-    icon: 'location_on',
-    renderText: () => {
-      // eslint-disable-next-line max-len
-      const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
-      return (
-        <Link href={mapDirectionsUrl} target="blank" rel="noopener">
-          {location}
-        </Link>
-      );
+}) => {
+  const list = [
+    {
+      key: '0',
+      icon: (
+        <img
+          alt="event-host"
+          src={profile.image}
+          style={{ width: '100%', height: '100%' }}
+        />
+      ),
+      renderText: () => (
+        <span>
+          Hosted by{' '}
+          <Link target="_blank" href={profile.link}>
+            {profile.name}
+          </Link>
+        </span>
+      ),
     },
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    renderText: () => (
-      <>
-        {!!limit && (
-          <span>
-            limit <b>{limit} - </b>
-          </span>
-        )}
-        <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
-        <b>{interestedCount}</b> interested
-      </>
-    ),
-  },
-];
+    {
+      key: '1',
+      icon: 'fas fa-calendar-alt',
+      text: timeString,
+    },
+    {
+      key: '3',
+      icon: 'fas fa-users',
+      renderText: () => (
+        <>
+          {!!limit && (
+            <span>
+              limit <b>{limit} - </b>
+            </span>
+          )}
+          <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
+          <b>{interestedCount}</b> interested
+        </>
+      ),
+    },
+  ];
+
+  if (location) {
+    list.push({
+      key: '2',
+      icon: 'location_on',
+      renderText: () => {
+        // eslint-disable-next-line max-len
+        const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
+        return (
+          <Link href={mapDirectionsUrl} target="blank" rel="noopener">
+            {location}
+          </Link>
+        );
+      },
+    });
+  }
+
+  return list;
+};
 
 const PeaEventDetails = ({
   id,

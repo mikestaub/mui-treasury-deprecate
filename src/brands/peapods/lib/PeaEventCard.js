@@ -25,34 +25,41 @@ const createList = ({
   attendingCount,
   interestedCount,
   limit,
-}) => [
-  {
-    key: '1',
-    icon: 'fas fa-calendar-alt',
-    text: timeString,
-  },
-  {
-    key: '2',
-    icon: 'location_on',
-    text: location,
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    text:
-      attendingCount && interestedCount ? (
-        <React.Fragment>
-          {!!limit && (
-            <span>
-              limit <b>{limit} - </b>
-            </span>
-          )}
-          {podCount} pod{podCount > 1 ? 's' : ''}, {attendingCount} going,{' '}
-          {interestedCount} interested
-        </React.Fragment>
-      ) : null,
-  },
-];
+}) => {
+  const list = [
+    {
+      key: '1',
+      icon: 'fas fa-calendar-alt',
+      text: timeString,
+    },
+    {
+      key: '3',
+      icon: 'fas fa-users',
+      text:
+        attendingCount && interestedCount ? (
+          <React.Fragment>
+            {!!limit && (
+              <span>
+                limit <b>{limit} - </b>
+              </span>
+            )}
+            {podCount} pod{podCount > 1 ? 's' : ''}, {attendingCount} going,{' '}
+            {interestedCount} interested
+          </React.Fragment>
+        ) : null,
+    },
+  ];
+
+  if (location) {
+    list.push({
+      key: '2',
+      icon: 'location_on',
+      text: location,
+    });
+  }
+
+  return list;
+};
 
 const Details = props => (
   <PeaButton
@@ -277,12 +284,12 @@ const PeaEventCard = ({
             </Popover>
 
             <CreatePod
-              id='event-card-create-pod'
+              id="event-card-create-pod"
               isLoading={isLoading}
               text={createPodText}
               onClick={onCreatePodClicked}
             />
-            <Details id='event-card-details' onClick={onShowDetailsClicked} />
+            <Details id="event-card-details" onClick={onShowDetailsClicked} />
           </>
         }
       />

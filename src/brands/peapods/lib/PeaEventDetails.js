@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 10px',
     position: 'sticky',
     top: 0,
-    zIndex: 1000,
+    zIndex: 10,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .2s',
@@ -66,59 +66,66 @@ const renderAboutDetails = ({
   attendingCount,
   interestedCount,
   limit,
-}) => [
-  {
-    key: '0',
-    icon: (
-      <img
-        alt="event-host"
-        src={profile.image}
-        style={{ width: '100%', height: '100%' }}
-      />
-    ),
-    renderText: () => (
-      <span>
-        Hosted by{' '}
-        <Link target="_blank" href={profile.link}>
-          {profile.name}
-        </Link>
-      </span>
-    ),
-  },
-  {
-    key: '1',
-    icon: 'fas fa-calendar-alt',
-    text: timeString,
-  },
-  {
-    key: '2',
-    icon: 'location_on',
-    renderText: () => {
-      // eslint-disable-next-line max-len
-      const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
-      return (
-        <Link href={mapDirectionsUrl} target="blank" rel="noopener">
-          {location}
-        </Link>
-      );
+}) => {
+  const list = [
+    {
+      key: '0',
+      icon: (
+        <img
+          alt="event-host"
+          src={profile.image}
+          style={{ width: '100%', height: '100%' }}
+        />
+      ),
+      renderText: () => (
+        <span>
+          Hosted by{' '}
+          <Link target="_blank" href={profile.link}>
+            {profile.name}
+          </Link>
+        </span>
+      ),
     },
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    renderText: () => (
-      <>
-        {!!limit && (
-          <span>
-            limit <b>{limit} - </b>
-          </span>
-        )}
-        <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
-        <b>{interestedCount}</b> interested
-      </>
-    ),
-  },
-];
+    {
+      key: '1',
+      icon: 'fas fa-calendar-alt',
+      text: timeString,
+    },
+    {
+      key: '3',
+      icon: 'fas fa-users',
+      renderText: () => (
+        <>
+          {!!limit && (
+            <span>
+              limit <b>{limit} - </b>
+            </span>
+          )}
+          <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
+          <b>{interestedCount}</b> interested
+        </>
+      ),
+    },
+  ];
+
+  if (location) {
+    list.push({
+      key: '2',
+      icon: 'location_on',
+      renderText: () => {
+        // eslint-disable-next-line max-len
+        const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
+        return (
+          <Link href={mapDirectionsUrl} target="blank" rel="noopener">
+            {location}
+          </Link>
+        );
+      },
+    });
+  }
+
+  return list;
+};
 
 const PeaEventDetails = ({
   id,
@@ -294,7 +301,7 @@ const PeaEventDetails = ({
       </MenuItem>
 
       {onEditEventClicked && (
-        <MenuItem id='event-details-edit' onClick={() => editEvent()}>
+        <MenuItem id="event-details-edit" onClick={() => editEvent()}>
           <ListItemText disableTypography>
             <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
               Edit Event
@@ -394,7 +401,7 @@ const PeaEventDetails = ({
                 </PeaButton>
 
                 <PeaButton
-                  id='event-details-more'
+                  id="event-details-more"
                   shape={'circular'}
                   icon={'more_vert'}
                   size={'small'}

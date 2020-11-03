@@ -314,6 +314,7 @@ const PeaEventDetails = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={'PeaGroupProfile-root'}
       onScroll={onScroll}
       ref={scrollRef}
@@ -430,6 +431,7 @@ const PeaEventDetails = ({
         activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
+        hasPadding={!isMobile}
         onTabChange={handleTabChanged}
         stickyOffset={scrollHeaderHeight}
         customStyle={{

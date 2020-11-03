@@ -47,6 +47,7 @@ const PeaGroupProfile = ({
       tabIndex={activeTabIndex}
       tabs={tabs}
       enableFeedback={isMobile}
+      hasPadding={!isMobile}
       onTabChange={onTabChange}
       stickyOffset={50}
       {...props}

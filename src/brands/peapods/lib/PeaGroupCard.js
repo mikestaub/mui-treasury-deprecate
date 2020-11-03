@@ -24,6 +24,7 @@ import PeaIcon from './PeaIcon';
 import PeaText from './PeaTypography';
 
 const PeaGroupCard = ({
+  isMobile,
   isMember,
   isLoading,
   name,
@@ -139,6 +140,7 @@ const PeaGroupCard = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={
         hasBorderRadius ? 'PeaGroupProfile-root' : 'PeaProfileCard-root'
       }

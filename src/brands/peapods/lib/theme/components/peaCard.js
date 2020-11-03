@@ -11,9 +11,12 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
-      maxWidth: 500,
       marginLeft: 'auto',
       marginRight: 'auto',
+      marginBottom: 40,
+      [breakpoints.up('sm')]: {
+        maxWidth: 500,
+      },
       '&.PeaEventCardSmall-root': {
         transition: '0.3s',
         margin: 'auto',

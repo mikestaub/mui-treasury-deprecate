@@ -372,6 +372,7 @@ const PeaAccountProfile = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={'PeaAccountProfile-root'}
       onScroll={onScroll}
       ref={scrollRef}
@@ -591,6 +592,7 @@ const PeaAccountProfile = ({
         activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
+        hasPadding={!isMobile}
         onTabChange={handleTabChanged}
         customStyle={{ paddingTop: 50 }}
       >

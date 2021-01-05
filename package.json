@@ -38,7 +38,7 @@
     "@material-ui/pickers": "^3.2.10",
     "@material-ui/styles": "^4.10.0",
     "@material-ui/system": "^4.9.14",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "clsx": "^1.0.4",
     "color": "^3.1.2",

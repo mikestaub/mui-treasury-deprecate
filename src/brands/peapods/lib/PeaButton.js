@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import cx from 'clsx';
 import MuiButton from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import Tooltip from '@material-ui/core/Tooltip';
+
 import Icon from './PeaIcon';
 
 const getLoaderSize = size => {
@@ -46,6 +48,7 @@ const PeaButton = ({
   iconPosition,
   children,
   loaderProps,
+  tooltip,
   ...props
 }) => {
   const iconComponent =
@@ -53,49 +56,52 @@ const PeaButton = ({
   const loaderSize = getLoaderSize(size);
   const renderChildren = () =>
     icon ? <span className={'MuiButton-span'}>{children}</span> : children;
+
   return (
-    <MuiButton
-      classes={{
-        root: cx('MuiButton-root', classes.root),
-        label: cx(
-          'MuiButton-label',
-          iconIsolated && '-icon-isolated',
-          classes.label,
-        ),
-        disabled: cx('MuiButton-disabled', classes.disabled),
-      }}
-      className={cx(
-        className,
-        inverted && '-inverted',
-        loading && '-loading',
-        elongated && '-elongated',
-        color && `-color-${color}`,
-        size && `-size-${size}`,
-        shape && `-shape-${shape}`,
-        labelExpanded && '-labelExpanded',
-        mobileFullWidth && '-mobileFullWidth',
-        shadowless && '-shadowless',
-        compact && '-compact',
-      )}
-      color={injectColor(color)}
-      {...props}
-    >
-      {loading && (
-        <CircularProgress
-          thickness={6}
-          {...loaderProps}
-          size={loaderSize}
-          style={{
-            marginLeft: -loaderSize / 2,
-            marginTop: -loaderSize / 2,
-          }}
-          className={'MuiButton-loader'}
-        />
-      )}
-      {icon && iconPosition === 'start' && iconComponent}
-      {renderChildren()}
-      {icon && iconPosition === 'end' && iconComponent}
-    </MuiButton>
+    <Tooltip title={tooltip} arrow>
+      <MuiButton
+        classes={{
+          root: cx('MuiButton-root', classes.root),
+          label: cx(
+            'MuiButton-label',
+            iconIsolated && '-icon-isolated',
+            classes.label,
+          ),
+          disabled: cx('MuiButton-disabled', classes.disabled),
+        }}
+        className={cx(
+          className,
+          inverted && '-inverted',
+          loading && '-loading',
+          elongated && '-elongated',
+          color && `-color-${color}`,
+          size && `-size-${size}`,
+          shape && `-shape-${shape}`,
+          labelExpanded && '-labelExpanded',
+          mobileFullWidth && '-mobileFullWidth',
+          shadowless && '-shadowless',
+          compact && '-compact',
+        )}
+        color={injectColor(color)}
+        {...props}
+      >
+        {loading && (
+          <CircularProgress
+            thickness={6}
+            {...loaderProps}
+            size={loaderSize}
+            style={{
+              marginLeft: -loaderSize / 2,
+              marginTop: -loaderSize / 2,
+            }}
+            className={'MuiButton-loader'}
+          />
+        )}
+        {icon && iconPosition === 'start' && iconComponent}
+        {renderChildren()}
+        {icon && iconPosition === 'end' && iconComponent}
+      </MuiButton>
+    </Tooltip>
   );
 };
 
@@ -115,6 +121,7 @@ PeaButton.propTypes = {
     'danger',
   ]),
   compact: PropTypes.bool,
+  tooltip: PropTypes.string,
   inverted: PropTypes.bool,
   loading: PropTypes.bool,
   elongated: PropTypes.bool,
@@ -136,6 +143,7 @@ PeaButton.defaultProps = {
   classes: {},
   color: 'default',
   compact: false,
+  tooltip: '',
   inverted: false,
   loading: false,
   elongated: false,

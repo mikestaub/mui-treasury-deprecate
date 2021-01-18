@@ -90,6 +90,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         '& > .MuiCardContent-root': {
           textAlign: 'left',
           padding: spacing(2),
+          borderRadius: spacing(2),
         },
         '&  span.MuiCardHeader-title': {
           fontWeight: 'bold',

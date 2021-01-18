@@ -24,9 +24,6 @@ const useStyles = makeStyles(theme => ({
     overflowY: 'auto',
     marginBottom: theme.spacing(2),
   },
-  followButton: {
-    width: 160,
-  },
   createGroupButton: {
     width: 200,
   },
@@ -122,7 +119,6 @@ const PeaGroupSelector = ({
 
         <Grid item>
           <PeaButton
-            className={classes.followButton}
             disabled={followDisabled}
             variant={'contained'}
             color={'primary'}

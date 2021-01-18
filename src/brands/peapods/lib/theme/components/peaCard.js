@@ -11,9 +11,12 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
       display: 'flex',
       flexDirection: 'column',
       width: '100%',
-      maxWidth: 500,
       marginLeft: 'auto',
       marginRight: 'auto',
+      marginBottom: 40,
+      [breakpoints.up('sm')]: {
+        maxWidth: 500,
+      },
       '&.PeaEventCardSmall-root': {
         transition: '0.3s',
         margin: 'auto',
@@ -87,6 +90,7 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
         '& > .MuiCardContent-root': {
           textAlign: 'left',
           padding: spacing(2),
+          borderRadius: spacing(2),
         },
         '&  span.MuiCardHeader-title': {
           fontWeight: 'bold',
@@ -203,27 +207,20 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           },
         },
         '& .MuiAvatar-root-profilePic': {
-          width: 84,
-          height: 84,
+          position: 'absolute',
+          width: 104,
+          height: 104,
           alignItems: 'center',
           transform: 'translateY(-60%)',
-          left: 0,
+          left: spacing(2),
           border: '4px solid #ffffff',
-          [breakpoints.up('sm')]: {
-            width: 104,
-            height: 104,
-            left: spacing(1.5),
-          },
         },
         '& .PeaFullProfile-profileImgBtn': {
           display: 'flex',
           flexDirection: 'column',
           transform: 'translateY(-60%)',
-          left: 0,
+          left: spacing(2),
           borderRadius: '50%',
-          [breakpoints.up('sm')]: {
-            left: spacing(1.5),
-          },
           '& .MuiAvatar-root-profilePic': {
             '&:after': {
               background: 'rgba(0,0,0,0.4)',
@@ -275,27 +272,20 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
           },
         },
         '& .MuiAvatar-root-profilePic': {
-          width: 96,
-          height: 96,
+          position: 'absolute',
+          width: 104,
+          height: 104,
           alignItems: 'center',
           transform: 'translateY(-60%)',
-          left: 0,
+          left: spacing(2),
           border: '4px solid #ffffff',
-          [breakpoints.up('sm')]: {
-            width: 104,
-            height: 104,
-            left: spacing(1.5),
-          },
         },
         '& .PeaAccountProfile-profileImgBtn': {
           display: 'flex',
           flexDirection: 'column',
           transform: 'translateY(-60%)',
-          left: 0,
+          left: spacing(2),
           borderRadius: '50%',
-          [breakpoints.up('sm')]: {
-            left: spacing(1.5),
-          },
           '& .MuiAvatar-root-profilePic': {
             '&:after': {
               background: 'rgba(0,0,0,0.4)',
@@ -307,7 +297,6 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
               height: '100%',
             },
             transform: 'none',
-            left: 0,
           },
         },
         '& .PeaAccountProfile-coverImgBtn': {
@@ -333,11 +322,10 @@ export default ({ spacing, palette, typography, breakpoints }) => ({
             marginTop: '24%',
           },
           '& .MuiGrid-container.-actions': {
-            justifyContent: 'space-between',
+            justifyContent: 'flex-end',
             [breakpoints.up('sm')]: {
-              justifyContent: 'flex-end',
               '& .MuiButton-root.-shape-chubby': {
-                minWidth: 120,
+                minWidth: 80,
               },
             },
           },

@@ -24,7 +24,7 @@ import PeaTag from './PeaTag';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaShareContent from './PeaShareContent';
 
-const scrollHeaderHeight = 50;
+const scrollHeaderHeight = 60;
 
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
@@ -170,9 +170,9 @@ const PeaEventDetails = ({
   const connectionRef = useRef();
 
   const tabs = [
-    { index: 0, ref: podsRef, label: 'Pods' },
-    { index: 1, ref: aboutRef, label: 'About' },
-    { index: 2, ref: connectionRef, label: 'Connections' },
+    { index: 0, ref: aboutRef, label: 'About', count: undefined },
+    { index: 1, ref: podsRef, label: 'Pods', count: podCount },
+    { index: 2, ref: connectionRef, label: 'Connections', count: undefined },
   ];
 
   const scrollToTop = () => (scrollRef.current.scrollTop = 0);
@@ -314,6 +314,7 @@ const PeaEventDetails = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={'PeaGroupProfile-root'}
       onScroll={onScroll}
       ref={scrollRef}
@@ -365,11 +366,23 @@ const PeaEventDetails = ({
               </Grid>
 
               <Grid item>
+                <PeaButton
+                  onClick={() => onCreatePodClicked(id)}
+                  variant={'contained'}
+                  color={'primary'}
+                  size="small"
+                  loading={isLoading}
+                  style={{ marginLeft: 8, minWidth: 120 }}
+                >
+                  {buttonText}
+                </PeaButton>
+
                 {sourceImage && (
                   <button
                     type="button"
                     className="MuiButtonBase-root"
                     href={sourceLink}
+                    style={{ marginLeft: 8 }}
                   >
                     <PeaAvatar src={sourceImage} />
                   </button>
@@ -381,6 +394,7 @@ const PeaEventDetails = ({
                   size={'small'}
                   style={{ marginLeft: 8 }}
                   onClick={handleShareClick}
+                  tooltip="share"
                 >
                   <Popover
                     id={shareAriaId}
@@ -407,19 +421,9 @@ const PeaEventDetails = ({
                   size={'small'}
                   style={{ marginLeft: 8 }}
                   onClick={e => setAnchor(e.currentTarget)}
+                  tooltip="more"
                 />
                 {renderMenu()}
-
-                <PeaButton
-                  onClick={() => onCreatePodClicked(id)}
-                  variant={'contained'}
-                  color={'primary'}
-                  size="small"
-                  loading={isLoading}
-                  style={{ marginLeft: 8, minWidth: 120 }}
-                >
-                  {buttonText}
-                </PeaButton>
               </Grid>
             </Grid>
           </Grid>
@@ -430,15 +434,10 @@ const PeaEventDetails = ({
         activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
+        hasPadding={!isMobile}
         onTabChange={handleTabChanged}
         stickyOffset={scrollHeaderHeight}
-        customStyle={{
-          marginTop: -scrollHeaderHeight,
-          overflow: showTopBar ? 'auto' : 'hidden',
-        }}
       >
-        {renderPods()}
-
         <>
           {isMobile && renderMap()}
           <PeaText color={'secondary'} gutterBottom>
@@ -530,6 +529,8 @@ const PeaEventDetails = ({
             ))}
           </Grid>
         </>
+
+        {renderPods()}
 
         {renderConnections()}
       </PeaSwipeableTabs>

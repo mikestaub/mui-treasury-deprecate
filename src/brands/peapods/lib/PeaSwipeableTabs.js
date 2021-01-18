@@ -3,8 +3,34 @@ import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/styles';
 import SwipeableViews from 'react-swipeable-views';
 import AutoSizer from 'react-virtualized-auto-sizer';
+import humanFormat from 'human-format';
+
+const useStyles = makeStyles(({ palette }) => ({
+  count: {
+    fontSize: '90%',
+    color: palette.primary.main,
+  },
+}));
+
+const genNode = ({ label, count }) => {
+  const classes = useStyles();
+
+  return (
+    <div>
+      {count && (
+        <p className={classes.count}>
+          {humanFormat(count, {
+            decimals: 0,
+          })}
+        </p>
+      )}
+      <p>{label}</p>
+    </div>
+  );
+};
 
 const PeaSwipeableTabs = ({
   tabIndex,
@@ -68,8 +94,9 @@ const PeaSwipeableTabs = ({
           width: '100%',
           position: 'sticky',
           background: 'white',
-          height: 50,
+          height: 64,
           top: stickyOffset,
+          zIndex: 1,
         }}
       >
         <Tabs
@@ -86,18 +113,10 @@ const PeaSwipeableTabs = ({
           onChange={(e, val) => onChange(val)}
         >
           {tabs.map(tab => (
-            <Tab key={tab.label} disableRipple {...tab} />
+            <Tab key={tab.label} disableRipple {...tab} label={genNode(tab)} />
           ))}
         </Tabs>
       </Grid>
-
-      <div
-        style={{
-          height: stickyOffset,
-          opacity: 0,
-          pointerEvents: 'none',
-        }}
-      />
 
       <Grid
         item
@@ -150,7 +169,8 @@ PeaSwipeableTabs.propTypes = {
     PropTypes.shape({
       index: PropTypes.number,
       ref: PropTypes.object,
-      label: PropTypes.node.isRequired,
+      label: PropTypes.string.isRequired,
+      labelNode: PropTypes.node.isRequired,
     }),
   ).isRequired,
   children: PropTypes.node.isRequired,

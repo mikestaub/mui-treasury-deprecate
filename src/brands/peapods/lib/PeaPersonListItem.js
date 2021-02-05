@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Popover from '@material-ui/core/Popover';
+
 import PeaButton from './PeaButton';
 import PeaAvatar from './PeaAvatar';
+import PeaGroupSelector from './PeaGroupSelector';
 
 const PeaPersonListItem = ({
   src,
@@ -16,28 +19,68 @@ const PeaPersonListItem = ({
   ListItemTextProps,
   ButtonProps,
   isButtonShown,
-}) => (
-  <ListItem {...ListItemProps} onClick={!isButtonShown ? onClick : null}>
-    <PeaAvatar src={src} {...AvatarProps} />
-    <ListItemText
-      primaryTypographyProps={{ noWrap: true }}
-      secondaryTypographyProps={{ noWrap: true }}
-      primary={name}
-      secondary={tag}
-      {...ListItemTextProps}
-    />
-    {isButtonShown && (
-      <PeaButton
-        variant={'contained'}
-        color={'primary'}
-        onClick={onClick}
-        {...ButtonProps}
-      >
-        Follow
-      </PeaButton>
-    )}
-  </ListItem>
-);
+  followableGroups,
+  followLoading,
+  onCreateGroupClicked,
+  onFollow,
+}) => {
+  const [followAnchorEl, setFollowAnchorEl] = useState(null);
+  const followAriaId = followAnchorEl ? 'follow-popover' : undefined;
+  const groupSelectorOpen = Boolean(followAnchorEl);
+
+  const onFollowBtnClick = event => {
+    setFollowAnchorEl(event.currentTarget);
+  };
+
+  const onFollowPopClose = () => {
+    setFollowAnchorEl(null);
+  };
+
+  const handleOnFollow = async groupIds => {
+    await onFollow(groupIds);
+    onFollowPopClose();
+  };
+
+  return (
+    <ListItem {...ListItemProps} onClick={!isButtonShown ? onClick : null}>
+      <PeaAvatar src={src} {...AvatarProps} />
+      <ListItemText
+        primaryTypographyProps={{ noWrap: true }}
+        secondaryTypographyProps={{ noWrap: true }}
+        primary={name}
+        secondary={tag}
+        {...ListItemTextProps}
+      />
+      {isButtonShown && (
+        <>
+          <PeaButton
+            variant={'contained'}
+            color={'primary'}
+            onClick={onFollowBtnClick}
+            loading={followLoading}
+            {...ButtonProps}
+          >
+            Follow
+          </PeaButton>
+          <Popover
+            id={followAriaId}
+            open={groupSelectorOpen}
+            anchorEl={followAnchorEl}
+            onClose={onFollowPopClose}
+          >
+            <PeaGroupSelector
+              followButtonText={'Follow'}
+              followableGroups={followableGroups}
+              followLoading={followLoading}
+              onCreateGroupClicked={onCreateGroupClicked}
+              onSubmit={handleOnFollow}
+            />
+          </Popover>
+        </>
+      )}
+    </ListItem>
+  );
+};
 
 PeaPersonListItem.propTypes = {
   src: PropTypes.string.isRequired,
@@ -49,6 +92,9 @@ PeaPersonListItem.propTypes = {
   ListItemTextProps: PropTypes.shape({}),
   ButtonProps: PropTypes.shape({}),
   isButtonShown: PropTypes.bool,
+  followableGroups: PropTypes.arrayOf(PropTypes.shape({})),
+  onCreateGroupClicked: PropTypes.func,
+  onFollow: PropTypes.func,
 };
 PeaPersonListItem.defaultProps = {
   ListItemProps: {},
@@ -56,6 +102,9 @@ PeaPersonListItem.defaultProps = {
   ListItemTextProps: {},
   ButtonProps: {},
   isButtonShown: true,
+  followableGroups: [],
+  onCreateGroupClicked: () => {},
+  onFollow: () => {},
 };
 PeaPersonListItem.metadata = {
   name: 'Pea Person List Item',

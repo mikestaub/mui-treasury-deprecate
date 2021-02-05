@@ -8,7 +8,14 @@ import Typography from '@material-ui/core/Typography';
 import PeaIcon from './PeaIcon';
 import PeaAvatar from './PeaAvatar';
 
-const PeaEventCardSmall = ({ image, name, range, time, images }) => (
+const PeaEventCardSmall = ({
+  image,
+  name,
+  range,
+  time,
+  images,
+  onViewDetail,
+}) => (
   <Card className={'PeaEventCardSmall-root'}>
     <CardMedia className={'MuiCardMedia-root'} image={image}>
       {range && (
@@ -19,7 +26,9 @@ const PeaEventCardSmall = ({ image, name, range, time, images }) => (
       )}
     </CardMedia>
     <CardContent className={'MuiCardContent-root'}>
-      <Typography className={'MuiTypography--heading'}>{name}</Typography>
+      <Typography className={'MuiTypography--heading'} onClick={onViewDetail}>
+        {name}
+      </Typography>
       <Grid container alignItems={'center'} spacing={1}>
         <Grid item>
           <PeaIcon
@@ -56,10 +65,12 @@ PeaEventCardSmall.propTypes = {
   range: PropTypes.string,
   time: PropTypes.string.isRequired,
   images: PropTypes.arrayOf(PropTypes.string),
+  onViewDetail: PropTypes.func,
 };
 PeaEventCardSmall.defaultProps = {
   range: '',
   images: [],
+  onViewDetail: () => {},
 };
 PeaEventCardSmall.metadata = {
   name: 'Pea Event Card Small',

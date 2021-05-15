@@ -34,11 +34,11 @@ const styles = () => ({
 class Root extends React.Component {
   constructor(props) {
     super(props);
-    this.setCollapse = val =>
+    this.setCollapse = (val) =>
       this.setState(({ collapsed }) => ({
         collapsed: typeof val === 'object' ? !collapsed : val,
       }));
-    this.setOpen = val =>
+    this.setOpen = (val) =>
       this.setState(({ open }) => ({
         open: typeof val === 'object' ? !open : val,
       }));
@@ -110,7 +110,7 @@ class Root extends React.Component {
   }
 }
 
-const createScreenPropTypes = valPropTypes =>
+const createScreenPropTypes = (valPropTypes) =>
   PropTypes.shape({
     xs: valPropTypes,
     sm: valPropTypes,

@@ -26,7 +26,7 @@ const components = [
     description: '',
     render: () => (
       <>
-        {sizes.map(size => (
+        {sizes.map((size) => (
           <Typography key={size} gutterBottom size={size}>
             size: {'"'}
             {size || 'default'}
@@ -42,7 +42,7 @@ const components = [
     description: '',
     render: () => (
       <>
-        {colors.map(color => (
+        {colors.map((color) => (
           <Typography key={color} gutterBottom color={color}>
             color: {'"'}
             {color}
@@ -58,7 +58,7 @@ const components = [
     description: '',
     render: () => (
       <>
-        {bottomSpace.map(space => (
+        {bottomSpace.map((space) => (
           <Typography key={space} bottomSpace={space}>
             bottom space: {'"'}
             {space}
@@ -74,7 +74,7 @@ const components = [
     description: '',
     render: () => (
       <Box borderRadius={4}>
-        {topSpace.map(space => (
+        {topSpace.map((space) => (
           <Typography key={space} topSpace={space}>
             top space: {'"'}
             {space}

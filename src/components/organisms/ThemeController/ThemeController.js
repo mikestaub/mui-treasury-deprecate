@@ -105,13 +105,13 @@ class ThemeController extends React.Component {
     }));
   };
 
-  handleSelectComponent = component => {
+  handleSelectComponent = (component) => {
     this.setState({ component });
   };
 
   handleClose = () => this.setState({ opened: false });
 
-  handleOpen = newType => () =>
+  handleOpen = (newType) => () =>
     this.setState(({ type }) => ({
       opened: true,
       type: newType || type,

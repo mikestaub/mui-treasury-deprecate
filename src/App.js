@@ -76,7 +76,7 @@ class App extends React.Component {
               >
                 <CssBaseline />
                 <Header
-                  renderMenuIcon={open =>
+                  renderMenuIcon={(open) =>
                     open ? <Icon>chevron_left</Icon> : <Icon>menu_rounded</Icon>
                   }
                 >
@@ -98,7 +98,7 @@ class App extends React.Component {
                   </Box>
                 </Header>
                 <Nav
-                  renderIcon={collapsed =>
+                  renderIcon={(collapsed) =>
                     collapsed ? (
                       <Icon>chevron_right</Icon>
                     ) : (

@@ -50,7 +50,7 @@ const TwitterTabs = ({ tabs, tabProps, ...props }) => {
   const tabClasses = useTabStyles(tabProps);
   return (
     <Tabs variant={'fullWidth'} {...props} classes={tabsClasses}>
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <Tab
           key={tab.label}
           disableRipple

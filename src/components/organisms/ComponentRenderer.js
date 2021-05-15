@@ -7,7 +7,7 @@ import ThemeProvider from '@material-ui/styles';
 import { PreviewWidget } from 'components/molecules';
 import ShouldUpdate from 'containers/ShouldUpdate';
 
-const createTheme = theme => createMuiTheme(theme);
+const createTheme = (theme) => createMuiTheme(theme);
 const baseTheme = createMuiTheme();
 
 const ComponentRenderer = ({

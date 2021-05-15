@@ -16,10 +16,12 @@ const UserSettings = () => {
     <PeaUserSettings
       notifications={switchState.notifications}
       receiveEmail={switchState.receiveEmail}
-      onNotificationsChange={value =>
+      onNotificationsChange={(value) =>
         handleSwitchChange('notifications', value)
       }
-      onReceiveEmailChange={value => handleSwitchChange('receiveEmail', value)}
+      onReceiveEmailChange={(value) =>
+        handleSwitchChange('receiveEmail', value)
+      }
       onEditProfile={() => {}}
       onContactSupport={() => {}}
       onLogout={() => {}}

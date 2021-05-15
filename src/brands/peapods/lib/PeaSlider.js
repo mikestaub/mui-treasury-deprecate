@@ -47,7 +47,7 @@ const styles = ({ palette }) => ({
   },
 });
 
-const tooltipStyles = theme => ({
+const tooltipStyles = (theme) => ({
   popper: {
     marginLeft: 0,
   },
@@ -103,9 +103,8 @@ const ValueLabelComponent = ({ children, open, value, classes }) => {
 
 ValueLabelComponent.propTypes = Tooltip.propTypes;
 ValueLabelComponent.defaultProps = Tooltip.defaultProps;
-const StyledValueLabelComponent = withStyles(tooltipStyles)(
-  ValueLabelComponent,
-);
+const StyledValueLabelComponent =
+  withStyles(tooltipStyles)(ValueLabelComponent);
 
 const ThumbComponent = forwardRef((props, ref) => (
   <span {...props} ref={ref}>
@@ -113,7 +112,7 @@ const ThumbComponent = forwardRef((props, ref) => (
   </span>
 ));
 
-const PeaSlider = props => {
+const PeaSlider = (props) => {
   const { value, onChange } = props;
 
   return (

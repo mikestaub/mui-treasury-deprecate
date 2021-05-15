@@ -64,7 +64,7 @@ const PeaMessageInput = ({
   const classes = useStyles({ disabled });
   const [showEmoji, setShowEmoji] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     onChange(e.target.value);
   };
 
@@ -77,13 +77,13 @@ const PeaMessageInput = ({
     onSubmit(value);
   };
 
-  const onKeyUp = e => {
+  const onKeyUp = (e) => {
     if (e.key === 'Enter') {
       handleSubmit();
     }
   };
 
-  const onEmojiSelect = e => {
+  const onEmojiSelect = (e) => {
     handleChange({
       target: {
         value: value + e.native,

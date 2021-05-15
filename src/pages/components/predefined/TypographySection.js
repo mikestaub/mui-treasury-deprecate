@@ -13,7 +13,7 @@ import PreviewWidget from 'components/molecules/PreviewWidget';
 import Typography from 'extensions/Typography';
 import Icon from 'extensions/Icon';
 
-const createTheme = theme => createMuiTheme(theme);
+const createTheme = (theme) => createMuiTheme(theme);
 
 const TypographySection = ({ globalTheme }) => {
   const [color, setColor] = useState('');
@@ -63,7 +63,7 @@ const TypographySection = ({ globalTheme }) => {
             select
             label={'Color'}
             value={color}
-            onChange={e => setColor(e.target.value)}
+            onChange={(e) => setColor(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none
@@ -84,7 +84,7 @@ const TypographySection = ({ globalTheme }) => {
             select
             label={'Weight'}
             value={weight}
-            onChange={e => setWeight(e.target.value)}
+            onChange={(e) => setWeight(e.target.value)}
           >
             <MenuItem key={'normal'} value={'normal'}>
               normal
@@ -99,7 +99,7 @@ const TypographySection = ({ globalTheme }) => {
             select
             label={'Indent'}
             value={indent}
-            onChange={e => setIndent(e.target.value)}
+            onChange={(e) => setIndent(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none
@@ -120,7 +120,7 @@ const TypographySection = ({ globalTheme }) => {
             select
             label={'Spacing'}
             value={spacing}
-            onChange={e => setSpacing(e.target.value)}
+            onChange={(e) => setSpacing(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none

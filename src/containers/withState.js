@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default (name, setName, initialValue) => WrappedComponent => {
+export default (name, setName, initialValue) => (WrappedComponent) => {
   class WithState extends React.Component {
     constructor() {
       super();
@@ -9,7 +9,7 @@ export default (name, setName, initialValue) => WrappedComponent => {
       };
     }
 
-    setVal = val => {
+    setVal = (val) => {
       this.setState({ [name]: val });
     };
 

@@ -18,7 +18,7 @@ const presets = {
       footerShrink: true,
     };
   },
-  createFixedLayout: config => ({
+  createFixedLayout: (config) => ({
     ...presets.createDefaultLayout(),
     navVariant: {
       xs: 'temporary',
@@ -33,7 +33,7 @@ const presets = {
     headerPosition: 'sticky',
     ...config,
   }),
-  createContentBasedLayout: config => ({
+  createContentBasedLayout: (config) => ({
     ...presets.createDefaultLayout(),
     navWidth: {
       sm: 200,
@@ -46,7 +46,7 @@ const presets = {
     collapsible: false,
     ...config,
   }),
-  createCozyLayout: config => ({
+  createCozyLayout: (config) => ({
     ...presets.createDefaultLayout(),
     navVariant: {
       xs: 'persistent',
@@ -64,7 +64,7 @@ const presets = {
     clipped: false,
     ...config,
   }),
-  createMuiTreasuryLayout: config => ({
+  createMuiTreasuryLayout: (config) => ({
     ...presets.createDefaultLayout(),
     navWidth: 200,
     navVariant: {

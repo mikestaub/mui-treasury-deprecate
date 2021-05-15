@@ -6,14 +6,14 @@ import route from 'pages/templates/.templateRoutes';
 
 const RootTemplatePage = () => (
   <ThemeController>
-    {props => (
+    {(props) => (
       <Switch>
         {route.map(({ path, Page }) => (
           <Route
             exact
             key={path}
             path={path}
-            render={router => <Page {...router} {...props} />}
+            render={(router) => <Page {...router} {...props} />}
           />
         ))}
       </Switch>

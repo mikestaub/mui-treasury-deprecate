@@ -15,7 +15,7 @@ const variantIcon = {
   info: 'info',
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   success: {
     backgroundColor: theme.palette.primary.main,
   },

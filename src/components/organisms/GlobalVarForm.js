@@ -14,10 +14,10 @@ import { globalThemeService } from 'helpers/globalTheme';
 const GlobalVarForm = ({ theme, onChange }) => (
   <Formik initialValues={theme} validationSchema={globalThemeService.schema}>
     {({ values, errors, touched, handleBlur, handleChange }) => {
-      const onChangeTheme = field => e => {
+      const onChangeTheme = (field) => (e) => {
         handleChange(e);
         const { value } = e.target;
-        globalThemeService.validators[field].isValid(value).then(isValid => {
+        globalThemeService.validators[field].isValid(value).then((isValid) => {
           if (isValid)
             onChange(
               [field],

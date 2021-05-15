@@ -8,7 +8,7 @@ import ButtonBase from '@material-ui/core/ButtonBase';
 import Collapse from '@material-ui/core/Collapse';
 import { makeStyles } from '@material-ui/styles';
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   const { palette } = theme;
   return {
     // Header
@@ -127,7 +127,7 @@ const Header = ({
         <MenuItem
           className={classes.item}
           {...menuItemProps}
-          onClick={e => {
+          onClick={(e) => {
             onToggle(e);
             onMenuClick(e);
           }}
@@ -158,63 +158,62 @@ const NestedMenu01 = ({ menus, selectedKey, openKeys }) => {
     setCurrentOpenKeys(openKeys);
   }, [openKeys]);
 
-  const handleToggle = key => () => {
+  const handleToggle = (key) => () => {
     if (currentOpenKeys.includes(key)) {
-      return setCurrentOpenKeys(currentOpenKeys.filter(k => k !== key));
+      return setCurrentOpenKeys(currentOpenKeys.filter((k) => k !== key));
     }
     return setCurrentOpenKeys([...currentOpenKeys, key]);
   };
 
-  const renderMenus = level => ({
-    key,
-    label,
-    subMenus,
-    separated,
-    ...rest
-  }) => (
-    <React.Fragment key={key}>
-      {level === 0 ? (
-        <Header
-          label={label}
-          selected={
-            subMenus ? separated && currentKey === key : currentKey === key
-          }
-          expanded={currentOpenKeys.includes(key)}
-          separated={separated}
-          onMenuClick={() => {
-            if (!subMenus || separated) {
-              setCurrentKey(key);
-            }
-            if (subMenus && !currentOpenKeys.includes(key)) {
-              handleToggle(key)();
-            }
-          }}
-          {...(subMenus && {
-            toggle: true,
-            onToggle: handleToggle(key),
-          })}
-          {...rest}
-        />
-      ) : (
-        <MenuItem
-          className={cx(
-            classes[`sub${level}`],
-            currentKey === key && classes[`sub${level}Selected`],
-            currentOpenKeys.includes(key) && classes[`sub${level}Expanded`],
+  const renderMenus =
+    (level) =>
+    ({ key, label, subMenus, separated, ...rest }) =>
+      (
+        <React.Fragment key={key}>
+          {level === 0 ? (
+            <Header
+              label={label}
+              selected={
+                subMenus ? separated && currentKey === key : currentKey === key
+              }
+              expanded={currentOpenKeys.includes(key)}
+              separated={separated}
+              onMenuClick={() => {
+                if (!subMenus || separated) {
+                  setCurrentKey(key);
+                }
+                if (subMenus && !currentOpenKeys.includes(key)) {
+                  handleToggle(key)();
+                }
+              }}
+              {...(subMenus && {
+                toggle: true,
+                onToggle: handleToggle(key),
+              })}
+              {...rest}
+            />
+          ) : (
+            <MenuItem
+              className={cx(
+                classes[`sub${level}`],
+                currentKey === key && classes[`sub${level}Selected`],
+                currentOpenKeys.includes(key) && classes[`sub${level}Expanded`],
+              )}
+              onClick={() =>
+                subMenus ? handleToggle(key)() : setCurrentKey(key)
+              }
+              {...rest}
+            >
+              {label}
+            </MenuItem>
           )}
-          onClick={() => (subMenus ? handleToggle(key)() : setCurrentKey(key))}
-          {...rest}
-        >
-          {label}
-        </MenuItem>
-      )}
-      {subMenus && (
-        <Collapse in={currentOpenKeys.includes(key)}>
-          {subMenus.map(renderMenus(level + 1))}
-        </Collapse>
-      )}
-    </React.Fragment>
-  );
+          {subMenus && (
+            <Collapse in={currentOpenKeys.includes(key)}>
+              {subMenus.map(renderMenus(level + 1))}
+            </Collapse>
+          )}
+        </React.Fragment>
+      );
   return menus.map(renderMenus(0));
 };
 

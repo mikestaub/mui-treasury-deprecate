@@ -18,7 +18,7 @@ const InputNumber = ({
   textProps,
   inputProps,
 }) => {
-  const handleChange = operator => () =>
+  const handleChange = (operator) => () =>
     onChange({ target: { value: value + operator, name } });
   return (
     <Box

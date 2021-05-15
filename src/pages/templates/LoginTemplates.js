@@ -11,7 +11,7 @@ import DashboardLogin from 'templates/login/DashboardLogin01';
 import DashboardLogin02 from 'templates/login/DashboardLogin02';
 import ShouldUpdate from 'containers/ShouldUpdate';
 
-const createTheme = theme => createMuiTheme(theme);
+const createTheme = (theme) => createMuiTheme(theme);
 const baseTheme = createMuiTheme();
 
 const components = [

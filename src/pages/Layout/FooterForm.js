@@ -44,7 +44,7 @@ const FooterForm = ({ footerShrink, onChange }) => (
         <FormControl margin={'dense'}>
           <FormControlLabel
             checked={footerShrink}
-            onChange={e => onChange(['footerShrink'], [e.target.checked])}
+            onChange={(e) => onChange(['footerShrink'], [e.target.checked])}
             control={<Checkbox />}
             label={'Shrank'}
           />

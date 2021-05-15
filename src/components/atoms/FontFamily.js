@@ -50,17 +50,17 @@ class FontFamily extends React.Component {
         <Box {...Box.alignCenter}>
           <Select
             styles={{
-              container: provided => ({
+              container: (provided) => ({
                 ...provided,
                 position: 'initial',
                 fontFamily:
                   'system-ui, BlinkMacSystemFont, -apple-system, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif',
               }),
-              control: provided => ({
+              control: (provided) => ({
                 ...provided,
                 minWidth: 160,
               }),
-              menu: provided => ({
+              menu: (provided) => ({
                 ...provided,
                 zIndex: 1500,
                 maxWidth: '160px',

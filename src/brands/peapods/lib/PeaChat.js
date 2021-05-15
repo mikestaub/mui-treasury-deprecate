@@ -51,7 +51,7 @@ const useStyles = makeStyles(({ palette, spacing }) => {
 const PeaChat = ({ avatar, messages, side }) => {
   const classes = useStyles();
 
-  const attachClass = index => {
+  const attachClass = (index) => {
     if (index === 0) {
       return classes[`${side}First`];
     }

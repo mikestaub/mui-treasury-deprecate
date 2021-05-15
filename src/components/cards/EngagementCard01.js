@@ -35,7 +35,7 @@ const EngagementCard01 = () => (
         together to form amazing environment.
       </Typography>
       <Divider className={'MuiDivider-root'} light />
-      {faces.map(face => (
+      {faces.map((face) => (
         <Avatar className={'MuiAvatar-root'} key={face} src={face} />
       ))}
     </CardContent>

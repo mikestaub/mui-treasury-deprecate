@@ -82,23 +82,23 @@ const useTimeRangeHooks = ({
     ...timeRangeOptions,
     ...localTimeRanges,
     ...selection,
-  ].filter(option => {
+  ].filter((option) => {
     return option.timeRange.start > now;
   });
 
   const events = sortBy(
-    uniqBy(allOptions, option => {
+    uniqBy(allOptions, (option) => {
       const { start, end } = option.timeRange;
       const key = `${start}_${end}`;
       return key;
-    }).map(option => ({
+    }).map((option) => ({
       ...option,
       ...option.timeRange,
     })),
     ({ start }) => start.toString(),
   );
 
-  const optionKeyMap = groupBy(allOptions, option => {
+  const optionKeyMap = groupBy(allOptions, (option) => {
     const { start, end } = option.timeRange;
     const key = `${start}_${end}`;
     return key;
@@ -109,9 +109,9 @@ const useTimeRangeHooks = ({
     prev[next] = uniq(
       optionKeyMap[next]
         .filter(
-          o => o.state !== 'MAYBE_AVAILABLE' && o.state !== 'NOT_AVAILABLE',
+          (o) => o.state !== 'MAYBE_AVAILABLE' && o.state !== 'NOT_AVAILABLE',
         )
-        .map(o => o.userId),
+        .map((o) => o.userId),
     );
     return prev;
   }, {});
@@ -120,13 +120,13 @@ const useTimeRangeHooks = ({
     // eslint-disable-next-line
     prev[next] = uniq(
       optionKeyMap[next]
-        .filter(o => o.state === 'MAYBE_AVAILABLE')
-        .map(o => o.userId),
+        .filter((o) => o.state === 'MAYBE_AVAILABLE')
+        .map((o) => o.userId),
     );
     return prev;
   }, {});
 
-  const checkBestOption = timeRange => {
+  const checkBestOption = (timeRange) => {
     const { start, end } = timeRange;
     const key = `${start}_${end}`;
 
@@ -135,7 +135,7 @@ const useTimeRangeHooks = ({
     const totalUsers = numUsers + numMaybeUsers;
     const ratio = numUsers / numMaybeUsers;
 
-    const largerOptions = Object.keys(optionUsersMap).filter(k => {
+    const largerOptions = Object.keys(optionUsersMap).filter((k) => {
       const numUsers2 = optionUsersMap[k].length;
       const numMaybeUsers2 = maybeOptionUsersMap[k].length;
       const totalUsers2 = numUsers2 + numMaybeUsers2;
@@ -149,8 +149,8 @@ const useTimeRangeHooks = ({
     return largerOptions.length === 0;
   };
 
-  const hasMaybes = day => {
-    const maybes = selection.filter(option => {
+  const hasMaybes = (day) => {
+    const maybes = selection.filter((option) => {
       return (
         option.state === 'MAYBE_AVAILABLE' && option.timeRange.start >= day
       );
@@ -158,7 +158,7 @@ const useTimeRangeHooks = ({
     return !!maybes.length;
   };
 
-  const isDayChecked = day => {
+  const isDayChecked = (day) => {
     const map = dayMap[day];
     if (!map) {
       return false;
@@ -167,7 +167,7 @@ const useTimeRangeHooks = ({
     return every(Object.values(map));
   };
 
-  const isDayIndeterminate = day => {
+  const isDayIndeterminate = (day) => {
     const map = dayMap[day];
     if (!map) {
       return false;
@@ -180,7 +180,7 @@ const useTimeRangeHooks = ({
     const { start, end } = timeRange;
     const key = `${start}_${end}`;
 
-    const [foundTimeRange] = selection.filter(option => {
+    const [foundTimeRange] = selection.filter((option) => {
       const t = option.timeRange;
       const timeRangeKey = `${t.start}_${t.end}`;
 
@@ -196,7 +196,7 @@ const useTimeRangeHooks = ({
         foundTimeRange.state = 'NOT_AVAILABLE';
         newSelection = [...selection];
       } else {
-        newSelection = selection.filter(option => {
+        newSelection = selection.filter((option) => {
           const t = option.timeRange;
           const timeRangeKey = `${t.start}_${t.end}`;
 
@@ -231,12 +231,12 @@ const useTimeRangeHooks = ({
 
     if (!isCheck) {
       newSelection = [
-        ...selection.filter(o => {
+        ...selection.filter((o) => {
           const { start, end } = o.timeRange;
           const key = `${start}_${end}`;
           return !Object.keys(map).includes(key);
         }),
-        ...Object.keys(map).map(key => {
+        ...Object.keys(map).map((key) => {
           const [start, end] = key.split('_');
           return {
             timeRange: {
@@ -249,7 +249,7 @@ const useTimeRangeHooks = ({
         }),
       ];
     } else {
-      newSelection = selection.filter(option => {
+      newSelection = selection.filter((option) => {
         const { start, end } = option.timeRange;
         const key = `${start}_${end}`;
         return !Object.keys(map).includes(key);
@@ -307,7 +307,7 @@ const useTimeRangeHooks = ({
   };
 
   const onNavigate = useCallback(
-    action => () => {
+    (action) => () => {
       let newDate = new Date(viewingDate);
       let offset;
 

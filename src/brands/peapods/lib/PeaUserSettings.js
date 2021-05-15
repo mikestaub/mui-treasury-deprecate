@@ -29,7 +29,7 @@ const PeaUserSettings = ({
   });
   const open = Boolean(anchorEl);
 
-  const handleSwitchChange = name => event => {
+  const handleSwitchChange = (name) => (event) => {
     setSwitchState({ ...switchState, [name]: event.target.checked });
     if (name === 'notifications') {
       onNotificationsChange(event.target.checked);
@@ -50,7 +50,7 @@ const PeaUserSettings = ({
           color: 'primary',
           size: 'small',
         }}
-        onClick={e => setAnchor(e.currentTarget)}
+        onClick={(e) => setAnchor(e.currentTarget)}
       >
         Settings
       </PeaButton>

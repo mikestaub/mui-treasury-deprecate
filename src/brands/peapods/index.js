@@ -12,19 +12,19 @@ import images from './lib/assets';
 
 const { logo } = images;
 
-const TimePicker = props => (
+const TimePicker = (props) => (
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardTimePicker {...props} />
   </MuiPickersUtilsProvider>
 );
 
-const DatePicker = props => (
+const DatePicker = (props) => (
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <KeyboardDatePicker {...props} />
   </MuiPickersUtilsProvider>
 );
 
-const DateTimePicker = props => (
+const DateTimePicker = (props) => (
   <MuiPickersUtilsProvider utils={DateFnsUtils}>
     <InnerDateTimePicker {...props} />
   </MuiPickersUtilsProvider>

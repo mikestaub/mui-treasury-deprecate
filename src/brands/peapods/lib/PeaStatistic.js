@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Box from '@material-ui/core/Box';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     flexDirection: 'column',
     justifyContent: 'center',

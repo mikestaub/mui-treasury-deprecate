@@ -24,9 +24,7 @@ export default ({
         '&.PeaFormControl-root': {
           '&.PeaFormControl-error': {
             '& textarea': {
-              backgroundColor: Color(red.light)
-                .fade(0.87)
-                .string(),
+              backgroundColor: Color(red.light).fade(0.87).string(),
             },
             '& .PeaFormLabel-root': {
               color: red.main,

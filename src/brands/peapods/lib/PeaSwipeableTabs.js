@@ -56,7 +56,7 @@ const PeaSwipeableTabs = ({
   };
 
   const onChange = useCallback(
-    i => {
+    (i) => {
       if (i === undefined) {
         return;
       }
@@ -112,7 +112,7 @@ const PeaSwipeableTabs = ({
           }}
           onChange={(e, val) => onChange(val)}
         >
-          {tabs.map(tab => (
+          {tabs.map((tab) => (
             <Tab key={tab.label} disableRipple {...tab} label={genNode(tab)} />
           ))}
         </Tabs>

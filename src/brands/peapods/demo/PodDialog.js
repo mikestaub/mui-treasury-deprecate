@@ -31,7 +31,7 @@ const PodDialog = () => {
                 aria-label="status"
                 name="status"
                 value={value}
-                onChange={e => onChange(e.target.value)}
+                onChange={(e) => onChange(e.target.value)}
                 row
               >
                 <FormControlLabel
@@ -54,7 +54,7 @@ const PodDialog = () => {
                 aria-label="privacy"
                 name="privacy"
                 value={value2}
-                onChange={e => onChange2(e.target.value)}
+                onChange={(e) => onChange2(e.target.value)}
                 row
               >
                 <FormControlLabel
@@ -81,7 +81,7 @@ const PodDialog = () => {
               <FormLabel component="legend">Size limit</FormLabel>
               <PeaCounter
                 value={value3}
-                onChange={e => onChange3(e.target.value)}
+                onChange={(e) => onChange3(e.target.value)}
               />
             </FormControl>
           </React.Fragment>

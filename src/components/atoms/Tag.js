@@ -24,9 +24,7 @@ const useStyles = makeStyles(({ spacing, palette }) => {
           opacity: 1,
         },
         '& .Tag-overline': {
-          color: Color(hoveredTextColor)
-            .fade(0.3)
-            .toString(),
+          color: Color(hoveredTextColor).fade(0.3).toString(),
         },
       },
     },

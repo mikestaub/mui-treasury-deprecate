@@ -12,10 +12,11 @@ const styles = () => ({
     display: 'flex',
   },
   inputRoot: {
-    '& input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button': {
-      '-webkit-appearance': 'none',
-      margin: 0,
-    },
+    '& input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button':
+      {
+        '-webkit-appearance': 'none',
+        margin: 0,
+      },
     width: 32,
   },
   inputInput: {
@@ -31,7 +32,7 @@ const styles = () => ({
 
 const PeaCounter = withStyles(styles, { name: 'PeaCounter' })(
   ({ classes, value, name, onChange, min, max, ...props }) => {
-    const handleButtonClicked = operator => () => {
+    const handleButtonClicked = (operator) => () => {
       const newVal = parseInt(value, 10) + operator;
       if (newVal > max || newVal < min) {
         return;
@@ -39,7 +40,7 @@ const PeaCounter = withStyles(styles, { name: 'PeaCounter' })(
       onChange({ target: { value: newVal, name } });
     };
 
-    const handleInputChange = e => {
+    const handleInputChange = (e) => {
       const newVal = e.target.value
         ? parseInt(e.target.value, 10)
         : e.target.value;

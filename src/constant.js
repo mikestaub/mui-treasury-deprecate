@@ -22,8 +22,7 @@ const libraries = {
 const files = {
   button:
     'https://firebasestorage.googleapis.com/v0/b/mui-treasury.appspot.com/o/public%2Fcode%2FButton.js?alt=media',
-  icon:
-    'https://firebasestorage.googleapis.com/v0/b/mui-treasury.appspot.com/o/public%2Fcode%2FIcon.js?alt=media',
+  icon: 'https://firebasestorage.googleapis.com/v0/b/mui-treasury.appspot.com/o/public%2Fcode%2FIcon.js?alt=media',
   typography:
     'https://firebasestorage.googleapis.com/v0/b/mui-treasury.appspot.com/o/public%2Fcode%2FTypography.js?alt=media',
 };

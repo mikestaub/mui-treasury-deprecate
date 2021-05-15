@@ -61,7 +61,7 @@ const createList = ({
   return list;
 };
 
-const Details = props => (
+const Details = (props) => (
   <PeaButton
     shape={''}
     size={'small'}
@@ -74,7 +74,7 @@ const Details = props => (
   </PeaButton>
 );
 
-const Share = props => (
+const Share = (props) => (
   <PeaButton
     shape={''}
     size={'small'}
@@ -132,7 +132,7 @@ const PeaEventCard = ({
   const openSharePopover = Boolean(shareAnchorEl);
   const shareAriaId = openSharePopover ? 'event-card-share' : undefined;
 
-  const handleShareClick = event => {
+  const handleShareClick = (event) => {
     event.stopPropagation();
 
     if (window.navigator.share) {
@@ -142,7 +142,7 @@ const PeaEventCard = ({
           url: shareLink,
         })
         .then(() => onShareEventClicked('native'))
-        .catch(err => {
+        .catch((err) => {
           if (err.message !== 'Share canceled') {
             throw err;
           }
@@ -156,7 +156,7 @@ const PeaEventCard = ({
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => () => {
+  const handleShareItemClick = (item) => () => {
     onShareEventClicked(item);
     handleShareClose();
   };

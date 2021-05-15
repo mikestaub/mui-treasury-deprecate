@@ -78,7 +78,7 @@ const PeaNotificationItem = ({
     );
   };
 
-  const onFollowBtnClick = actionId => event => {
+  const onFollowBtnClick = (actionId) => (event) => {
     setFollowAnchorEl(event.currentTarget);
     onAction({ id: actionId, type: 'accept' });
   };
@@ -87,10 +87,12 @@ const PeaNotificationItem = ({
     setFollowAnchorEl(null);
   };
 
-  const handleOnFollow = actionId => async ({ groupIds, followBack }) => {
-    await onAction({ id: actionId, type: 'accept', groupIds, followBack });
-    onFollowPopClose();
-  };
+  const handleOnFollow =
+    (actionId) =>
+    async ({ groupIds, followBack }) => {
+      await onAction({ id: actionId, type: 'accept', groupIds, followBack });
+      onFollowPopClose();
+    };
 
   return (
     <ListItem className={cx('PeaNotificationItem-root', unread && '-unread')}>

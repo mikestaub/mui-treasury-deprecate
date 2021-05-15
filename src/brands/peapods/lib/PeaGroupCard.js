@@ -79,7 +79,7 @@ const PeaGroupCard = ({
     onReport();
   };
 
-  const onTouchStart = e => {
+  const onTouchStart = (e) => {
     [lastTouchRef.current] = e.touches;
   };
 
@@ -194,7 +194,7 @@ const PeaGroupCard = ({
                 shape={'circular'}
                 icon={'more_vert'}
                 size={'small'}
-                onClick={e => setAnchor(e.currentTarget)}
+                onClick={(e) => setAnchor(e.currentTarget)}
                 tooltip="more"
               />
 

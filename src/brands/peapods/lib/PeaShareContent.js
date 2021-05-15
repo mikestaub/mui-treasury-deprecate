@@ -18,7 +18,7 @@ import {
   EmailIcon,
 } from 'react-share';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   item: {
     display: 'flex',
     alignItems: 'center',

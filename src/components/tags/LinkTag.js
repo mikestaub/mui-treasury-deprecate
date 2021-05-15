@@ -9,9 +9,7 @@ import Icon from 'extensions/Icon';
 const useStyles = makeStyles(({ spacing, palette }) => {
   const initialBgColor = palette.grey[100];
   const shade = palette.primary;
-  const hoveredBgColor = Color(shade.light)
-    .lighten(0.5)
-    .toString();
+  const hoveredBgColor = Color(shade.light).lighten(0.5).toString();
   const hoveredTextColor = shade.dark;
   return {
     root: {
@@ -26,9 +24,7 @@ const useStyles = makeStyles(({ spacing, palette }) => {
           opacity: 1,
         },
         '& .LinkTag-overline': {
-          color: Color(hoveredTextColor)
-            .fade(0.3)
-            .toString(),
+          color: Color(hoveredTextColor).fade(0.3).toString(),
         },
       },
     },

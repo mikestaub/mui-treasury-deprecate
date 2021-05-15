@@ -28,7 +28,7 @@ const PeaPodCard = ({
   }
   const { members, maxSize, datingOption, state } = pod;
 
-  const peopleGoing = members.map(member => member.profilePhoto);
+  const peopleGoing = members.map((member) => member.profilePhoto);
 
   const limit = maxSize || DEFAULT_POD_SIZE_LIMIT;
   const stateString = state.toLowerCase();
@@ -66,7 +66,7 @@ const PeaPodCard = ({
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={6}>
-                {items.map(item => (
+                {items.map((item) => (
                   <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
                     <Grid item>
                       <PeaIcon

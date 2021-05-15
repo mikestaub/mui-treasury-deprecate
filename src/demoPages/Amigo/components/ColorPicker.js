@@ -47,7 +47,7 @@ Color.defaultProps = {
 
 const ColorPicker = ({ colors }) => (
   <Grid container spacing={2}>
-    {colors.map(color => (
+    {colors.map((color) => (
       <Grid key={color.color} item>
         <Color {...color} />
       </Grid>

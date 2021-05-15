@@ -5,7 +5,7 @@ import CONSTANT from 'constant';
 
 DotIndicator.Demo = ({ index, setIndex }) => (
   <div>
-    {[0, 1, 2].map(i => (
+    {[0, 1, 2].map((i) => (
       <DotIndicator key={i} active={i === index} onClick={() => setIndex(i)} />
     ))}
   </div>

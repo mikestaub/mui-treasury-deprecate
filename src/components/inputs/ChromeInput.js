@@ -25,7 +25,7 @@ export const getTheme = ({ spacing }) => {
   };
 };
 
-const ChromeInput = props => (
+const ChromeInput = (props) => (
   <InputBase
     className={'ChromeInput-root'}
     placeholder={'https://'}

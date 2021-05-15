@@ -5,7 +5,7 @@ import variables, { primary, muiBaseTheme, background } from './variables';
 const req = require.context('./components', true, /.js$/);
 let overrides = {};
 
-req.keys().forEach(filename => {
+req.keys().forEach((filename) => {
   overrides = {
     ...overrides,
     ...req(filename).default(variables),

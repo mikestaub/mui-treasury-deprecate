@@ -12,7 +12,7 @@ const FullProfile = () => {
   const [blockedMe, setBlockedMe] = useState(false);
   const [blocked, setBlocked] = useState(false);
 
-  const inviteHandler = pod => {
+  const inviteHandler = (pod) => {
     setInvited(true);
   };
 
@@ -65,13 +65,11 @@ const FullProfile = () => {
         groups={[
           {
             name: 'Celebrities',
-            src:
-              'https://images.livemint.com/rf/Image-621x414/LiveMint/Period1/2015/01/10/Photos/selfie-kH4D--621x414@LiveMint.jpg',
+            src: 'https://images.livemint.com/rf/Image-621x414/LiveMint/Period1/2015/01/10/Photos/selfie-kH4D--621x414@LiveMint.jpg',
           },
           {
             name: 'Friends',
-            src:
-              'https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/06/09/11/group-photos-need-to-die.jpg?w968h681',
+            src: 'https://static.independent.co.uk/s3fs-public/thumbnails/image/2017/06/09/11/group-photos-need-to-die.jpg?w968h681',
           },
         ]}
         tags={[

@@ -141,7 +141,7 @@ const PeaDialog = ({
     onClose,
   };
 
-  const onScroll = e => e.stopPropagation();
+  const onScroll = (e) => e.stopPropagation();
 
   return isMobile ? (
     <div onScroll={onScroll} onWheel={onScroll} onTouchMove={onScroll}>

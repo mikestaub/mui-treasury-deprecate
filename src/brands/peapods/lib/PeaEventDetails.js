@@ -178,7 +178,7 @@ const PeaEventDetails = ({
   const scrollToTop = () => (scrollRef.current.scrollTop = 0);
 
   const onScroll = useCallback(
-    debounce(e => {
+    debounce((e) => {
       const shouldUpdateTab = scrollRef.current.scrollTop > 300;
 
       const { ref } = tabs[tabIndex];
@@ -194,13 +194,13 @@ const PeaEventDetails = ({
     [tabIndex, tabs],
   );
 
-  const onTabChange = index => {
+  const onTabChange = (index) => {
     if (onChangeTab) {
       onChangeTab(tabs[index].label);
     }
   };
 
-  const handleTabChanged = newIndex => {
+  const handleTabChanged = (newIndex) => {
     setTabIndex(newIndex);
 
     if (onTabChange) {
@@ -231,7 +231,7 @@ const PeaEventDetails = ({
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const shareAriaId = shareAnchorEl ? 'event-details-share' : undefined;
 
-  const handleShareClick = event => {
+  const handleShareClick = (event) => {
     event.stopPropagation();
 
     if (window.navigator.share) {
@@ -243,7 +243,7 @@ const PeaEventDetails = ({
         .then(() => {
           onShareEventClicked('native');
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.message !== 'Share canceled') {
             throw err;
           }
@@ -257,7 +257,7 @@ const PeaEventDetails = ({
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => () => {
+  const handleShareItemClick = (item) => () => {
     onShareEventClicked(item);
     handleShareClose();
   };
@@ -420,7 +420,7 @@ const PeaEventDetails = ({
                   icon={'more_vert'}
                   size={'small'}
                   style={{ marginLeft: 8 }}
-                  onClick={e => setAnchor(e.currentTarget)}
+                  onClick={(e) => setAnchor(e.currentTarget)}
                   tooltip="more"
                 />
                 {renderMenu()}
@@ -455,7 +455,7 @@ const PeaEventDetails = ({
                 attendingCount: stats ? stats.attending : null,
                 interestedCount: stats ? stats.interested : null,
                 limit: stats ? stats.limit : null,
-              }).map(item => (
+              }).map((item) => (
                 <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
                   <Grid item>
                     {typeof item.icon === 'string' ? (
@@ -499,7 +499,7 @@ const PeaEventDetails = ({
               {typeof description === 'string' ? (
                 <PeaText>{description}</PeaText>
               ) : (
-                React.Children.map(description, text => (
+                React.Children.map(description, (text) => (
                   <div
                     style={{
                       marginBottom: 20,
@@ -518,7 +518,7 @@ const PeaEventDetails = ({
 
           <PeaText gutterBottom />
           <Grid container wrap="wrap" spacing={1}>
-            {tags.map(tag => (
+            {tags.map((tag) => (
               <Grid item key={tag}>
                 <PeaTag
                   color={'secondary'}

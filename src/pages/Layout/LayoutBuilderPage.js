@@ -136,7 +136,7 @@ const LayoutBuilderPage = ({ classes }) => {
       return <ContentForm {...mapValues(config, screen)} onChange={onChange} />;
     return <FooterForm {...mapValues(config, screen)} onChange={onChange} />;
   };
-  const onNextStep = value => () => {
+  const onNextStep = (value) => () => {
     const nextStep = step + value;
     scroll.scrollToTop(scrollConfig);
     setTimeout(() => {

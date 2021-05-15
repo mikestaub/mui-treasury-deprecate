@@ -132,7 +132,7 @@ const AmigoHome = () => (
                   </Hidden>
                   <Grid item xs={12} sm={8} md={9}>
                     <Grid container>
-                      {ProductCard.data.map(data => (
+                      {ProductCard.data.map((data) => (
                         <Grid key={data.name} item xs={6} sm={6} md={4}>
                           <ProductCard {...data} bordered />
                         </Grid>

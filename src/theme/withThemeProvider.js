@@ -14,7 +14,7 @@ const generateClassName = createGenerateClassName({
   dangerouslyUseGlobalCSS: true,
 });
 
-export default element => (
+export default (element) => (
   <JssProvider generateClassName={generateClassName}>
     <ThemeProvider theme={theme}>
       <MuiThemeProvider theme={theme}>

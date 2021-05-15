@@ -11,7 +11,7 @@ const calculateMargin = (selfIndex, slideIndex, speed = 50) => {
 const ParallaxSlide = ({ transition, children, renderElements, ...props }) => {
   const [index, setIndex] = useState(0);
   const [fineIndex, setFineIndex] = useState(index);
-  const onChangeIndex = i => {
+  const onChangeIndex = (i) => {
     setIndex(i);
     setFineIndex(i);
   };
@@ -40,7 +40,7 @@ const ParallaxSlide = ({ transition, children, renderElements, ...props }) => {
         {...props}
         index={index}
         onChangeIndex={onChangeIndex}
-        onSwitching={i => {
+        onSwitching={(i) => {
           setFineIndex(i);
         }}
       >

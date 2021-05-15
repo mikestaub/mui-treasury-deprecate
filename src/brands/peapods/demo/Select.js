@@ -13,7 +13,7 @@ const Tag = () => {
         label={'Sort By'}
         helperText={'Helper Text'}
         value={value || ''}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       >
         <MenuItem value={1}>Popular</MenuItem>
         <MenuItem value={2}>Newest</MenuItem>
@@ -26,7 +26,7 @@ const Tag = () => {
         label={'Sort By'}
         helperText={'Helper Text'}
         value={value || ''}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
       >
         <MenuItem value={1}>Popular</MenuItem>
         <MenuItem value={2}>Newest</MenuItem>

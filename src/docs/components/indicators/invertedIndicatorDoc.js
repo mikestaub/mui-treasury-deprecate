@@ -5,7 +5,7 @@ import CONSTANT from 'constant';
 
 InvertedIndicator.Demo = ({ index, setIndex }) => (
   <div>
-    {[0, 1, 2].map(i => (
+    {[0, 1, 2].map((i) => (
       <InvertedIndicator
         key={i}
         active={i === index}

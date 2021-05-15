@@ -25,10 +25,10 @@ const createSimpleShowcase = (components, options = {}) => {
     gridItemProps: globalGridItemProps,
     gridContainerProps: globalGridContainerProps,
   } = options;
-  const Page = props => {
+  const Page = (props) => {
     const [info, setInfo] = useState(null);
     const [infoShowed, setInfoShowed] = useState(false);
-    const showInfo = component => {
+    const showInfo = (component) => {
       setInfo(component);
       setInfoShowed(true);
     };
@@ -59,7 +59,7 @@ const createSimpleShowcase = (components, options = {}) => {
                         component={'a'}
                         href={component.codeSandbox}
                         target={'_blank'}
-                        onClick={e => {
+                        onClick={(e) => {
                           e.stopPropagation();
                         }}
                       >

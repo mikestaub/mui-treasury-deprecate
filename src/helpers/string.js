@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape,prettier/prettier */
-export const normalizeJSX = code =>
+export const normalizeJSX = (code) =>
   code
     .replace(/WithStyles/g, '')
     .replace(/\(/g, '')

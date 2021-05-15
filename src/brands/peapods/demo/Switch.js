@@ -4,7 +4,7 @@ import PeaSwitch from '../lib/PeaSwitch';
 const Switch = () => {
   const [value, onChange] = useState(false);
   return (
-    <PeaSwitch checked={value} onChange={e => onChange(e.target.checked)} />
+    <PeaSwitch checked={value} onChange={(e) => onChange(e.target.checked)} />
   );
 };
 

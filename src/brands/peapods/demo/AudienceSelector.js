@@ -19,7 +19,7 @@ const suggestions = [
   { label: 'Spirituality' },
   { label: 'Sport' },
   { label: 'Volunteering' },
-].map(suggestion => ({
+].map((suggestion) => ({
   value: suggestion.label,
   label: suggestion.label,
 }));
@@ -30,7 +30,9 @@ const AudienceSelector = () => (
     placeholder="Select"
     suggestions={suggestions}
     InputControl={PeaAudienceSelectorInputControl}
-    onChange={data => alert(`"${data.value ? data.value : null}" is selected`)}
+    onChange={(data) =>
+      alert(`"${data.value ? data.value : null}" is selected`)
+    }
   />
 );
 

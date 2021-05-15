@@ -50,7 +50,7 @@ const ContentForm = ({ squeezed, onChange }) => (
         <FormControl margin={'dense'}>
           <FormControlLabel
             checked={squeezed}
-            onChange={e => onChange(['squeezed'], [e.target.checked])}
+            onChange={(e) => onChange(['squeezed'], [e.target.checked])}
             control={<Checkbox />}
             label={'Squeezed (including Header)'}
           />

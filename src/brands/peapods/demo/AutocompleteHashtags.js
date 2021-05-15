@@ -23,13 +23,13 @@ const AutocompleteHashtags = () => {
     newTags.push(value);
     setTags(newTags);
     const newSuggestions = suggestions.filter(
-      item => item.value !== value.value,
+      (item) => item.value !== value.value,
     );
     setSuggestions(newSuggestions);
   }
 
   function handleTagDelete(value) {
-    const newTags = tags.filter(item => item.value !== value.value);
+    const newTags = tags.filter((item) => item.value !== value.value);
     setTags(newTags);
     const newSuggestions = [...suggestions];
     newSuggestions.push(value);
@@ -38,7 +38,7 @@ const AutocompleteHashtags = () => {
 
   return (
     <Grid container spacing={1}>
-      {tags.map(item => (
+      {tags.map((item) => (
         <Grid item key={item.label}>
           <PeaTag
             color={'secondary'}

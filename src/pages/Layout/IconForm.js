@@ -74,7 +74,7 @@ const IconForm = ({ icon, setIcon }) => (
             aria-label="icon type"
             name="icon type"
             value={icon.type}
-            onChange={e =>
+            onChange={(e) =>
               setIcon({
                 ...icon,
                 type: e.target.value,
@@ -124,7 +124,7 @@ const IconForm = ({ icon, setIcon }) => (
             aria-label="icon style"
             name="icon style"
             value={icon.style}
-            onChange={e =>
+            onChange={(e) =>
               setIcon({
                 ...icon,
                 style: e.target.value,

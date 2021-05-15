@@ -49,7 +49,7 @@ const useStyles = makeStyles(({ shadows, palette }) => ({
   },
 }));
 
-const TwitterButton = props => {
+const TwitterButton = (props) => {
   const classes = useStyles(props);
   return <Button {...props} classes={classes} />;
 };

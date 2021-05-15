@@ -57,7 +57,7 @@ const PeaInvitationDialog = ({
             {index === 0 && (
               <Box className="List-Container">
                 <List>
-                  {pods.map(pod => {
+                  {pods.map((pod) => {
                     const { id, event } = pod;
                     const { profilePhoto, title } = event;
                     return (
@@ -111,7 +111,7 @@ const PeaInvitationDialog = ({
             {index === 1 && (
               <Box className="List-Container">
                 <List>
-                  {groups.map(group => {
+                  {groups.map((group) => {
                     const { id, name, profilePhoto } = group;
                     return (
                       <ListItem key={id}>

@@ -249,12 +249,12 @@ const PeaAccountProfile = ({
     setFollowAnchorEl(null);
   };
 
-  const handleOnFollow = async groupIds => {
+  const handleOnFollow = async (groupIds) => {
     await onFollow(groupIds);
     onFollowPopClose();
   };
 
-  const onFollowBtnClick = event => {
+  const onFollowBtnClick = (event) => {
     if (needsGroups) {
       setFollowAnchorEl(event.currentTarget);
     } else {
@@ -262,13 +262,13 @@ const PeaAccountProfile = ({
     }
   };
 
-  const onNotificationsChange = enabled => {
+  const onNotificationsChange = (enabled) => {
     onChangeSettings({
       pushNotificationsDisabled: enabled ? !!enabled : null,
     });
   };
 
-  const onReceiveEmailChange = enabled => {
+  const onReceiveEmailChange = (enabled) => {
     onChangeSettings({
       emailNotificationsDisabled: enabled ? !!enabled : null,
     });
@@ -280,7 +280,7 @@ const PeaAccountProfile = ({
   };
 
   const onScroll = useCallback(
-    e => {
+    (e) => {
       const content = scrollRef.current;
 
       const offset = content.scrollHeight - content.clientHeight;
@@ -293,7 +293,7 @@ const PeaAccountProfile = ({
     [tabIndex, tabs],
   );
 
-  const handleTabChanged = newIndex => {
+  const handleTabChanged = (newIndex) => {
     setTabIndex(newIndex);
 
     if (onTabChange) {
@@ -528,7 +528,7 @@ const PeaAccountProfile = ({
                   size={'small'}
                   shape={'circular'}
                   tooltip="more"
-                  onClick={e => setAnchor(e.currentTarget)}
+                  onClick={(e) => setAnchor(e.currentTarget)}
                 />
                 {renderMenu()}
               </Grid>
@@ -566,7 +566,7 @@ const PeaAccountProfile = ({
           </PeaText>
           <PeaText gutterBottom />
           <Grid container spacing={1}>
-            {tags.map(item => (
+            {tags.map((item) => (
               <Grid item key={item.label}>
                 <PeaTag
                   color={'secondary'}

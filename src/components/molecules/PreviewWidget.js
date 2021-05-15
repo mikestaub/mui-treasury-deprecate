@@ -103,7 +103,7 @@ const PreviewWidget = ({
               component={'a'}
               href={sandboxLink}
               target={'_blank'}
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
               }}
             >

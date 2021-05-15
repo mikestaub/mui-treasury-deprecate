@@ -16,7 +16,7 @@ const MobileThemeController = ({
   onOpen,
   onClose,
 }) => {
-  const createOnClick = t => {
+  const createOnClick = (t) => {
     if (type === t && opened) {
       return onClose;
     }

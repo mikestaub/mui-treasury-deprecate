@@ -7,7 +7,7 @@ import { jssPreset, StylesProvider } from '@material-ui/styles';
 import NoSsr from '@material-ui/core/NoSsr';
 import Frame from 'react-frame-component';
 
-const styles = theme => ({
+const styles = (theme) => ({
   root: {
     backgroundColor: theme.palette.common.white,
     height: 'calc(100vh - 48px)',
@@ -21,7 +21,7 @@ class DemoFrame extends React.Component {
     ready: false,
   };
 
-  handleRef = ref => {
+  handleRef = (ref) => {
     this.contentDocument = ref ? ref.node.contentDocument : null;
     this.contentWindow = ref ? ref.node.contentWindow : null;
   };

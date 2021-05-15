@@ -11,7 +11,7 @@ const ShareContent = () => {
       <PeaShareContent
         open={open}
         onClose={() => setOpen(false)}
-        onShare={name => alert(`${name} clicked`)}
+        onShare={(name) => alert(`${name} clicked`)}
       />
     </>
   );

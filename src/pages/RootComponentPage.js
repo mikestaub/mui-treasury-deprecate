@@ -9,7 +9,7 @@ const flatten = (data, callback) => {
   return [data, ...callback(data.children)];
 };
 
-const normalize = array =>
+const normalize = (array) =>
   array.reduce(
     (result, current) => [...result, ...flatten(current, normalize)],
     [],
@@ -24,7 +24,7 @@ const RootComponentPage = () => (
         exact
         key={path}
         path={path}
-        render={router => <Page {...router} />}
+        render={(router) => <Page {...router} />}
       />
     ))}
   </Switch>

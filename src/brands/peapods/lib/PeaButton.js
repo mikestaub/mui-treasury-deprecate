@@ -10,14 +10,14 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 import Icon from './PeaIcon';
 
-const getLoaderSize = size => {
+const getLoaderSize = (size) => {
   if (size === 'small') return 16;
   if (size === 'big') return 28;
   if (size === 'large') return 36;
   return 20;
 };
 
-const injectColor = color => {
+const injectColor = (color) => {
   if (
     color === 'inherit' ||
     color === 'primary' ||

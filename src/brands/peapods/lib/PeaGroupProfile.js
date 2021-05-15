@@ -34,7 +34,7 @@ const PeaGroupProfile = ({
     { index: 3, ref: messagesRef, label: 'Messages', count: undefined },
   ];
 
-  const onTabChange = index => {
+  const onTabChange = (index) => {
     if (onChangeTab) {
       onChangeTab(tabs[index]);
     }
@@ -65,7 +65,7 @@ const PeaGroupProfile = ({
                 {typeof description === 'string' ? (
                   <PeaText>{description}</PeaText>
                 ) : (
-                  React.Children.map(description, text => (
+                  React.Children.map(description, (text) => (
                     <div
                       style={{
                         marginBottom: 20,
@@ -87,7 +87,7 @@ const PeaGroupProfile = ({
             </PeaText>
 
             <Grid container wrap="wrap" spacing={1}>
-              {tags.map(tag => (
+              {tags.map((tag) => (
                 <Grid item key={tag}>
                   <PeaTag
                     color={'secondary'}

@@ -36,9 +36,7 @@ export default ({ palette: { primary, secondary, common, text, error } }) => ({
       },
     },
     colorPrimary: {
-      backgroundColor: Color(primary.main)
-        .fade(0.75)
-        .string(),
+      backgroundColor: Color(primary.main).fade(0.75).string(),
       '&.PeaTag-root': {
         '& .MuiChip-label': {
           color: primary.dark,
@@ -46,9 +44,7 @@ export default ({ palette: { primary, secondary, common, text, error } }) => ({
       },
     },
     colorSecondary: {
-      backgroundColor: Color(secondary.main)
-        .fade(0.75)
-        .string(),
+      backgroundColor: Color(secondary.main).fade(0.75).string(),
       '&.PeaTag-root': {
         '& .MuiChip-label': {
           color: secondary.dark,

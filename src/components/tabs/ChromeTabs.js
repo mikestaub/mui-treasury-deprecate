@@ -17,7 +17,7 @@ const useTabStyles = makeStyles(({ palette, spacing, breakpoints }) => {
   const defaultMinWidth = {
     md: 120,
   };
-  const getTextColor = color => {
+  const getTextColor = (color) => {
     if (Color(color).isLight()) return palette.text.primary;
     return palette.common.white;
   };
@@ -56,9 +56,7 @@ const useTabStyles = makeStyles(({ palette, spacing, breakpoints }) => {
       },
       '&:hover': {
         '&:not($selected)': {
-          backgroundColor: Color(bgColor)
-            .whiten(0.6)
-            .hex(),
+          backgroundColor: Color(bgColor).whiten(0.6).hex(),
         },
         '&::before': {
           opacity: 0,
@@ -91,7 +89,7 @@ const ChromeTabs = ({ tabs, tabStyle, tabProps, ...props }) => {
   const tabClasses = useTabStyles({ ...tabProps, ...tabStyle });
   return (
     <Tabs {...props} classes={tabsClasses}>
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <Tab key={tab.label} {...tabProps} {...tab} classes={tabClasses} />
       ))}
     </Tabs>

@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import HelpIcon from '@material-ui/icons/Help';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-const useStyles = makeStyles(theme => {
+const useStyles = makeStyles((theme) => {
   return {
     warning: {
       color: theme.palette.secondary.main,

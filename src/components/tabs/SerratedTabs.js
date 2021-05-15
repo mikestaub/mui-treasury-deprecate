@@ -23,7 +23,7 @@ const useTabStyles = makeStyles(({ palette, spacing, breakpoints }) => {
   const defaultMinWidth = {
     md: 120,
   };
-  const getTextColor = color => {
+  const getTextColor = (color) => {
     if (Color(color).isLight()) return palette.text.primary;
     return palette.common.white;
   };
@@ -90,7 +90,7 @@ const SerratedTabs = ({ tabs, tabStyle, tabProps, ...props }) => {
   const tabClasses = useTabStyles({ ...tabProps, ...tabStyle });
   return (
     <Tabs {...props} classes={tabsClasses}>
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <Tab key={tab.label} {...tabProps} {...tab} classes={tabClasses} />
       ))}
     </Tabs>

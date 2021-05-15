@@ -149,7 +149,7 @@ const PeaUserFilters = ({ open, onClose }) => {
             aria-label="position"
             name="position"
             value={genderValue}
-            onChange={e => onGenderValueChange(e.target.value)}
+            onChange={(e) => onGenderValueChange(e.target.value)}
             row
             fullWidth
           >
@@ -189,7 +189,7 @@ const PeaUserFilters = ({ open, onClose }) => {
             fullWidth
             margin={'dense'}
             value={sortByValue || ''}
-            onChange={e => onSortByValueChange(e.target.value)}
+            onChange={(e) => onSortByValueChange(e.target.value)}
           >
             <MenuItem value={1}>Distance</MenuItem>
             <MenuItem value={2}>Newest</MenuItem>

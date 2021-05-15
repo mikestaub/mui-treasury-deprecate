@@ -7,14 +7,14 @@ import MuiButton from '@material-ui/core/Button';
 import Icon from 'extensions/Icon';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
-const getLoaderSize = size => {
+const getLoaderSize = (size) => {
   if (size === 'small') return 16;
   if (size === 'big') return 28;
   if (size === 'large') return 36;
   return 20;
 };
 
-const injectColor = color => {
+const injectColor = (color) => {
   if (
     color === 'inherit' ||
     color === 'primary' ||
@@ -74,15 +74,15 @@ const useStyles = makeStyles(({ breakpoints, palette, spacing, shadows }) => {
     // eslint-disable-next-line max-len
     '.MuiButton-label:not([class*="-icon-isolated"]) > .material-icons:not([class*="-bg-"]), > svg:not([class*="-bg-"])';
   const loaderSelector = '.MuiButton-label .MuiButton-loader';
-  const mapBtnHeight = x => 36 - Math.exp(3.72 - x / 38.6);
-  const getIconSize = btnHeight => {
+  const mapBtnHeight = (x) => 36 - Math.exp(3.72 - x / 38.6);
+  const getIconSize = (btnHeight) => {
     const icon = Math.round(mapBtnHeight(btnHeight));
     if (icon % 2 === 0) {
       return icon;
     }
     return icon + 1;
   };
-  const getBgIconSize = btnSize => {
+  const getBgIconSize = (btnSize) => {
     const mapping = {
       small: btnHeights.small - 6,
       normal: btnHeights.normal - 8,
@@ -91,7 +91,7 @@ const useStyles = makeStyles(({ breakpoints, palette, spacing, shadows }) => {
     };
     return mapping[btnSize];
   };
-  const generateStylesBySize = size => ({
+  const generateStylesBySize = (size) => ({
     fontSize: labelSizes[size],
     padding: `0 ${btnHeights[size] / 2}px`,
     minHeight: btnHeights[size],
@@ -131,9 +131,7 @@ const useStyles = makeStyles(({ breakpoints, palette, spacing, shadows }) => {
       '&.-color-danger': {
         color: palette.error.main,
         '&:hover': {
-          backgroundColor: Color(palette.error.main)
-            .fade(0.92)
-            .toString(),
+          backgroundColor: Color(palette.error.main).fade(0.92).toString(),
         },
       },
       '&.-compact': {
@@ -151,18 +149,19 @@ const useStyles = makeStyles(({ breakpoints, palette, spacing, shadows }) => {
       },
       // Icon
       // eslint-disable-next-line max-len
-      '&[class*="-shape-rectangle"], &[class*="-shape-chubby"], &:not([class*="-shape-"])': {
-        [`& ${notBgIconSelector}`]: {
-          '&:first-of-type': {
-            marginLeft: '-0.3em',
-            marginRight: 8,
-          },
-          '&:last-of-type': {
-            marginRight: '-0.3em',
-            marginLeft: 8,
+      '&[class*="-shape-rectangle"], &[class*="-shape-chubby"], &:not([class*="-shape-"])':
+        {
+          [`& ${notBgIconSelector}`]: {
+            '&:first-of-type': {
+              marginLeft: '-0.3em',
+              marginRight: 8,
+            },
+            '&:last-of-type': {
+              marginRight: '-0.3em',
+              marginLeft: 8,
+            },
           },
         },
-      },
       '&.-labelExpanded': {
         [`& ${notBgIconSelector}`]: {
           '&:first-of-type': {
@@ -341,9 +340,7 @@ const useStyles = makeStyles(({ breakpoints, palette, spacing, shadows }) => {
     },
     outlined: {
       '&.-color-danger': {
-        borderColor: Color(palette.error.main)
-          .fade(0.5)
-          .toString(),
+        borderColor: Color(palette.error.main).fade(0.5).toString(),
         '&:hover': {
           borderColor: palette.error.main,
         },

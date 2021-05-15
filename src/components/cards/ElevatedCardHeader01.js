@@ -46,7 +46,7 @@ const ElevatedCardHeader01 = () => (
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map(row => (
+            {rows.map((row) => (
               <TableRow key={row.id}>
                 <TableCell component="th" scope="row">
                   {row.name}

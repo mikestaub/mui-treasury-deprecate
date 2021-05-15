@@ -52,7 +52,7 @@ const PersistentImage = styled('img')(({ visible }) => ({
 }));
 const TimelinePage = () => {
   const [activeImages, setActiveImages] = useState([]);
-  const createSection = prefix => (
+  const createSection = (prefix) => (
     <>
       <Grid item xs={12} sm={12} md={5}>
         <Box
@@ -258,9 +258,9 @@ const TimelinePage = () => {
                 large: true,
               },
             ]}
-            onMouseOver={id => setActiveImages(uniq([...activeImages, id]))}
-            onFocus={id => setActiveImages(uniq([...activeImages, id]))}
-            onMouseLeave={id => setActiveImages(without(activeImages, id))}
+            onMouseOver={(id) => setActiveImages(uniq([...activeImages, id]))}
+            onFocus={(id) => setActiveImages(uniq([...activeImages, id]))}
+            onMouseLeave={(id) => setActiveImages(without(activeImages, id))}
           />
         </Grid>
         {createSection('Blog I')}

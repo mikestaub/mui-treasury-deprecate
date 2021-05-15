@@ -209,7 +209,7 @@ export const TOUCH_RIPPLE = {
   child: 'MuiTouchRipple-child',
 };
 
-export default (converter = classes => classes) =>
+export default (converter = (classes) => classes) =>
   converter({
     AVATAR,
     APP_BAR,

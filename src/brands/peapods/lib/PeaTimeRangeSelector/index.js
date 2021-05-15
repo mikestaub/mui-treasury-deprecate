@@ -93,7 +93,7 @@ const PeaTimeRangeSelector = ({
     const { start, end } = timeRange;
     const key = `${start}_${end}`;
 
-    const [foundTimeRange] = selection.filter(option => {
+    const [foundTimeRange] = selection.filter((option) => {
       const t = option.timeRange;
       const timeRangeKey = `${t.start}_${t.end}`;
 
@@ -159,7 +159,7 @@ const PeaTimeRangeSelector = ({
 
     return (
       <Grid container spacing={1}>
-        {peas.map(pea => {
+        {peas.map((pea) => {
           let badge;
           let color = 'secondary';
           if (pea.state === 'MAYBE_AVAILABLE') {

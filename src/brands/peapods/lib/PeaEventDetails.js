@@ -170,9 +170,27 @@ const PeaEventDetails = ({
   const connectionRef = useRef();
 
   const tabs = [
-    { index: 0, ref: aboutRef, label: 'About', count: undefined },
-    { index: 1, ref: podsRef, label: 'Pods', count: podCount },
-    { index: 2, ref: connectionRef, label: 'Connections', count: undefined },
+    {
+      id: 'event-about-tab',
+      index: 0,
+      ref: aboutRef,
+      label: 'About',
+      count: undefined,
+    },
+    {
+      id: 'event-pods-tab',
+      index: 1,
+      ref: podsRef,
+      label: 'Pods',
+      count: podCount,
+    },
+    {
+      id: 'event-connections-tab',
+      index: 2,
+      ref: connectionRef,
+      label: 'Connections',
+      count: undefined,
+    },
   ];
 
   const scrollToTop = () => (scrollRef.current.scrollTop = 0);
@@ -367,6 +385,7 @@ const PeaEventDetails = ({
 
               <Grid item>
                 <PeaButton
+                  data-test-id={'mutate-pod'}
                   onClick={() => onCreatePodClicked(id)}
                   variant={'contained'}
                   color={'primary'}

@@ -54,9 +54,6 @@ const PeaGroupDialog = ({
             value={name}
             onChange={onChange('name')}
           />
-          <Box mt={2}>
-            <PeaInfoTooltip description={'The name of group'} />
-          </Box>
         </Grid>
         <FormControl margin={'normal'} fullWidth>
           <Grid
@@ -66,9 +63,6 @@ const PeaGroupDialog = ({
             wrap={'nowrap'}
           >
             <FormLabel component="legend">Cover Picture</FormLabel>
-            <Box mb={0.5}>
-              <PeaInfoTooltip description={'The cover picture of group'} />
-            </Box>
           </Grid>
 
           <Box
@@ -111,28 +105,24 @@ const PeaGroupDialog = ({
             value={description || ''}
             onChange={onChange('description')}
           />
-          <Box mt={2}>
-            <PeaInfoTooltip description={'The description of group'} />
-          </Box>
         </Grid>
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           {inviteInput}
-          <Box mt={2}>
-            <PeaInfoTooltip description={'The members of group'} />
-          </Box>
         </Grid>
 
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           {tagsInput}
           <Box mt={2}>
-            <PeaInfoTooltip description={'The tags of group'} />
+            <PeaInfoTooltip description={'tags help peas find your group'} />
           </Box>
         </Grid>
 
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           {typeInput}
           <Box mt={2}>
-            <PeaInfoTooltip description={'The type of group'} />
+            <PeaInfoTooltip
+              description={'personal groups are only visible to you'}
+            />
           </Box>
         </Grid>
       </>

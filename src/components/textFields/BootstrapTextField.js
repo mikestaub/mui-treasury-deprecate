@@ -97,7 +97,7 @@ export const getTheme = ({ palette, spacing, transitions }) => {
   };
 };
 
-const BootstrapTextField = props => (
+const BootstrapTextField = (props) => (
   <div>
     <TextField
       classes={{

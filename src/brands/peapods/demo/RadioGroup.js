@@ -16,7 +16,7 @@ const Radio = ({ label }) => {
         aria-label="position"
         name="position"
         value={value}
-        onChange={e => onChange(e.target.value)}
+        onChange={(e) => onChange(e.target.value)}
         row
       >
         <FormControlLabel

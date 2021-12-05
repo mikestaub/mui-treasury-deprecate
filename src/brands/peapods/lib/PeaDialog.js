@@ -33,6 +33,14 @@ const useStyles = makeStyles(() => ({
       background: 'white',
     },
   },
+  container: {
+    height: '100%',
+    overflowY: 'auto',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    background: 'white',
+  },
 }));
 
 const MotionWrapper = forwardRef(({ open, children, ...rest }, ref) => {
@@ -42,7 +50,7 @@ const MotionWrapper = forwardRef(({ open, children, ...rest }, ref) => {
 
   const variants = {
     open: {
-      height: '30%',
+      height: '48%',
     },
     closed,
   };
@@ -122,6 +130,7 @@ const PeaDialog = ({
   const theme = useTheme();
   const { md } = theme.breakpoints.values;
   const isMobile = useMediaQuery(`(max-width:${md}px)`);
+  const classes = useStyles();
 
   const contentProps = {
     titleVariant,
@@ -132,12 +141,10 @@ const PeaDialog = ({
     onClose,
   };
 
-  const onScroll = e => e.stopPropagation();
+  const onScroll = (e) => e.stopPropagation();
 
   return isMobile ? (
     <div onScroll={onScroll} onWheel={onScroll} onTouchMove={onScroll}>
-      <Backdrop open={open} transitionDuration={500} onClick={onClose} />
-
       <MotionWrapper open={open}>
         <Container
           className={cx(
@@ -146,11 +153,14 @@ const PeaDialog = ({
             'PeaEventDialog',
             'PeaGroupDialog',
             className,
+            classes.container,
           )}
         >
           {renderContent(contentProps)}
         </Container>
       </MotionWrapper>
+
+      <Backdrop open={open} transitionDuration={500} onClick={onClose} />
     </div>
   ) : (
     <Dialog

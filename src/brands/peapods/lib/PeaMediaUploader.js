@@ -69,7 +69,7 @@ class MediaUploader extends Component {
     };
     this.wasClosed = false; // protect against async race condition
     this.cloudinaryWidget = null;
-    this.cloudinaryUrl = 'https://widget.cloudinary.com/v2.0/global/all.js';
+    this.cloudinaryUrl = 'https://upload-widget.cloudinary.com/global/all.js';
   }
 
   componentWillUnmount() {

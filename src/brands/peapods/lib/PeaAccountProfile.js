@@ -32,19 +32,16 @@ import PeaGroupSelector from './PeaGroupSelector';
 const AVATAR_SCROLL_FACTOR = 0.0055;
 
 const useStyles = makeStyles(() => ({
-  followButton: {
-    width: 160,
-  },
   scrollHeader: {
     display: 'flex',
     alignItems: 'center',
-    height: 50,
+    height: 60,
     boxShadow: '3px 1px 20px rgba(0,0,0,0.2)',
     padding: '0 10px',
     position: 'sticky',
     top: 0,
     width: '100%',
-    zIndex: 1000,
+    zIndex: 10,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .5s',
@@ -79,6 +76,7 @@ const PeaAccountProfile = ({
   followableGroups,
   tags,
   podsCount,
+  groupsCount,
   reputation,
   followersCount,
   followingCount,
@@ -86,6 +84,8 @@ const PeaAccountProfile = ({
   eventList,
   groupList,
   podList,
+  followingList,
+  followersList,
   onChange,
   onSubmit,
   editing,
@@ -132,12 +132,35 @@ const PeaAccountProfile = ({
   const podsRef = useRef();
   const aboutRef = useRef();
   const groupsRef = useRef();
+  const followersRef = useRef();
+  const followingRef = useRef();
 
   const tabs = [
-    { ref: hostingRef, label: 'Hosting' },
-    { ref: podsRef, label: 'Pods' },
-    { ref: aboutRef, label: 'About' },
-    { ref: groupsRef, label: 'Groups' },
+    {
+      id: 'profile-tab-about',
+      ref: aboutRef,
+      label: 'About',
+      count: undefined,
+    },
+    { id: 'profile-tab-pods', ref: podsRef, label: 'Pods', count: podsCount },
+    {
+      id: 'profile-tab-groups',
+      ref: groupsRef,
+      label: 'Groups',
+      count: groupsCount,
+    },
+    {
+      id: 'profile-tab-followers',
+      ref: followersRef,
+      label: 'Followers',
+      count: followersCount,
+    },
+    {
+      id: 'profile-tab-following',
+      ref: followingRef,
+      label: 'Following',
+      count: followingCount,
+    },
   ];
 
   const isFollower = followerState === 'FOLLOWING';
@@ -226,12 +249,12 @@ const PeaAccountProfile = ({
     setFollowAnchorEl(null);
   };
 
-  const handleOnFollow = async groupIds => {
+  const handleOnFollow = async (groupIds) => {
     await onFollow(groupIds);
     onFollowPopClose();
   };
 
-  const onFollowBtnClick = event => {
+  const onFollowBtnClick = (event) => {
     if (needsGroups) {
       setFollowAnchorEl(event.currentTarget);
     } else {
@@ -239,13 +262,13 @@ const PeaAccountProfile = ({
     }
   };
 
-  const onNotificationsChange = enabled => {
+  const onNotificationsChange = (enabled) => {
     onChangeSettings({
       pushNotificationsDisabled: enabled ? !!enabled : null,
     });
   };
 
-  const onReceiveEmailChange = enabled => {
+  const onReceiveEmailChange = (enabled) => {
     onChangeSettings({
       emailNotificationsDisabled: enabled ? !!enabled : null,
     });
@@ -257,7 +280,7 @@ const PeaAccountProfile = ({
   };
 
   const onScroll = useCallback(
-    e => {
+    (e) => {
       const content = scrollRef.current;
 
       const offset = content.scrollHeight - content.clientHeight;
@@ -270,7 +293,7 @@ const PeaAccountProfile = ({
     [tabIndex, tabs],
   );
 
-  const handleTabChanged = newIndex => {
+  const handleTabChanged = (newIndex) => {
     setTabIndex(newIndex);
 
     if (onTabChange) {
@@ -372,6 +395,7 @@ const PeaAccountProfile = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={'PeaAccountProfile-root'}
       onScroll={onScroll}
       ref={scrollRef}
@@ -392,212 +416,143 @@ const PeaAccountProfile = ({
       <CardMedia className={'MuiCardMedia-root'} image={cover} />
 
       <CardContent className={'MuiCardContent-root'}>
-        <Grid container justify={'space-between'} spacing={2}>
-          <Grid item>
-            <PeaAvatar
-              style={{
-                transform: `translateY(-50%) scale(${avatarScale})`,
-                transformOrigin: 33,
-              }}
-              className={'MuiAvatar-root-profilePic'}
-              src={image}
-            />
-          </Grid>
-          <Hidden only={'xs'}>
-            <Grid item>
-              <PeaStatistic label={'Pods'} value={podsCount} />
-            </Grid>
-            <Grid item>
-              <PeaStatistic label={'Following'} value={followingCount} />
-            </Grid>
-            <Grid item>
-              <PeaStatistic label={'Followers'} value={followersCount} />
-            </Grid>
-          </Hidden>
-          <Grid item className={'MuiGrid-item -reputation'}>
-            <PeaText color={'secondary'} weight={'bold'} align={'center'}>
-              Reputation: {reputation}
-            </PeaText>
-          </Grid>
-        </Grid>
+        <PeaAvatar
+          className={'MuiAvatar-root-profilePic'}
+          src={image}
+          style={{
+            transform: `translateY(-60%) scale(${avatarScale})`,
+            transformOrigin: 33,
+          }}
+        />
 
-        <Box mt={4} mb={3}>
-          {followerRequested && (
-            <Grid container spacing={2} justify="center">
-              <Grid item>
+        {followerRequested && (
+          <PeaButton
+            variant={'contained'}
+            color={'primary'}
+            size={'small'}
+            disabled={acceptFollowLoading}
+            loading={acceptFollowLoading}
+            onClick={onAcceptFollowRequest}
+          >
+            {'Accept Follow Request'}
+          </PeaButton>
+        )}
+
+        <Grid className={'MuiGrid-container -actions'} container spacing={1}>
+          <Grid item>
+            {isCurrentUser ? (
+              <>
+                <PeaUserSettings
+                  onNotificationsChange={onNotificationsChange}
+                  onReceiveEmailChange={onReceiveEmailChange}
+                  onEditProfile={() => setEditing(true)}
+                  onContactSupport={onContactSupport}
+                  onLogout={onLogout}
+                  onDeleteProfile={() => setDelModalOpen(true)}
+                />
+
+                <PeaConfirmation
+                  title={'Delete Account'}
+                  content={'Are you sure?'}
+                  submitLabel={'Delete'}
+                  open={delModalOpen}
+                  onClose={() => setDelModalOpen(false)}
+                  onSubmit={() => deleteProfile()}
+                  submitting={isDeleting}
+                />
+              </>
+            ) : (
+              <>
                 <PeaButton
                   variant={'contained'}
                   color={'primary'}
                   size={'small'}
-                  disabled={acceptFollowLoading}
-                  loading={acceptFollowLoading}
-                  onClick={onAcceptFollowRequest}
+                  disabled={followBtnDisabled}
+                  loading={followLoading}
+                  onClick={onFollowBtnClick}
+                  onMouseOver={onMouseOver}
+                  onMouseOut={onMouseOut}
+                  onFocus={() => {}}
+                  onBlur={() => {}}
                 >
-                  {'Accept Follow Request'}
+                  {followButtonText}
                 </PeaButton>
-              </Grid>
-            </Grid>
-          )}
 
-          <Grid className={'MuiGrid-container -actions'} container spacing={1}>
-            <Grid item>
-              {isCurrentUser ? (
-                <>
-                  <PeaUserSettings
-                    onNotificationsChange={onNotificationsChange}
-                    onReceiveEmailChange={onReceiveEmailChange}
-                    onEditProfile={() => setEditing(true)}
-                    onContactSupport={onContactSupport}
-                    onLogout={onLogout}
-                    onDeleteProfile={() => setDelModalOpen(true)}
+                <Popover
+                  id={followAriaId}
+                  open={groupSelectorOpen}
+                  anchorEl={followAnchorEl}
+                  onClose={onFollowPopClose}
+                >
+                  <PeaGroupSelector
+                    followButtonText={confirmText}
+                    followableGroups={
+                      followButtonText === 'Follow'
+                        ? followableGroups
+                        : undefined
+                    }
+                    followLoading={followLoading}
+                    onCreateGroupClicked={onCreateGroupClicked}
+                    onSubmit={handleOnFollow}
                   />
-
-                  <PeaConfirmation
-                    title={'Delete Account'}
-                    content={'Are you sure?'}
-                    submitLabel={'Delete'}
-                    open={delModalOpen}
-                    onClose={() => setDelModalOpen(false)}
-                    onSubmit={() => deleteProfile()}
-                    submitting={isDeleting}
-                  />
-                </>
-              ) : (
-                <>
-                  <PeaButton
-                    className={classes.followButton}
-                    variant={'contained'}
-                    color={'primary'}
-                    size={'small'}
-                    disabled={followBtnDisabled}
-                    loading={followLoading}
-                    onClick={onFollowBtnClick}
-                    onMouseOver={onMouseOver}
-                    onMouseOut={onMouseOut}
-                    onFocus={() => {}}
-                    onBlur={() => {}}
-                  >
-                    {followButtonText}
-                  </PeaButton>
-
-                  <Popover
-                    id={followAriaId}
-                    open={groupSelectorOpen}
-                    anchorEl={followAnchorEl}
-                    onClose={onFollowPopClose}
-                  >
-                    <PeaGroupSelector
-                      followButtonText={confirmText}
-                      followableGroups={
-                        followButtonText === 'Follow'
-                          ? followableGroups
-                          : undefined
-                      }
-                      followLoading={followLoading}
-                      onCreateGroupClicked={onCreateGroupClicked}
-                      onSubmit={handleOnFollow}
-                    />
-                  </Popover>
-                </>
-              )}
-            </Grid>
-
-            {!isCurrentUser && (
-              <>
-                <Grid item>
-                  <PeaButton
-                    variant={'outlined'}
-                    color={'primary'}
-                    size={'small'}
-                    onClick={onInviteClick}
-                  >
-                    Invite
-                  </PeaButton>
-                </Grid>
-
-                <Grid item>
-                  <PeaButton icon={'email'} size={'small'} shape={'circular'}>
-                    message
-                  </PeaButton>
-                </Grid>
-
-                <Grid item>
-                  <PeaButton
-                    icon={'more_vert'}
-                    size={'small'}
-                    shape={'circular'}
-                    onClick={e => setAnchor(e.currentTarget)}
-                  >
-                    more
-                  </PeaButton>
-                  {renderMenu()}
-                </Grid>
+                </Popover>
               </>
             )}
           </Grid>
+
+          {!isCurrentUser && (
+            <>
+              <Grid item>
+                <PeaButton
+                  variant={'outlined'}
+                  color={'primary'}
+                  size={'small'}
+                  onClick={onInviteClick}
+                >
+                  Invite
+                </PeaButton>
+              </Grid>
+
+              <Grid item>
+                <PeaButton
+                  icon={'email'}
+                  size={'small'}
+                  shape={'circular'}
+                  tooltip="message"
+                />
+              </Grid>
+
+              <Grid item>
+                <PeaButton
+                  icon={'more_vert'}
+                  size={'small'}
+                  shape={'circular'}
+                  tooltip="more"
+                  onClick={(e) => setAnchor(e.currentTarget)}
+                />
+                {renderMenu()}
+              </Grid>
+            </>
+          )}
+        </Grid>
+
+        <Box mt={2}>
+          <PeaText variant={'h5'} weight={'bold'}>
+            {name}
+          </PeaText>
+          <PeaText gutterBottom>{`@${userName}`}</PeaText>
+          {isFollower && <PeaText gutterBottom>{'follows you'}</PeaText>}
         </Box>
-
-        <Hidden smUp>
-          <Grid container justify={'space-evenly'}>
-            <Grid item>
-              <PeaStatistic label={'Pods'} value={podsCount} />
-            </Grid>
-            <Grid item>
-              <PeaStatistic label={'Following'} value={48} />
-            </Grid>
-            <Grid item>
-              <PeaStatistic label={'Followers'} value={5} />
-            </Grid>
-          </Grid>
-          <br />
-        </Hidden>
-
-        <Hidden only={'xs'}>
-          <div style={{ marginTop: -32 }} />
-        </Hidden>
-
-        <PeaText variant={'h5'} weight={'bold'}>
-          {name}
-        </PeaText>
-
-        <PeaText gutterBottom>{`@${userName}`}</PeaText>
-        {isFollower && <PeaText gutterBottom>{'follows you'}</PeaText>}
-
-        <Grid container wrap={'nowrap'} spacing={1}>
-          <Grid item>
-            <PeaIcon color={'secondary'} size={'small'}>
-              info
-            </PeaIcon>
-          </Grid>
-          <Grid item>
-            <PeaText gutterBottom>{bio}</PeaText>
-          </Grid>
-        </Grid>
-        <Grid container wrap={'nowrap'} spacing={1}>
-          <Grid item>
-            <PeaIcon color={'secondary'} size={'small'}>
-              location_on
-            </PeaIcon>
-          </Grid>
-          <Grid item>
-            <PeaText gutterBottom>
-              {location ? location.formattedAddress : 'Unknown'}
-            </PeaText>
-          </Grid>
-        </Grid>
       </CardContent>
 
       <PeaSwipeableTabs
         activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
+        hasPadding={!isMobile}
         onTabChange={handleTabChanged}
-        customStyle={{ paddingTop: 50 }}
+        stickyOffset={60}
       >
-        <Box>{eventList}</Box>
-
-        <Box>{podList}</Box>
-
         <Box p={2} textAlign={'left'}>
           <PeaText gutterBottom>
             <PeaText link underline={'none'}>
@@ -611,7 +566,7 @@ const PeaAccountProfile = ({
           </PeaText>
           <PeaText gutterBottom />
           <Grid container spacing={1}>
-            {tags.map(item => (
+            {tags.map((item) => (
               <Grid item key={item.label}>
                 <PeaTag
                   color={'secondary'}
@@ -623,7 +578,13 @@ const PeaAccountProfile = ({
           </Grid>
         </Box>
 
+        <Box>{podList}</Box>
+
         <Box>{groupList}</Box>
+
+        <Box>{followersList}</Box>
+
+        <Box>{followingList}</Box>
       </PeaSwipeableTabs>
 
       <PeaInvitationDialog
@@ -671,11 +632,14 @@ PeaAccountProfile.propTypes = {
   isCurrentUser: PropTypes.bool,
   email: PropTypes.string,
   phoneNumber: PropTypes.string,
+  groupsCount: PropTypes.number,
   followersCount: PropTypes.number,
   followingCount: PropTypes.number,
   isPrivate: PropTypes.bool,
   groupList: PropTypes.object,
   podList: PropTypes.object,
+  followersList: PropTypes.object,
+  followingList: PropTypes.object,
   editing: PropTypes.bool,
   isUpdating: PropTypes.bool,
   isDeleting: PropTypes.bool,
@@ -705,7 +669,6 @@ PeaAccountProfile.propTypes = {
   isMobile: PropTypes.bool,
   activeTabIndex: PropTypes.number,
   onTabChange: PropTypes.func.isRequired,
-  eventList: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 PeaAccountProfile.defaultProps = {
@@ -718,7 +681,6 @@ PeaAccountProfile.defaultProps = {
   locationInput: undefined,
   birthday: undefined,
   gender: undefined,
-  eventList: [],
   pods: [],
   invitableGroups: [],
   followableGroups: [],
@@ -734,10 +696,12 @@ PeaAccountProfile.defaultProps = {
   editing: false,
   isUpdating: false,
   isDeleting: false,
+  podList: undefined,
   groupList: undefined,
+  followersList: undefined,
+  followingList: undefined,
   followLoading: false,
   currentUserFollowing: undefined,
-  podList: undefined,
   onChange: () => {},
   onSubmit: () => {},
   setEditing: () => {},

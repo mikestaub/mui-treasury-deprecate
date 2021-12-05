@@ -6,7 +6,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import tresuryTheme from '../src/theme/treasury';
 import './global.css';
 
-const ThemeDecorator = storyFn => (
+const ThemeDecorator = (storyFn) => (
   <>
     <CssBaseline />
     <ThemeProvider theme={tresuryTheme}>

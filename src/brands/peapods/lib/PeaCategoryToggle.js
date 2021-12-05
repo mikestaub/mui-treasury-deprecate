@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useRef } from 'react';
 import PropTypes from 'prop-types';
 import cx from 'clsx';
@@ -5,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 
-const styles = theme => {
+const styles = (theme) => {
   const blurLength = 5;
   const imageSize = 100;
   const mobileImageSize = 80;
@@ -144,6 +145,7 @@ const PeaCategoryToggle = withStyles(styles, { name: 'PeaCategoryToggle' })(
         <FormControlLabel
           control={
             <Checkbox
+              id={`event-category-${label.toLowerCase()}-toggle`}
               color={'primary'}
               {...CheckboxProps}
               checked={checked}

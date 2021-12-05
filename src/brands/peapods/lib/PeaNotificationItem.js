@@ -30,6 +30,7 @@ const PeaNotificationItem = ({
   needGroups,
   isFollowing,
   requestApproved,
+  requestDenied,
 }) => {
   const count = Array.isArray(src) ? src.length : 0;
   const avatarSrc = Array.isArray(src) ? src[0] : src;
@@ -48,8 +49,6 @@ const PeaNotificationItem = ({
   }, [followAnchorEl, needGroups, setOpenFollowPopover, openFollowPopover]);
 
   const followAriaId = openFollowPopover ? 'follow-popover' : undefined;
-
-  const requestDenied = !unread && !requestApproved;
 
   const acceptText = requestApproved ? 'Approved' : 'Accept';
   const denyText = requestDenied ? 'Denied' : 'Deny';
@@ -79,7 +78,7 @@ const PeaNotificationItem = ({
     );
   };
 
-  const onFollowBtnClick = actionId => event => {
+  const onFollowBtnClick = (actionId) => (event) => {
     setFollowAnchorEl(event.currentTarget);
     onAction({ id: actionId, type: 'accept' });
   };
@@ -88,10 +87,12 @@ const PeaNotificationItem = ({
     setFollowAnchorEl(null);
   };
 
-  const handleOnFollow = actionId => async ({ groupIds, followBack }) => {
-    await onAction({ id: actionId, type: 'accept', groupIds, followBack });
-    onFollowPopClose();
-  };
+  const handleOnFollow =
+    (actionId) =>
+    async ({ groupIds, followBack }) => {
+      await onAction({ id: actionId, type: 'accept', groupIds, followBack });
+      onFollowPopClose();
+    };
 
   return (
     <ListItem className={cx('PeaNotificationItem-root', unread && '-unread')}>
@@ -233,6 +234,7 @@ PeaNotificationItem.propTypes = {
   onCreateGroupClicked: PropTypes.func,
   needGroups: PropTypes.bool,
   requestApproved: PropTypes.bool,
+  requestDenied: PropTypes.bool,
   isFollowing: PropTypes.bool,
 };
 
@@ -245,6 +247,7 @@ PeaNotificationItem.defaultProps = {
   followableGroups: [],
   needGroups: false,
   requestApproved: false,
+  requestDenied: false,
   isFollowing: false,
 };
 

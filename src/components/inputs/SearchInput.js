@@ -2,7 +2,7 @@ import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import Icon from '@material-ui/core/Icon';
 
-const SearchInput = props => (
+const SearchInput = (props) => (
   <InputBase
     className={'SearchInput-root'}
     placeholder={'Search...'}

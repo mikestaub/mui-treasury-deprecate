@@ -25,7 +25,7 @@ const PeaPodDialog = ({ onClose, ...props }) => {
               aria-label="status"
               name="status"
               value={value}
-              onChange={e => onChange(e.target.value)}
+              onChange={(e) => onChange(e.target.value)}
               row
             >
               <FormControlLabel
@@ -48,7 +48,7 @@ const PeaPodDialog = ({ onClose, ...props }) => {
               aria-label="privacy"
               name="privacy"
               value={value2}
-              onChange={e => onChange2(e.target.value)}
+              onChange={(e) => onChange2(e.target.value)}
               row
             >
               <FormControlLabel
@@ -75,7 +75,7 @@ const PeaPodDialog = ({ onClose, ...props }) => {
             <FormLabel component="legend">Size limit</FormLabel>
             <PeaCounter
               value={value3}
-              onChange={e => onChange3(e.target.value)}
+              onChange={(e) => onChange3(e.target.value)}
             />
           </FormControl>
         </React.Fragment>

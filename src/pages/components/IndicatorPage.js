@@ -5,11 +5,11 @@ import { DotIndicator, InvertedIndicator } from 'docs/components/indicators';
 const components = [
   {
     component: DotIndicator,
-    render: props => <DotIndicator.Demo {...props} />,
+    render: (props) => <DotIndicator.Demo {...props} />,
   },
   {
     component: InvertedIndicator,
-    render: props => <InvertedIndicator.Demo {...props} />,
+    render: (props) => <InvertedIndicator.Demo {...props} />,
     previewProps: {
       inverted: true,
     },

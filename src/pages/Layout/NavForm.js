@@ -48,7 +48,7 @@ const NavForm = ({
             aria-label="nav variant"
             name="navVariant"
             value={navVariant}
-            onChange={e => onChange(['navVariant'], [e.target.value])}
+            onChange={(e) => onChange(['navVariant'], [e.target.value])}
           >
             <FormControlLabel
               value="permanent"
@@ -89,7 +89,7 @@ const NavForm = ({
           variant={'outlined'}
           placeholder={'only number'}
           value={navWidth}
-          onChange={e =>
+          onChange={(e) =>
             onChange(
               ['navWidth'],
               [Number(e.target.value) ? Number(e.target.value) : 0],
@@ -115,7 +115,7 @@ const NavForm = ({
           <FormControl>
             <FormControlLabel
               checked={collapsible}
-              onChange={e => onChange(['collapsible'], [e.target.checked])}
+              onChange={(e) => onChange(['collapsible'], [e.target.checked])}
               control={<Checkbox />}
               label={'Enabled'}
             />
@@ -134,7 +134,7 @@ const NavForm = ({
               placeholder={'only number'}
               value={collapsedWidth}
               helperText={'width of nav after collapsed'}
-              onChange={e =>
+              onChange={(e) =>
                 onChange(
                   ['collapsedWidth'],
                   [Number(e.target.value) ? Number(e.target.value) : 0],

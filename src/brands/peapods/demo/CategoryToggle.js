@@ -13,7 +13,7 @@ const MenuItem = () => {
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7duEshbQ9Iple2a1jvGuUtRUGxJjKW7_lIwxlbEx_OthMBUiF'
         }
         checked={checked}
-        onChange={e => onChange(e.target.checked)}
+        onChange={(e) => onChange(e.target.checked)}
       />
       <PeaCategoryToggle
         label={'Beach'}
@@ -21,7 +21,7 @@ const MenuItem = () => {
           'https://freedesignfile.com/upload/2017/05/Sunrise-tropical-island-beach-view-HD-picture-01.jpg'
         }
         checked={checked}
-        onChange={e => onChange(e.target.checked)}
+        onChange={(e) => onChange(e.target.checked)}
       />
     </Box>
   );

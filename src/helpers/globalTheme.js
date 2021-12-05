@@ -13,9 +13,7 @@ const GlobalTheme = () => {
     .matches(/^#(([0-9a-fA-F]{2}){3}|([0-9a-fA-F]){3})$/, 'only hex color')
     .required('Please fill color in hexa format');
 
-  const positiveInt = Yup.number()
-    .integer()
-    .min(0);
+  const positiveInt = Yup.number().integer().min(0);
 
   const exist = Yup.string().required();
 

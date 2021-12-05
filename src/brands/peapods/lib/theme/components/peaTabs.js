@@ -14,6 +14,7 @@ export default ({ breakpoints, primary, secondary }) => ({
   },
   MuiTab: {
     root: {
+      alignItems: 'flex-end',
       backgroundColor: 'none',
       minHeight: 53,
       minWidth: 0,

@@ -50,7 +50,7 @@ const HeaderForm = ({ clipped, headerPosition, onChange }) => (
         <FormControl margin={'dense'}>
           <FormControlLabel
             checked={clipped}
-            onChange={e => onChange(['clipped'], [e.target.checked])}
+            onChange={(e) => onChange(['clipped'], [e.target.checked])}
             control={<Checkbox />}
             label={'Clipped'}
           />
@@ -68,7 +68,7 @@ const HeaderForm = ({ clipped, headerPosition, onChange }) => (
             aria-label="header position"
             name="headerPosition"
             value={headerPosition}
-            onChange={e => onChange(['headerPosition'], [e.target.value])}
+            onChange={(e) => onChange(['headerPosition'], [e.target.value])}
           >
             <FormControlLabel
               value="relative"

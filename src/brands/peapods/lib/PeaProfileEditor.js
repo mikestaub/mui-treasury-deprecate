@@ -69,7 +69,7 @@ const PeaProfileEditor = ({
 
   const [error, setError] = useState({});
 
-  const changeUser = userParams => {
+  const changeUser = (userParams) => {
     setUser(userParams);
 
     if (onChange) {
@@ -77,7 +77,7 @@ const PeaProfileEditor = ({
     }
   };
 
-  const onUserChange = field => event => {
+  const onUserChange = (field) => (event) => {
     let value = event.target.value || '';
     if (field === 'privateAccount') {
       value = event.target.checked;
@@ -97,7 +97,7 @@ const PeaProfileEditor = ({
     }
   };
 
-  const onLocationChange = res => {
+  const onLocationChange = (res) => {
     if (!res) {
       return;
     }
@@ -117,14 +117,14 @@ const PeaProfileEditor = ({
     });
   };
 
-  const onBirthdayChange = date => {
+  const onBirthdayChange = (date) => {
     changeUser({
       ...user,
       birthday: date,
     });
   };
 
-  const onTagsChanged = values => {
+  const onTagsChanged = (values) => {
     changeUser({
       ...user,
       tags: uniqBy(values, 'value'),
@@ -132,7 +132,7 @@ const PeaProfileEditor = ({
   };
 
   let hasError = false;
-  Object.keys(error).forEach(key => {
+  Object.keys(error).forEach((key) => {
     hasError = hasError || error[key];
   });
 

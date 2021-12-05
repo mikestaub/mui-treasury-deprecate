@@ -59,7 +59,7 @@ const ReviewCard01 = () => (
         of environment...
       </Typography>
       <div className={'ContentTail'}>
-        {faces.map(face => (
+        {faces.map((face) => (
           <Avatar className={'MuiAvatar-root'} key={face} src={face} />
         ))}
         <Typography

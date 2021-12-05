@@ -6,7 +6,7 @@ import { ParallaxCarousel } from 'docs/components/carousels';
 const components = [
   {
     component: ParallaxCarousel,
-    render: props => <ParallaxCarousel.Demo {...props} />,
+    render: (props) => <ParallaxCarousel.Demo {...props} />,
   },
 ];
 

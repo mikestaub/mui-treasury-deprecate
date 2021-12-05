@@ -38,7 +38,7 @@ const suggestions = [
   { label: 'Brazil' },
   { label: 'British Indian Ocean Territory' },
   { label: 'Brunei Darussalam' },
-].map(suggestion => ({
+].map((suggestion) => ({
   value: suggestion.label,
   label: suggestion.label,
 }));
@@ -49,7 +49,7 @@ const AutocompleteList = () => (
     clearOnFocus={false}
     placeholder="Search countries..."
     suggestions={suggestions}
-    onChange={value =>
+    onChange={(value) =>
       value
         ? alert(`"${JSON.stringify(value)}" is the current value`)
         : alert('no values')

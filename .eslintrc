@@ -13,7 +13,7 @@
     "import/no-unresolved": "off",
     "react/jsx-curly-brace-presence": "off"
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "es6": true

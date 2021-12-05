@@ -1,7 +1,7 @@
 import uniq from 'lodash/uniq';
 import uniqBy from 'lodash/uniqBy';
 
-const getCoreFiles = files => files.filter(({ core }) => !!core);
+const getCoreFiles = (files) => files.filter(({ core }) => !!core);
 
 export const mergeInfo = (...info) =>
   info.reduce((result, curr, index) =>

@@ -40,7 +40,7 @@ Size.defaultProps = {
 
 const SizePicker = ({ sizes }) => (
   <Grid container spacing={2}>
-    {sizes.map(size => (
+    {sizes.map((size) => (
       <Grid key={size.size} item>
         <Size {...size} />
       </Grid>

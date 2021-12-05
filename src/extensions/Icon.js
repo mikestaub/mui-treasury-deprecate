@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import MuiIcon from '@material-ui/core/Icon';
 
-const injectColor = color => {
+const injectColor = (color) => {
   if (
     color === 'inherit' ||
     color === 'primary' ||

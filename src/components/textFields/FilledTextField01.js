@@ -33,7 +33,7 @@ export const getTheme = ({ spacing }) => {
   };
 };
 
-const FilledTextField01 = props => (
+const FilledTextField01 = (props) => (
   <div>
     <TextField
       variant={'filled'}

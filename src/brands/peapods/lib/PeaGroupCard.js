@@ -24,6 +24,7 @@ import PeaIcon from './PeaIcon';
 import PeaText from './PeaTypography';
 
 const PeaGroupCard = ({
+  isMobile,
   isMember,
   isLoading,
   name,
@@ -54,7 +55,6 @@ const PeaGroupCard = ({
 
   const joinButtonProps = {
     size: 'small',
-    style: { marginLeft: 8, minWidth: 120 },
     onClick: () => (isMember ? onLeave() : onJoin()),
   };
 
@@ -79,7 +79,7 @@ const PeaGroupCard = ({
     onReport();
   };
 
-  const onTouchStart = e => {
+  const onTouchStart = (e) => {
     [lastTouchRef.current] = e.touches;
   };
 
@@ -116,7 +116,7 @@ const PeaGroupCard = ({
       <Divider variant={'middle'} />
 
       {onDelete && (
-        <MenuItem onClick={onDeleteClicked}>
+        <MenuItem id="group-delete-option" onClick={onDeleteClicked}>
           <ListItemText disableTypography>
             <PeaText color={'error'} variant={'body1'} weight={'bold'}>
               Delete
@@ -139,6 +139,7 @@ const PeaGroupCard = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={
         hasBorderRadius ? 'PeaGroupProfile-root' : 'PeaProfileCard-root'
       }
@@ -151,10 +152,54 @@ const PeaGroupCard = ({
 
       <CardContent className={'MuiCardContent-root'}>
         <Grid container direction="column">
-          <Grid item alignItems={'center'} xs>
-            <PeaText variant={'h6'} weight={'bold'}>
-              {name}
-            </PeaText>
+          <Grid
+            container
+            justify="space-between"
+            alignItems="center"
+            spacing={1}
+          >
+            <Grid item alignItems={'center'} xs>
+              <PeaText variant={'h6'} weight={'bold'}>
+                {name}
+              </PeaText>
+            </Grid>
+
+            <Grid item>
+              {type !== 'PERSONAL' && (
+                <PeaButton
+                  variant={'contained'}
+                  color={isMember ? 'primary' : 'danger'}
+                  style={{ minWidth: 100 }}
+                  loading={isLoading}
+                  {...joinButtonProps}
+                >
+                  {actionText}
+                </PeaButton>
+              )}
+            </Grid>
+
+            <Grid item>
+              <PeaButton
+                shape={'circular'}
+                icon={'email'}
+                size={'small'}
+                onClick={onMessage}
+                tooltip="message"
+              />
+            </Grid>
+
+            <Grid item>
+              <PeaButton
+                id={`${name.replace(/\s/g, '')}-more-options`}
+                shape={'circular'}
+                icon={'more_vert'}
+                size={'small'}
+                onClick={(e) => setAnchor(e.currentTarget)}
+                tooltip="more"
+              />
+
+              {renderMenu()}
+            </Grid>
           </Grid>
 
           <Grid item>
@@ -169,39 +214,6 @@ const PeaGroupCard = ({
                 <PeaText>{`${humanFormat(memberCount || 0, {
                   decimals: 0,
                 })} member${memberCount === 1 ? '' : 's'}`}</PeaText>
-              </Grid>
-
-              <Grid item>
-                <PeaButton
-                  shape={'circular'}
-                  icon={'email'}
-                  size={'small'}
-                  onClick={onMessage}
-                >
-                  message
-                </PeaButton>
-
-                <PeaButton
-                  shape={'circular'}
-                  icon={'more_vert'}
-                  size={'small'}
-                  style={{ marginLeft: 8 }}
-                  onClick={e => setAnchor(e.currentTarget)}
-                />
-
-                {renderMenu()}
-
-                {type !== 'PERSONAL' && (
-                  <PeaButton
-                    variant={'contained'}
-                    color={isMember ? 'primary' : 'danger'}
-                    style={{ marginLeft: 8, minWidth: 120 }}
-                    loading={isLoading}
-                    {...joinButtonProps}
-                  >
-                    {actionText}
-                  </PeaButton>
-                )}
               </Grid>
             </Grid>
           </Grid>

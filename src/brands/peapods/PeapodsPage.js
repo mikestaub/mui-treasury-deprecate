@@ -376,7 +376,7 @@ const PeapodsPage = () => {
         }}
       >
         <Grid container spacing={4} justify={'center'}>
-          {components.map(item => {
+          {components.map((item) => {
             const { component: Component, previewProps, gridItemProps } = item;
             return (
               <Grid

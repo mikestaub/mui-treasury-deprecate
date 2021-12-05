@@ -14,7 +14,7 @@ import Box from 'components/atoms/Box';
 import PreviewWidget from 'components/molecules/PreviewWidget';
 import Icon from 'extensions/Icon';
 
-const createTheme = theme => createMuiTheme(theme);
+const createTheme = (theme) => createMuiTheme(theme);
 
 const IconSection = ({ globalTheme }) => {
   const [color, setColor] = useState('');
@@ -93,7 +93,7 @@ const IconSection = ({ globalTheme }) => {
             select
             label={'Color'}
             value={color}
-            onChange={e => setColor(e.target.value)}
+            onChange={(e) => setColor(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none
@@ -114,7 +114,7 @@ const IconSection = ({ globalTheme }) => {
             select
             label={'Background color'}
             value={bgColor}
-            onChange={e => setBgColor(e.target.value)}
+            onChange={(e) => setBgColor(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none
@@ -138,7 +138,7 @@ const IconSection = ({ globalTheme }) => {
             select
             label={'Size'}
             value={size}
-            onChange={e => setSize(e.target.value)}
+            onChange={(e) => setSize(e.target.value)}
           >
             <MenuItem key={'small'} value={'small'}>
               small
@@ -159,7 +159,7 @@ const IconSection = ({ globalTheme }) => {
             select
             label={'Shape'}
             value={shape}
-            onChange={e => setShape(e.target.value)}
+            onChange={(e) => setShape(e.target.value)}
           >
             <MenuItem key={'none'} value={''}>
               none

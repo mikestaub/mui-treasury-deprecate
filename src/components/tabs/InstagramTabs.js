@@ -58,7 +58,7 @@ const InstagramTabs = ({ tabs, tabProps, ...props }) => {
   const tabClasses = useTabStyles(tabProps);
   return (
     <Tabs {...props} classes={tabsClasses}>
-      {tabs.map(tab => (
+      {tabs.map((tab) => (
         <Tab key={tab.label} {...tab} classes={tabClasses} />
       ))}
     </Tabs>

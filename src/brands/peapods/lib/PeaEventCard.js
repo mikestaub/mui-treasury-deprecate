@@ -25,36 +25,43 @@ const createList = ({
   attendingCount,
   interestedCount,
   limit,
-}) => [
-  {
-    key: '1',
-    icon: 'fas fa-calendar-alt',
-    text: timeString,
-  },
-  {
-    key: '2',
-    icon: 'location_on',
-    text: location,
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    text:
-      attendingCount && interestedCount ? (
-        <React.Fragment>
-          {!!limit && (
-            <span>
-              limit <b>{limit} - </b>
-            </span>
-          )}
-          {podCount} pod{podCount > 1 ? 's' : ''}, {attendingCount} going,{' '}
-          {interestedCount} interested
-        </React.Fragment>
-      ) : null,
-  },
-];
+}) => {
+  const list = [
+    {
+      key: '1',
+      icon: 'fas fa-calendar-alt',
+      text: timeString,
+    },
+    {
+      key: '3',
+      icon: 'fas fa-users',
+      text:
+        attendingCount && interestedCount ? (
+          <React.Fragment>
+            {!!limit && (
+              <span>
+                limit <b>{limit} - </b>
+              </span>
+            )}
+            {podCount} pod{podCount > 1 ? 's' : ''}, {attendingCount} going,{' '}
+            {interestedCount} interested
+          </React.Fragment>
+        ) : null,
+    },
+  ];
 
-const Details = props => (
+  if (location) {
+    list.push({
+      key: '2',
+      icon: 'location_on',
+      text: location,
+    });
+  }
+
+  return list;
+};
+
+const Details = (props) => (
   <PeaButton
     shape={''}
     size={'small'}
@@ -67,7 +74,7 @@ const Details = props => (
   </PeaButton>
 );
 
-const Share = props => (
+const Share = (props) => (
   <PeaButton
     shape={''}
     size={'small'}
@@ -125,7 +132,7 @@ const PeaEventCard = ({
   const openSharePopover = Boolean(shareAnchorEl);
   const shareAriaId = openSharePopover ? 'event-card-share' : undefined;
 
-  const handleShareClick = event => {
+  const handleShareClick = (event) => {
     event.stopPropagation();
 
     if (window.navigator.share) {
@@ -135,7 +142,7 @@ const PeaEventCard = ({
           url: shareLink,
         })
         .then(() => onShareEventClicked('native'))
-        .catch(err => {
+        .catch((err) => {
           if (err.message !== 'Share canceled') {
             throw err;
           }
@@ -149,7 +156,7 @@ const PeaEventCard = ({
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => () => {
+  const handleShareItemClick = (item) => () => {
     onShareEventClicked(item);
     handleShareClose();
   };
@@ -277,11 +284,12 @@ const PeaEventCard = ({
             </Popover>
 
             <CreatePod
+              id="event-card-create-pod"
               isLoading={isLoading}
               text={createPodText}
               onClick={onCreatePodClicked}
             />
-            <Details onClick={onShowDetailsClicked} />
+            <Details id="event-card-details" onClick={onShowDetailsClicked} />
           </>
         }
       />

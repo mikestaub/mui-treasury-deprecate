@@ -11,9 +11,7 @@ import ProductInfo from './ProductInfo';
 
 const useStyles = makeStyles(({ palette }) => ({
   root: {
-    backgroundColor: Color(palette.primary.main)
-      .fade(0.3)
-      .toString(),
+    backgroundColor: Color(palette.primary.main).fade(0.3).toString(),
     boxShadow: `0 2px 12px 0 ${Color(palette.primary.main)
       .fade(0.2)
       .toString()}`,

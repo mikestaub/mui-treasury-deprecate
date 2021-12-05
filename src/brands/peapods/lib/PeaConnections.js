@@ -48,7 +48,7 @@ const PeaConnections = ({ classes, followers, followings, tags, groups }) => {
             </Grid>
 
             <Grid container spacing={2}>
-              {data.map(item => (
+              {data.map((item) => (
                 <Grid key={item.name} item>
                   <PeaSocialAvatar {...item} />
                 </Grid>

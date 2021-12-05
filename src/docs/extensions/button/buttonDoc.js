@@ -52,7 +52,7 @@ const components = [
     description: '',
     inverted: true,
     render: () =>
-      sizes.map(s => (
+      sizes.map((s) => (
         <Button
           key={s}
           size={s}
@@ -68,7 +68,7 @@ const components = [
     name: 'Square Icon Button',
     description: '',
     render: () =>
-      sizes.map(s => (
+      sizes.map((s) => (
         <Button
           key={s}
           size={s}
@@ -83,7 +83,7 @@ const components = [
     name: 'Circular Icon Button',
     description: '',
     render: () =>
-      sizes.map(s => (
+      sizes.map((s) => (
         <Button
           key={s}
           size={s}
@@ -106,7 +106,7 @@ const components = [
     name: 'Outlined Icon Button',
     description: '',
     render: () =>
-      sizes.map(s => (
+      sizes.map((s) => (
         <Button
           key={s}
           size={s}

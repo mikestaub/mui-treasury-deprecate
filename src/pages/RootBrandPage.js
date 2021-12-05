@@ -10,7 +10,7 @@ const RootBrandPage = () => (
         exact
         key={path}
         path={path}
-        render={router => <Page {...router} />}
+        render={(router) => <Page {...router} />}
       />
     ))}
   </Switch>

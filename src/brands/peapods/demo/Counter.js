@@ -3,7 +3,9 @@ import PeaCounter from '../lib/PeaCounter';
 
 const Counter = () => {
   const [value, onChange] = useState(0);
-  return <PeaCounter value={value} onChange={e => onChange(e.target.value)} />;
+  return (
+    <PeaCounter value={value} onChange={(e) => onChange(e.target.value)} />
+  );
 };
 
 Counter.metadata = {

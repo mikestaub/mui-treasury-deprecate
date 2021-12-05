@@ -27,7 +27,7 @@ mergedTheme = responsiveFontSizes(mergedTheme);
 const req = require.context('./components', true, /.js$/);
 let overrides = {};
 
-req.keys().forEach(filename => {
+req.keys().forEach((filename) => {
   overrides = {
     ...overrides,
     ...req(filename).default(mergedTheme),

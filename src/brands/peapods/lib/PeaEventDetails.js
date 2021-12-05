@@ -24,7 +24,7 @@ import PeaTag from './PeaTag';
 import PeaSwipeableTabs from './PeaSwipeableTabs';
 import PeaShareContent from './PeaShareContent';
 
-const scrollHeaderHeight = 50;
+const scrollHeaderHeight = 60;
 
 // TODO: this can be cleaned up and refactored
 // Much of this can be reused for GroupDetails
@@ -38,7 +38,7 @@ const useStyles = makeStyles(() => ({
     padding: '0 10px',
     position: 'sticky',
     top: 0,
-    zIndex: 1000,
+    zIndex: 10,
     background: '#fff',
     transform: 'translateY(-100px)',
     transition: 'transform .2s',
@@ -66,59 +66,66 @@ const renderAboutDetails = ({
   attendingCount,
   interestedCount,
   limit,
-}) => [
-  {
-    key: '0',
-    icon: (
-      <img
-        alt="event-host"
-        src={profile.image}
-        style={{ width: '100%', height: '100%' }}
-      />
-    ),
-    renderText: () => (
-      <span>
-        Hosted by{' '}
-        <Link target="_blank" href={profile.link}>
-          {profile.name}
-        </Link>
-      </span>
-    ),
-  },
-  {
-    key: '1',
-    icon: 'fas fa-calendar-alt',
-    text: timeString,
-  },
-  {
-    key: '2',
-    icon: 'location_on',
-    renderText: () => {
-      // eslint-disable-next-line max-len
-      const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
-      return (
-        <Link href={mapDirectionsUrl} target="blank" rel="noopener">
-          {location}
-        </Link>
-      );
+}) => {
+  const list = [
+    {
+      key: '0',
+      icon: (
+        <img
+          alt="event-host"
+          src={profile.image}
+          style={{ width: '100%', height: '100%' }}
+        />
+      ),
+      renderText: () => (
+        <span>
+          Hosted by{' '}
+          <Link target="_blank" href={profile.link}>
+            {profile.name}
+          </Link>
+        </span>
+      ),
     },
-  },
-  {
-    key: '3',
-    icon: 'fas fa-users',
-    renderText: () => (
-      <>
-        {!!limit && (
-          <span>
-            limit <b>{limit} - </b>
-          </span>
-        )}
-        <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
-        <b>{interestedCount}</b> interested
-      </>
-    ),
-  },
-];
+    {
+      key: '1',
+      icon: 'fas fa-calendar-alt',
+      text: timeString,
+    },
+    {
+      key: '3',
+      icon: 'fas fa-users',
+      renderText: () => (
+        <>
+          {!!limit && (
+            <span>
+              limit <b>{limit} - </b>
+            </span>
+          )}
+          <b>{podCount}</b> pods, <b>{attendingCount}</b> going, and{' '}
+          <b>{interestedCount}</b> interested
+        </>
+      ),
+    },
+  ];
+
+  if (location) {
+    list.push({
+      key: '2',
+      icon: 'location_on',
+      renderText: () => {
+        // eslint-disable-next-line max-len
+        const mapDirectionsUrl = `https://www.google.com/maps/dir/?api=1&origin=${mapOrigin}&destination=${location}&travelMode=driving`;
+        return (
+          <Link href={mapDirectionsUrl} target="blank" rel="noopener">
+            {location}
+          </Link>
+        );
+      },
+    });
+  }
+
+  return list;
+};
 
 const PeaEventDetails = ({
   id,
@@ -163,15 +170,33 @@ const PeaEventDetails = ({
   const connectionRef = useRef();
 
   const tabs = [
-    { index: 0, ref: podsRef, label: 'Pods' },
-    { index: 1, ref: aboutRef, label: 'About' },
-    { index: 2, ref: connectionRef, label: 'Connections' },
+    {
+      id: 'event-about-tab',
+      index: 0,
+      ref: aboutRef,
+      label: 'About',
+      count: undefined,
+    },
+    {
+      id: 'event-pods-tab',
+      index: 1,
+      ref: podsRef,
+      label: 'Pods',
+      count: podCount,
+    },
+    {
+      id: 'event-connections-tab',
+      index: 2,
+      ref: connectionRef,
+      label: 'Connections',
+      count: undefined,
+    },
   ];
 
   const scrollToTop = () => (scrollRef.current.scrollTop = 0);
 
   const onScroll = useCallback(
-    debounce(e => {
+    debounce((e) => {
       const shouldUpdateTab = scrollRef.current.scrollTop > 300;
 
       const { ref } = tabs[tabIndex];
@@ -187,13 +212,13 @@ const PeaEventDetails = ({
     [tabIndex, tabs],
   );
 
-  const onTabChange = index => {
+  const onTabChange = (index) => {
     if (onChangeTab) {
       onChangeTab(tabs[index].label);
     }
   };
 
-  const handleTabChanged = newIndex => {
+  const handleTabChanged = (newIndex) => {
     setTabIndex(newIndex);
 
     if (onTabChange) {
@@ -224,7 +249,7 @@ const PeaEventDetails = ({
   const [shareAnchorEl, setShareAnchorEl] = useState(null);
   const shareAriaId = shareAnchorEl ? 'event-details-share' : undefined;
 
-  const handleShareClick = event => {
+  const handleShareClick = (event) => {
     event.stopPropagation();
 
     if (window.navigator.share) {
@@ -236,7 +261,7 @@ const PeaEventDetails = ({
         .then(() => {
           onShareEventClicked('native');
         })
-        .catch(err => {
+        .catch((err) => {
           if (err.message !== 'Share canceled') {
             throw err;
           }
@@ -250,7 +275,7 @@ const PeaEventDetails = ({
     setShareAnchorEl(null);
   };
 
-  const handleShareItemClick = item => () => {
+  const handleShareItemClick = (item) => () => {
     onShareEventClicked(item);
     handleShareClose();
   };
@@ -294,7 +319,7 @@ const PeaEventDetails = ({
       </MenuItem>
 
       {onEditEventClicked && (
-        <MenuItem onClick={() => editEvent()}>
+        <MenuItem id="event-details-edit" onClick={() => editEvent()}>
           <ListItemText disableTypography>
             <PeaText color={'secondary'} variant={'body1'} weight={'bold'}>
               Edit Event
@@ -307,6 +332,7 @@ const PeaEventDetails = ({
 
   return (
     <Card
+      elevation={isMobile ? 0 : 1}
       className={'PeaGroupProfile-root'}
       onScroll={onScroll}
       ref={scrollRef}
@@ -358,11 +384,24 @@ const PeaEventDetails = ({
               </Grid>
 
               <Grid item>
+                <PeaButton
+                  data-test-id={'mutate-pod'}
+                  onClick={() => onCreatePodClicked(id)}
+                  variant={'contained'}
+                  color={'primary'}
+                  size="small"
+                  loading={isLoading}
+                  style={{ marginLeft: 8, minWidth: 120 }}
+                >
+                  {buttonText}
+                </PeaButton>
+
                 {sourceImage && (
                   <button
                     type="button"
                     className="MuiButtonBase-root"
                     href={sourceLink}
+                    style={{ marginLeft: 8 }}
                   >
                     <PeaAvatar src={sourceImage} />
                   </button>
@@ -374,6 +413,7 @@ const PeaEventDetails = ({
                   size={'small'}
                   style={{ marginLeft: 8 }}
                   onClick={handleShareClick}
+                  tooltip="share"
                 >
                   <Popover
                     id={shareAriaId}
@@ -394,24 +434,15 @@ const PeaEventDetails = ({
                 </PeaButton>
 
                 <PeaButton
+                  id="event-details-more"
                   shape={'circular'}
                   icon={'more_vert'}
                   size={'small'}
                   style={{ marginLeft: 8 }}
-                  onClick={e => setAnchor(e.currentTarget)}
+                  onClick={(e) => setAnchor(e.currentTarget)}
+                  tooltip="more"
                 />
                 {renderMenu()}
-
-                <PeaButton
-                  onClick={() => onCreatePodClicked(id)}
-                  variant={'contained'}
-                  color={'primary'}
-                  size="small"
-                  loading={isLoading}
-                  style={{ marginLeft: 8, minWidth: 120 }}
-                >
-                  {buttonText}
-                </PeaButton>
               </Grid>
             </Grid>
           </Grid>
@@ -422,15 +453,10 @@ const PeaEventDetails = ({
         activeIndex={tabIndex}
         tabs={tabs}
         enableFeedback={isMobile}
+        hasPadding={!isMobile}
         onTabChange={handleTabChanged}
         stickyOffset={scrollHeaderHeight}
-        customStyle={{
-          marginTop: -scrollHeaderHeight,
-          overflow: showTopBar ? 'auto' : 'hidden',
-        }}
       >
-        {renderPods()}
-
         <>
           {isMobile && renderMap()}
           <PeaText color={'secondary'} gutterBottom>
@@ -448,7 +474,7 @@ const PeaEventDetails = ({
                 attendingCount: stats ? stats.attending : null,
                 interestedCount: stats ? stats.interested : null,
                 limit: stats ? stats.limit : null,
-              }).map(item => (
+              }).map((item) => (
                 <Grid key={item.key} container spacing={1} wrap={'nowrap'}>
                   <Grid item>
                     {typeof item.icon === 'string' ? (
@@ -492,7 +518,7 @@ const PeaEventDetails = ({
               {typeof description === 'string' ? (
                 <PeaText>{description}</PeaText>
               ) : (
-                React.Children.map(description, text => (
+                React.Children.map(description, (text) => (
                   <div
                     style={{
                       marginBottom: 20,
@@ -511,7 +537,7 @@ const PeaEventDetails = ({
 
           <PeaText gutterBottom />
           <Grid container wrap="wrap" spacing={1}>
-            {tags.map(tag => (
+            {tags.map((tag) => (
               <Grid item key={tag}>
                 <PeaTag
                   color={'secondary'}
@@ -522,6 +548,8 @@ const PeaEventDetails = ({
             ))}
           </Grid>
         </>
+
+        {renderPods()}
 
         {renderConnections()}
       </PeaSwipeableTabs>

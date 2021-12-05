@@ -19,32 +19,34 @@ const styles = ({ transitions }) => ({
   },
 });
 
-const createGet = (
-  { clipped, navVariant, collapsible, collapsed, open, squeezed, navAnchor },
-  normal,
-  shrink,
-  pushed,
-  unsqueeze,
-) => () => {
-  if (clipped || navAnchor !== 'left') return normal;
-  if (navVariant === 'persistent' && open) {
-    // open is effect only when
-    // navVariant === 'persistent' ||
-    // navVariant === 'temporary'
-    if (squeezed) {
+const createGet =
+  (
+    { clipped, navVariant, collapsible, collapsed, open, squeezed, navAnchor },
+    normal,
+    shrink,
+    pushed,
+    unsqueeze,
+  ) =>
+  () => {
+    if (clipped || navAnchor !== 'left') return normal;
+    if (navVariant === 'persistent' && open) {
+      // open is effect only when
+      // navVariant === 'persistent' ||
+      // navVariant === 'temporary'
+      if (squeezed) {
+        return pushed;
+      }
+      return unsqueeze;
+    }
+    if (navVariant === 'permanent') {
+      if (collapsible) {
+        if (collapsed) return shrink;
+        return pushed;
+      }
       return pushed;
     }
-    return unsqueeze;
-  }
-  if (navVariant === 'permanent') {
-    if (collapsible) {
-      if (collapsed) return shrink;
-      return pushed;
-    }
-    return pushed;
-  }
-  return normal;
-};
+    return normal;
+  };
 
 const Header = ({
   className,

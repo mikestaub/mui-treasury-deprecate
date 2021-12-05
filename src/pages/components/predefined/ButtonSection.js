@@ -16,7 +16,7 @@ import PreviewWidget from 'components/molecules/PreviewWidget';
 import Grid from '@material-ui/core/Grid';
 import Button from 'extensions/Button';
 
-const createTheme = theme => createMuiTheme(theme);
+const createTheme = (theme) => createMuiTheme(theme);
 
 const ButtonSection = ({ globalTheme }) => {
   const [inverted, setInverted] = useState(false);
@@ -100,7 +100,7 @@ const ButtonSection = ({ globalTheme }) => {
               aria-label="Gender"
               name="gender1"
               value={variant}
-              onChange={e => setVariant(e.target.value)}
+              onChange={(e) => setVariant(e.target.value)}
             >
               <FormControlLabel value="text" control={<Radio />} label="text" />
               <FormControlLabel
@@ -123,7 +123,7 @@ const ButtonSection = ({ globalTheme }) => {
             margin={'normal'}
             label={'Label'}
             value={label}
-            onChange={e => setLabel(e.target.value)}
+            onChange={(e) => setLabel(e.target.value)}
           />
           <TextField
             margin={'normal'}
@@ -131,7 +131,7 @@ const ButtonSection = ({ globalTheme }) => {
             select
             label={'Color'}
             value={color}
-            onChange={e => setColor(e.target.value)}
+            onChange={(e) => setColor(e.target.value)}
           >
             <MenuItem key={'default'} value={'default'}>
               default
@@ -149,7 +149,7 @@ const ButtonSection = ({ globalTheme }) => {
             select
             label={'Size'}
             value={size}
-            onChange={e => setSize(e.target.value)}
+            onChange={(e) => setSize(e.target.value)}
           >
             <MenuItem key={'small'} value={'small'}>
               small
@@ -170,7 +170,7 @@ const ButtonSection = ({ globalTheme }) => {
             select
             label={'Shape'}
             value={shape}
-            onChange={e => setShape(e.target.value)}
+            onChange={(e) => setShape(e.target.value)}
           >
             <MenuItem key={'default'} value={''}>
               default
@@ -203,7 +203,7 @@ const ButtonSection = ({ globalTheme }) => {
                   select
                   label={'placement'}
                   value={iconPosition}
-                  onChange={e => setIconPlacement(e.target.value)}
+                  onChange={(e) => setIconPlacement(e.target.value)}
                 >
                   <MenuItem key={'start'} value={'start'}>
                     start

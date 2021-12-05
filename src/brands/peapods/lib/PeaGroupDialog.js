@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
+/* eslint-disable react/forbid-prop-types, react/jsx-props-no-spreading */
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@material-ui/core/TextField/TextField';
@@ -28,6 +28,7 @@ const PeaGroupDialog = ({
   tagsInput,
   profilePhoto,
   loading,
+  isValid,
   onChangeCoverPhotoClicked,
   onChange,
   onClose,
@@ -42,6 +43,7 @@ const PeaGroupDialog = ({
       <>
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           <TextField
+            id="group-dialog-name"
             required
             fullWidth
             margin={'normal'}
@@ -99,6 +101,7 @@ const PeaGroupDialog = ({
 
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           <TextField
+            id="group-dialog-description"
             fullWidth
             margin={'normal'}
             label={'Description'}
@@ -112,7 +115,6 @@ const PeaGroupDialog = ({
             <PeaInfoTooltip description={'The description of group'} />
           </Box>
         </Grid>
-
         <Grid container alignItems={'flex-start'} wrap={'nowrap'}>
           {inviteInput}
           <Box mt={2}>
@@ -138,9 +140,10 @@ const PeaGroupDialog = ({
     actions={[
       <PeaButton onClick={onClose}>Cancel</PeaButton>,
       <PeaButton
+        id="group-dialog-create"
         color={'primary'}
         variant={'contained'}
-        disabled={loading}
+        disabled={loading || !isValid}
         onClick={onSave}
       >
         {loading ? (
@@ -170,6 +173,7 @@ PeaGroupDialog.propTypes = {
   typeInput: PropTypes.node.isRequired,
   profilePhoto: PropTypes.string,
   loading: PropTypes.bool,
+  isValid: PropTypes.bool,
   onChangeCoverPhotoClicked: PropTypes.func,
   onChange: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
@@ -180,6 +184,7 @@ PeaGroupDialog.defaultProps = {
   dialogTitle: 'Create Group',
   actionText: 'Create',
   loading: false,
+  isValid: false,
   description: '',
   profilePhoto: undefined,
   onChangeCoverPhotoClicked: () => {},

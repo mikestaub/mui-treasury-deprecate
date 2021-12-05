@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import Link from '@material-ui/core/Link';
 import MuiTypography from '@material-ui/core/Typography';
 
-const injectColor = color => {
+const injectColor = (color) => {
   if (
     color === 'default' ||
     color === 'inherit' ||
@@ -20,7 +20,7 @@ const injectColor = color => {
   return undefined;
 };
 
-const injectDisplay = display => {
+const injectDisplay = (display) => {
   if (display === 'initial' || display === 'inline' || display === 'block') {
     return display;
   }
@@ -31,7 +31,7 @@ const generateMediaQueries = (css, breakpoints, object) => {
   if (!breakpoints) return '';
   const keys = Object.keys(object);
   const result = {};
-  keys.forEach(key => {
+  keys.forEach((key) => {
     if (key === 'xs') {
       result[css] = object[key];
     } else {
@@ -343,7 +343,7 @@ Typography.defaultProps = {
   secondFamily: false,
 };
 Typography.getTheme = () => {};
-Typography.setSecondFamily = family => {
+Typography.setSecondFamily = (family) => {
   secondFamilyVar = family;
 };
 

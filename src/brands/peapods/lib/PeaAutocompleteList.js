@@ -15,10 +15,10 @@ import PropTypes from 'prop-types';
 import PeaTag from './PeaTag';
 import PeaSearchInputControl from './PeaSearchInputControl';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: 360,
-    padding: props => (props.removeSpacing ? 0 : 4),
+    padding: (props) => (props.removeSpacing ? 0 : 4),
     '&.fullWidth': {
       width: '100%',
     },
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     alignItems: 'center',
     overflow: 'hidden',
-    marginLeft: props => (props.removeSpacing ? 0 : 10),
+    marginLeft: (props) => (props.removeSpacing ? 0 : 10),
     '& > div': {
       margin: 0,
       padding: 0,
@@ -230,14 +230,14 @@ const PeaAutocompleteList = ({
   }
 
   const selectStyles = {
-    input: base => ({
+    input: (base) => ({
       ...base,
       color: theme.palette.text.primary,
       '& input': {
         font: 'inherit',
       },
     }),
-    menuList: base => ({
+    menuList: (base) => ({
       ...base,
       overflowX: 'hidden',
     }),
@@ -252,7 +252,7 @@ const PeaAutocompleteList = ({
     DropdownIndicator: null,
   };
 
-  const handleKeyDown = event => {
+  const handleKeyDown = (event) => {
     if (!canCreate) {
       return;
     }
@@ -265,7 +265,7 @@ const PeaAutocompleteList = ({
     ];
 
     const isNewValue =
-      inputValue && !value.map(i => i.value).includes(inputValue.trim());
+      inputValue && !value.map((i) => i.value).includes(inputValue.trim());
 
     if (isNewValue && codes.includes(event.keyCode)) {
       event.preventDefault();
@@ -278,7 +278,7 @@ const PeaAutocompleteList = ({
     }
   };
 
-  const handleInputChange = val => {
+  const handleInputChange = (val) => {
     setInputValue(val);
   };
 
@@ -299,7 +299,7 @@ const PeaAutocompleteList = ({
 
   const key = value && value.length ? JSON.stringify(value) : inputValue;
 
-  const onBlur = e => {
+  const onBlur = (e) => {
     if (inputValue) {
       const newVal = { label: inputValue, value: inputValue };
       if (isMulti) {
@@ -321,7 +321,7 @@ const PeaAutocompleteList = ({
     <div className={cx(classes.root, fullWidth && 'fullWidth')}>
       <SelectComponent
         key={key}
-        ref={ref => {
+        ref={(ref) => {
           selectRef.current = ref;
         }}
         classes={classes}

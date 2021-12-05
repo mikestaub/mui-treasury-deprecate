@@ -8,7 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import PeaButton from './PeaButton';
 import PeaCategoryToggle from './PeaCategoryToggle';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   followPopover: {
     display: 'flex',
     flexDirection: 'column',
@@ -23,9 +23,6 @@ const useStyles = makeStyles(theme => ({
     maxHeight: 250,
     overflowY: 'auto',
     marginBottom: theme.spacing(2),
-  },
-  followButton: {
-    width: 160,
   },
   createGroupButton: {
     width: 200,
@@ -45,7 +42,7 @@ const PeaGroupSelector = ({
   const [followDisabled, setFollowDisabled] = useState(true);
   const [checkedFollowGroup, setCheckedFollowGroup] = useState({});
 
-  const onFollowGroupChange = id => () => {
+  const onFollowGroupChange = (id) => () => {
     const followGroups = {
       ...checkedFollowGroup,
       [id]: !checkedFollowGroup[id],
@@ -64,9 +61,9 @@ const PeaGroupSelector = ({
     setFollowDisabled(value);
   }, [followButtonText, setFollowDisabled]);
 
-  const onFollowByGroupIds = followBack => async () => {
+  const onFollowByGroupIds = (followBack) => async () => {
     const groupIds = Object.keys(checkedFollowGroup).filter(
-      key => checkedFollowGroup[key],
+      (key) => checkedFollowGroup[key],
     );
     onSubmit({ groupIds, followBack });
   };
@@ -122,7 +119,6 @@ const PeaGroupSelector = ({
 
         <Grid item>
           <PeaButton
-            className={classes.followButton}
             disabled={followDisabled}
             variant={'contained'}
             color={'primary'}

@@ -35,7 +35,7 @@ const ContentForm = ({
   data,
   onChangeData,
 }) => {
-  const handleChange = key => e =>
+  const handleChange = (key) => (e) =>
     onChangeData({
       ...data,
       [key]: e.target.checked,
@@ -51,7 +51,7 @@ const ContentForm = ({
                 aria-label="Preset"
                 name="preset"
                 value={preset}
-                onChange={e => onChangePreset(e.target.value)}
+                onChange={(e) => onChangePreset(e.target.value)}
               >
                 <FormControlLabel
                   value="createDefaultLayout"

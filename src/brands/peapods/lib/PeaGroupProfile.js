@@ -9,6 +9,8 @@ import PeaTag from './PeaTag';
 import PeaText from './PeaTypography';
 
 const PeaGroupProfile = ({
+  podCount,
+  memberCount,
   description,
   tags,
   renderPodList,
@@ -26,13 +28,13 @@ const PeaGroupProfile = ({
   const messagesRef = useRef();
 
   const tabs = [
-    { index: 0, ref: podsRef, label: 'Pods' },
-    { index: 1, ref: aboutRef, label: 'About' },
-    { index: 2, ref: membersRef, label: 'Members' },
-    { index: 3, ref: messagesRef, label: 'Messages' },
+    { index: 0, ref: aboutRef, label: 'About', count: undefined },
+    { index: 1, ref: podsRef, label: 'Pods', count: podCount },
+    { index: 2, ref: membersRef, label: 'Members', count: memberCount },
+    { index: 3, ref: messagesRef, label: 'Messages', count: undefined },
   ];
 
-  const onTabChange = index => {
+  const onTabChange = (index) => {
     if (onChangeTab) {
       onChangeTab(tabs[index]);
     }
@@ -47,12 +49,10 @@ const PeaGroupProfile = ({
       tabIndex={activeTabIndex}
       tabs={tabs}
       enableFeedback={isMobile}
+      hasPadding={!isMobile}
       onTabChange={onTabChange}
-      stickyOffset={50}
-      {...props}
+      stickyOffset={60}
     >
-      {renderPodList()}
-
       <>
         {description && (
           <>
@@ -65,7 +65,7 @@ const PeaGroupProfile = ({
                 {typeof description === 'string' ? (
                   <PeaText>{description}</PeaText>
                 ) : (
-                  React.Children.map(description, text => (
+                  React.Children.map(description, (text) => (
                     <div
                       style={{
                         marginBottom: 20,
@@ -87,7 +87,7 @@ const PeaGroupProfile = ({
             </PeaText>
 
             <Grid container wrap="wrap" spacing={1}>
-              {tags.map(tag => (
+              {tags.map((tag) => (
                 <Grid item key={tag}>
                   <PeaTag
                     color={'secondary'}
@@ -102,6 +102,8 @@ const PeaGroupProfile = ({
 
         {renderConnections()}
       </>
+
+      {renderPodList()}
 
       {renderMemberList()}
 
@@ -120,9 +122,11 @@ PeaGroupProfile.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.shape({})),
   isMobile: PropTypes.bool,
   onChangeTab: PropTypes.func,
+  podCount: PropTypes.number,
 };
 
 PeaGroupProfile.defaultProps = {
+  podCount: 0,
   activeTabIndex: 0,
   isMobile: false,
   onChangeTab: () => {},

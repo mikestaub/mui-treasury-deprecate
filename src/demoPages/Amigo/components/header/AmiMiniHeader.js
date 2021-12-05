@@ -56,67 +56,69 @@ const AmiMiniHeader = ({ menus }) => {
     );
   };
   // eslint-disable-next-line react/prop-types
-  const renderItem = (level = 0) => ({ icon, label, children }, index) => {
-    const collapsed = collapsedIndex[level];
-    const listItemText = (
-      <ListItemText
-        key={label}
-        style={{
-          paddingLeft: (level - 1) * 20 + (level === 0 ? 0 : 28),
-          marginLeft: level === 0 && !icon ? 28 : 0,
-        }}
-        classes={{ primary: classes.listItemText }}
-        primary={label}
-      />
-    );
-    if (!children) {
+  const renderItem =
+    (level = 0) =>
+    ({ icon, label, children }, index) => {
+      const collapsed = collapsedIndex[level];
+      const listItemText = (
+        <ListItemText
+          key={label}
+          style={{
+            paddingLeft: (level - 1) * 20 + (level === 0 ? 0 : 28),
+            marginLeft: level === 0 && !icon ? 28 : 0,
+          }}
+          classes={{ primary: classes.listItemText }}
+          primary={label}
+        />
+      );
+      if (!children) {
+        return (
+          <>
+            <ListItem button key={label}>
+              {icon && (
+                <Icon size={'small'} push={'right'}>
+                  {icon}
+                </Icon>
+              )}
+              {listItemText}
+            </ListItem>
+            {level === 0 && <Divider light />}
+          </>
+        );
+      }
       return (
         <>
-          <ListItem button key={label}>
+          <ListItem
+            button
+            onClick={() =>
+              updateByIndex(collapsed === index ? null : index, level)
+            }
+          >
             {icon && (
               <Icon size={'small'} push={'right'}>
                 {icon}
               </Icon>
             )}
             {listItemText}
+            {collapsedIndex[level] === index ? (
+              <Icon>expand_less</Icon>
+            ) : (
+              <Icon>expand_more</Icon>
+            )}
           </ListItem>
+          <Collapse
+            in={collapsedIndex[level] === index}
+            timeout="auto"
+            unmountOnExit
+          >
+            <List className={classes.subList} component="div" disablePadding>
+              {children.map(renderItem(level + 1))}
+            </List>
+          </Collapse>
           {level === 0 && <Divider light />}
         </>
       );
-    }
-    return (
-      <>
-        <ListItem
-          button
-          onClick={() =>
-            updateByIndex(collapsed === index ? null : index, level)
-          }
-        >
-          {icon && (
-            <Icon size={'small'} push={'right'}>
-              {icon}
-            </Icon>
-          )}
-          {listItemText}
-          {collapsedIndex[level] === index ? (
-            <Icon>expand_less</Icon>
-          ) : (
-            <Icon>expand_more</Icon>
-          )}
-        </ListItem>
-        <Collapse
-          in={collapsedIndex[level] === index}
-          timeout="auto"
-          unmountOnExit
-        >
-          <List className={classes.subList} component="div" disablePadding>
-            {children.map(renderItem(level + 1))}
-          </List>
-        </Collapse>
-        {level === 0 && <Divider light />}
-      </>
-    );
-  };
+    };
   return (
     <>
       <Slide appear={false} direction="down" in={!trigger}>

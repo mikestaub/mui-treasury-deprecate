@@ -34,7 +34,7 @@ const useStyles = makeStyles(({ shadows, palette }) => ({
   },
 }));
 
-const FirebaseButton = props => {
+const FirebaseButton = (props) => {
   const classes = useStyles(props);
   return <Button {...props} classes={classes} />;
 };

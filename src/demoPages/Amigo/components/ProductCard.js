@@ -3,7 +3,7 @@ import Fade from '@material-ui/core/Fade';
 import ProductCardFront from './ProductCardFront';
 import ProductCardBack from './ProductCardBack';
 
-const ProductCard = props => {
+const ProductCard = (props) => {
   const [showed, setShowed] = useState(false);
   return (
     <div

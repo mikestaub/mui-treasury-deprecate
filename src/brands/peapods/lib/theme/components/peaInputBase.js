@@ -11,8 +11,10 @@ export default ({ palette }) => {
 
   return {
     MuiInputBase: {
-      root: {
+      input: {
         minHeight: 36,
+      },
+      root: {
         '&.PeaSearchInput-root': {
           transition: '0.2s',
           backgroundColor,

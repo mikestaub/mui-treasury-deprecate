@@ -1,10 +1,9 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState, useEffect, useRef, memo, useCallback } from 'react';
-import Select, {
-  AsyncCreatable,
-  Creatable,
-  Async as AsyncSelect,
-} from 'react-select-v2';
+import Select from 'react-select';
+import AsyncSelect from 'react-select/async';
+import AsyncCreatable from 'react-select/async-creatable';
+import Creatable from 'react-select/creatable';
 import cx from 'clsx';
 import { uniqBy } from 'lodash';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
@@ -29,16 +28,13 @@ const useStyles = makeStyles((theme) => ({
     height: 'auto',
   },
   valueContainer: {
+    position: 'relative',
     display: 'flex',
     flexWrap: 'wrap',
     flex: 1,
     alignItems: 'center',
     overflow: 'hidden',
     marginLeft: (props) => (props.removeSpacing ? 0 : 10),
-    '& > div': {
-      margin: 0,
-      padding: 0,
-    },
   },
   noOptionsMessage: {
     padding: theme.spacing(1, 2),
@@ -183,6 +179,7 @@ const PeaAutocompleteList = ({
   onBlur: onBlurProp,
   isMulti,
   isLoading,
+  isClearable,
   fullWidth,
   hideSuggestions,
   clearAfterEnter,
@@ -203,16 +200,16 @@ const PeaAutocompleteList = ({
   const isAsync = !!getSuggestions;
 
   const focusInput = useCallback(() => {
-    // TODO: this seems hacky
+    // TODO: this is hacky
+    // we have to manage the focus states because of this issue: https://github.com/JedWatson/react-select/issues/3832
     if (preserveFocus && selectRef.current) {
-      selectRef.current.select.focus();
+      selectRef?.current?.inputRef?.focus();
     }
   }, [preserveFocus]);
 
-  useEffect(() => {
-    setValue(propValue);
-    focusInput();
-  }, [propValue, focusInput]);
+  const blurInput = () => {
+    selectRef?.current?.inputRef?.blur();
+  };
 
   useEffect(() => {
     focusInput();
@@ -227,19 +224,51 @@ const PeaAutocompleteList = ({
       setValue(newValue);
     }
     onChange(newValue);
+    blurInput();
+    if (!val) {
+      focusInput();
+    }
   }
 
   const selectStyles = {
     input: (base) => ({
       ...base,
+      position: 'relative',
       color: theme.palette.text.primary,
       '& input': {
         font: 'inherit',
+        position: 'absolute',
+        left: 0,
+        right: 0,
       },
     }),
     menuList: (base) => ({
       ...base,
       overflowX: 'hidden',
+    }),
+    placeholder: (base) => ({
+      ...base,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      marginLeft: 8,
+    }),
+    singleValue: (base) => ({
+      ...base,
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      marginLeft: 8,
+    }),
+    valueContainer: (base) => ({
+      ...base,
+      position: 'relative',
+    }),
+    clearIndicator: (base) => ({
+      color: 'blue',
+      '& :hover': {
+        cursor: 'pointer',
+      },
     }),
   };
 
@@ -334,7 +363,7 @@ const PeaAutocompleteList = ({
         // https://github.com/JedWatson/react-select/pull/3690
         isLoading={isLoading}
         inputValue={inputValue.length ? inputValue : undefined}
-        isClearable
+        isClearable={isClearable}
         openMenuOnClick={!isAsync}
         cacheOptions={isAsync}
         loadOptions={getSuggestions}
@@ -362,6 +391,7 @@ PeaAutocompleteList.defaultProps = {
   placeholder: '',
   fullWidth: true,
   isLoading: false,
+  isClearable: false,
   clearOnFocus: true,
   getSuggestions: undefined,
   hideSuggestions: false,
@@ -384,6 +414,7 @@ PeaAutocompleteList.propTypes = {
   value: PropTypes.arrayOf(PropTypes.object),
   isMulti: PropTypes.bool,
   isLoading: PropTypes.bool,
+  isClearable: PropTypes.bool,
   getSuggestions: PropTypes.func,
   placeholder: PropTypes.string,
   suggestions: PropTypes.arrayOf(

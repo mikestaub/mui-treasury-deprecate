@@ -27,7 +27,7 @@ const PeaProfileCard = ({
 
   const open = Boolean(anchorEl);
 
-  const onMenuClick = click => () => {
+  const onMenuClick = (click) => () => {
     setAnchor(null);
     if (click) click();
   };
@@ -60,7 +60,7 @@ const PeaProfileCard = ({
     </Menu>
   );
 
-  const handleMoreClick = e => {
+  const handleMoreClick = (e) => {
     e.stopPropagation();
     setAnchor(e.currentTarget);
   };
